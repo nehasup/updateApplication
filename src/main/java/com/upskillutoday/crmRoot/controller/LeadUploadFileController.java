@@ -1,6 +1,9 @@
 package com.upskillutoday.crmRoot.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,16 +30,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.upskillutoday.crmRoot.common.WebSession;
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
+import com.upskillutoday.crmRoot.dto.EmployeeLeadDto;
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
+import com.upskillutoday.crmRoot.model.EmpLead;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.model.UserMaster;
+import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
 import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
 import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
 import com.upskillutoday.crmRoot.repository.UserMasterRepository;
+import com.upskillutoday.crmRoot.response.EmpLeadResponseDto;
 import com.upskillutoday.crmRoot.response.ResponseMessage;
 import com.upskillutoday.crmRoot.response.ResponseVO;
+import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
 import com.upskillutoday.crmRoot.util.SessionUtils;
@@ -60,6 +69,12 @@ public class LeadUploadFileController {
 	
 	@Autowired
 	EmployeeJpaRepository employeeJpaRepository;
+	
+	@Autowired
+	EmpLeadJpaRepository empleadJparepository;
+	
+	@Autowired
+	EmpLeadService empLeadService;
 
 	//import excel sheet
 	@PostMapping("/upload")
@@ -129,6 +144,7 @@ public class LeadUploadFileController {
 	
 	 @GetMapping("/getAllLeadList")	  
 	 public @ResponseBody ResponseVO<List> getAllLeadList(@RequestParam(name = "userId") Long userId) {
+		 //, @RequestParam(name = "pageName") String pageName
 		 System.out.println("user"+userId);
 	        ResponseVO<List> response=new ResponseVO<List>();
 	        System.out.println("List Successfully!!");
@@ -140,6 +156,7 @@ public class LeadUploadFileController {
 		        	if(employeeMaster!=null) {
 		        		if(employeeMaster.getCategory()!=null && !employeeMaster.getCategory().equals("") ) {
 		        			//Cousler     //Category based leads
+		        			//List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster, pageName);
 		        			List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
 		        			if(leadMasterDtoList!=null) {
 		        				response.setResult(leadMasterDtoList);
@@ -153,7 +170,9 @@ public class LeadUploadFileController {
 		        		}		        
 		        		else {
 		        			//Admin // All leads
+		        			
 		        			List list=leadMasterService.getAllLeadRecordService();
+		        		
 		        			if(list!=null) {
 		        				 response.setResult(list);
 		        			}
@@ -166,6 +185,7 @@ public class LeadUploadFileController {
 		      			   
 		        			
 		        		}
+		        		
 		        	}
 		        }
 	        
@@ -219,8 +239,10 @@ public class LeadUploadFileController {
 		        		}
 		        	}
 		        }
+		        
 	        
 	        }
+	        
 	        
 	        
 			  
@@ -305,6 +327,93 @@ public class LeadUploadFileController {
 	} 
 	
 	
+	
+//assign lead to employee
+	@PostMapping(value = "/saveleadassignemp", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody 
+	public ResponseVO assignLeadtoEmployee(@RequestBody EmployeeLeadDto employeeLeadDto) {	
+		
+		ResponseVO response = new ResponseVO();
+		LeadMaster leadMasterObj = null;
+		for(String leadMaster : employeeLeadDto.getStudentId()) {
+
+			long leadId=Long.parseLong(leadMaster);  //convert string to long.
+
+			//bring leadMasterObj from leadid
+			
+			leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId, true);	
+			
+			EmployeeMaster employeeMaster = employeeJpaRepository.findByEmployeeIdAndDeletedFlag(employeeLeadDto.getEmployeeId(),true);
+	
+			//insert
+			EmpLead empLead = new EmpLead();
+			empLead.setEmployeeMaster(employeeMaster);
+			empLead.setLeadMaster(leadMasterObj);
+			empLead.setUpdatedOn(new Date());
+			empLead.setDeletedFlag(true);
+
+		   empleadJparepository.save(empLead);
+
+		 //change flag assignleadflag
+			leadMasterObj.setAssignLeadFlag(true);
+			leadJpaMasterRepository.save(leadMasterObj);
+
+			}
+		
+	
+	     
+		return response;
+	
+
+    }
+	  
+	 @GetMapping("/getAssignLeadbyempId")	  
+	 public @ResponseBody ResponseVO<List> getListAssignLeadbyEmpId(@RequestParam(name = "userId") Long userId) {
+		 System.out.println("user"+userId);
+	        ResponseVO<List> response=new ResponseVO<List>();
+	        System.out.println("List Successfully!!");
+	        //user obj
+	        if(userId!=null) {
+		        UserMaster userMaster = userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true);
+		        if(userMaster!=null) {
+		        	EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMaster);
+		        	if(employeeMaster!=null) {
+		        		if(employeeMaster.getCategory()!=null && !employeeMaster.getCategory().equals("") ) {
+		        			        		
+		        		List<LeadMasterDto> leadMasterDtoList=leadMasterService.getAllAssignLeadListService(employeeMaster);
+		        			if(leadMasterDtoList!=null) {
+		        				response.setResult(leadMasterDtoList);
+		        			}
+		        			else {
+		        				//Data not present
+		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+		        				response.setMessage("Data is not Present");	
+		        				response.setResult(leadMasterDtoList);
+		        			}		        			
+		        		}		        
+		        		else {
+		        			//Admin // All leads
+		        			//List list=leadMasterService.getAllLeadRecordService();
+		        			List<LeadMasterDto> list =empLeadService.getAllAssignEmpLeadRecordService();
+		        			if(list!=null) {
+		        				 response.setResult(list);
+		        			}
+		        			else {
+		        				//Data not present
+		        				 response.setResult(list);
+		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+		        				response.setMessage("Data is not Present");		        				
+		        			}
+		      			   
+		        			
+		        		}
+		        	}
+		        	}
+		        }
+	        
+	        return response;
+	    }
+	  
 	
 	
 

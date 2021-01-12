@@ -10,6 +10,10 @@ public interface EmployeeJpaRepository extends JpaRepository<EmployeeMaster, Lon
 
 	EmployeeMaster findByUserMaster(UserMaster userMaster);
 
+	EmployeeMaster findByEmployeeIdAndDeletedFlag(Long employeeId, boolean b);
+
+	//EmployeeMaster findByEmployeeMasterAndDeletedFlag(EmployeeMaster employeeMaster, boolean b);
+
 	//EmployeeMaster findByUserMaster(Long userId);
 
 }

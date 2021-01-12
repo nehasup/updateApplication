@@ -75,14 +75,19 @@ public class LeadMaster {
 	  @Temporal(TemporalType.TIMESTAMP)
 	  private Date updatedOn;
 	  
-	  @Column(name="deletedFlag") 
+	  @Column(name="deleted_flag") 
 	  private boolean deletedFlag;
 	 
 
 	  @Column(name="file_type")
 	  private String fileType;
+	  
+	  @Column(name="assign_lead_flag")
+	  private boolean assignLeadFlag;
 	
-	  @Transient
+	
+
+	@Transient
 	  private MultipartFile file;
 	
 	
@@ -119,6 +124,26 @@ private Long remarkId;
 @Transient
 private String remarkName;
 
+
+@Transient
+private String employeeName;
+
+
+
+
+
+
+
+
+	
+
+	public String getEmployeeName() {
+	return employeeName;
+}
+
+public void setEmployeeName(String employeeName) {
+	this.employeeName = employeeName;
+}
 
 	public String getRemarkName() {
 	return remarkName;
@@ -395,6 +420,15 @@ public void setRemarkId(Long remarkId) {
 		this.remarkMaster = remarkMaster;
 		}
 
+	public boolean isAssignLeadFlag() {
+		return assignLeadFlag;
+	}
+
+	public void setAssignLeadFlag(boolean assignLeadFlag) {
+		this.assignLeadFlag = assignLeadFlag;
+	}
+
+	
 		
 	
 

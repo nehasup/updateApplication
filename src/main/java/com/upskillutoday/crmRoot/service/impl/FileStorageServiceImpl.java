@@ -143,6 +143,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 					//leadMaster.setUpdatedBy(userId);
 					leadMaster.setUpdatedOn(new Date());
 					leadMaster.setDeletedFlag(true);
+					leadMaster.setAssignLeadFlag(false);
 					leadMaster.setFileType(FilenameUtils.getExtension(file.getOriginalFilename()));
 					fileuploadrepository.save(leadMaster);
 				}
@@ -237,6 +238,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 			if(leadMasters!=null && leadMasters.size()>0) {
 				for(LeadMaster leadMaster : leadMasters) {
 					leadMaster.setFileType(FilenameUtils.getExtension(file.getOriginalFilename()));
+					
 					fileuploadrepository.save(leadMaster);
 				}
 			}

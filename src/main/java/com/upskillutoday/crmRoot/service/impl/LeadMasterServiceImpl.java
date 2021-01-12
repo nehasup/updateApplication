@@ -11,15 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
+import com.upskillutoday.crmRoot.dto.EmployeeLeadDto;
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.CategoryMaster;
+import com.upskillutoday.crmRoot.model.EmpLead;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.model.RemarkMaster;
 import com.upskillutoday.crmRoot.model.RoleMaster;
 import com.upskillutoday.crmRoot.model.SubCategoryMaster;
+import com.upskillutoday.crmRoot.model.UserMaster;
 import com.upskillutoday.crmRoot.model.UserRole;
 import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
+import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
 import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
 import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
 import com.upskillutoday.crmRoot.repository.RemarkJpaRepository;
@@ -45,6 +50,12 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	
 	@Autowired
 	private LeadJpaMasterRepository leadJpaMasterRepository;
+	
+	@Autowired
+	private EmployeeJpaRepository employeeJpaRepository;
+	
+	@Autowired
+	EmpLeadJpaRepository empleadJparepository;
 
 	@Override
 	public boolean insertLeadService(LeadMasterDto leadMasterDto) {
@@ -77,6 +88,7 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		leadMaster.setInstituteName(leadMasterDto.getInstituteName());
 		leadMaster.setUpdatedOn(new Date());
 		leadMaster.setDeletedFlag(true);
+		leadMaster.setAssignLeadFlag(false);
 		leadMaster.setCategoryMaster(categoryMaster);
 		leadMaster.setSubCategoryMaster(subCategoryMaster);
 		leadMaster.setRemarkMaster(remarkMaster);
@@ -211,10 +223,22 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	@Override
 	public List<LeadMasterDto> getAllLeadListCategoryWiseService(EmployeeMaster employeeMaster) {
 		// TODO Auto-generated method stub
+		List<LeadMaster> leadMasterList =  new ArrayList<LeadMaster>();
+		System.out.println("asdfa"+employeeMaster.getEmployeeName());
+		//if(pageName.equals("Lead")) {
+			System.out.println("leadd");
+			leadMasterList = leadJpaMasterRepository.findByCategoryMasterAndDeletedFlag(employeeMaster.getCategory(), true);
+		//}
 		
-		List<LeadMaster> leadMasterList = leadJpaMasterRepository.findByCategoryMasterAndDeletedFlag(employeeMaster.getCategory(), true);
+//		if(pageName.equals("Assign")) {
+//			System.out.println("asssing");
+//			 //leadMasterList = leadJpaMasterRepository.findByCategoryMasterAndDeletedFlagAndAssignLeadFlag(employeeMaster.getCategory(), true,false);
+//			leadMasterList=leadJpaMasterRepository.findAllAndDeletedFlagAndAssignLeadFlag(true,false);
+//		}
+//		
+		
 		List<LeadMasterDto> leadMasterDtoList = new ArrayList<LeadMasterDto>();
-		
+	
 		if(leadMasterList!=null) {
 			for (LeadMaster leadMaster : leadMasterList) {
 				LeadMasterDto leadMasterDto = new LeadMasterDto();
@@ -236,6 +260,8 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 				leadMasterDto.setUpdatedOn(new Date());
 				leadMasterDto.setDeletedFlag(true);
 				leadMasterDto.setCategoryName(leadMaster.getCategoryMaster().getCategoryName());
+			//	leadMasterDto.setAssignLeadFlag(leadMaster.isAssignLeadFlag());
+				//leadMasterDto.setEmployeeName(employeeMaster.getEmployeeName());
 				//leadMasterDto.setSubCategoryName(leadMaster.getSubCategoryMaster().getSubCategoryName());
 				leadMasterDto.setRemarkName(leadMaster.getRemarkMaster().getRemarkName());
 				
@@ -285,6 +311,74 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 			}
 		}		
 		return leadMasterDtoList;
+	}
+
+	
+	@Override
+	public List<LeadMasterDto> getAllAssignLeadListService(EmployeeMaster employeeMaster) {
+		// TODO Auto-generated method stub
+		
+		///List<LeadMaster> leadMasterList = leadJpaMasterRepository.findByCategoryMasterAndDeletedFlagAndAssignLeadFlag(employeeMaster.getCategory(), true,false);
+	
+		//third table
+		List<EmpLead> emList=empleadJparepository.findByEmployeeMasterAndDeletedFlag(employeeMaster, true);
+		
+		
+		List<LeadMasterDto> leadMasterDtoList = new ArrayList<LeadMasterDto>();
+			if(emList!=null) {
+				for(EmpLead empLead:emList) 
+				{	
+		
+		LeadMaster leadMaster= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(empLead.getLeadMaster().getStudentId(), true);
+		LeadMasterDto leadMasterDto = new LeadMasterDto();
+		
+		leadMasterDto.setStudentId(leadMaster.getStudentId());
+		leadMasterDto.setStudentName(leadMaster.getStudentName());
+		leadMasterDto.setCourseName(leadMaster.getCourseName());
+		leadMasterDto.setContactNo(leadMaster.getContactNo());
+		leadMasterDto.setArea(leadMaster.getArea());
+		leadMasterDto.setCity(leadMaster.getCity());
+		leadMasterDto.setEmailId(leadMaster.getEmailId());
+		leadMasterDto.setModeOfCourse(leadMaster.getModeOfCourse());
+		leadMasterDto.setAddress(leadMaster.getAddress());
+		leadMasterDto.setBudget(leadMaster.getBudget());
+		leadMasterDto.setModificationStage(leadMaster.getModificationStage());
+		leadMasterDto.setRemark(leadMaster.getRemark());
+		leadMasterDto.setComments(leadMaster.getComments());
+		leadMasterDto.setInstituteName(leadMaster.getInstituteName());
+		leadMasterDto.setUpdatedOn(new Date());
+		leadMasterDto.setDeletedFlag(true);
+		leadMasterDto.setEmployeeName(employeeMaster.getEmployeeName());
+		
+		CategoryMaster categoryMaster = categoryJpaRepository.findByCategoryId(leadMaster.getCategoryId());
+		leadMasterDto.setCategoryMaster(categoryMaster);	
+		
+		leadMasterDto.setCategoryName(leadMaster.getCategoryMaster().getCategoryName());
+		leadMasterDto.setCategoryId(leadMaster.getCategoryMaster().getCategoryId());
+		RemarkMaster remarkMaster=remarkJpaRepository.findByRemarkId(leadMaster.getRemarkId());
+
+		
+		leadMasterDto.setRemarkMaster(remarkMaster);
+		
+		//leadMasterDto.setSubCategoryName(leadMaster.getSubCategoryMaster().getSubCategoryName());
+		leadMasterDto.setRemarkName(leadMaster.getRemarkMaster().getRemarkName());
+		leadMasterDto.setRemarkId(leadMaster.getRemarkMaster().getRemarkId());
+		
+		leadMasterDtoList.add(leadMasterDto);
+	
+	}
+		}
+		
+		
+		
+	
+		return leadMasterDtoList;
+	}
+
+	@Override
+	public List<LeadMaster> getAllLeadByAssignFlag() {
+		List<LeadMaster> leadMasterDtos=leadRepostiory.getAllLeadByassignFlag();
+		return leadMasterDtos;
 	}
 
 	

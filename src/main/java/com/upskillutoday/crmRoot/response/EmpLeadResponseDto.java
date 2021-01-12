@@ -4,8 +4,8 @@ import java.util.Date;
 
 
 
-public class LeadResponseDto {
-
+public class EmpLeadResponseDto {
+	
 	 private Long studentId;
 		
 	  private String studentName;
@@ -38,30 +38,28 @@ public class LeadResponseDto {
 	  
 	  private boolean deletedFlag;
 
-	  private String fileType;
+	 
 	  
 	  private String instituteName;
-	  
-	  private Long categoryId;
-	  
-	  private Long subCategoryId;
-	  
-	  private Long remarkId;
-	  	  
-	  private String categoryName;
-		
-	  private String subCategoryName;
-		
-	  private String remarkName;
-	  
+	
 	  private String employeeName;
+	  
 	  
 	  private boolean assignLeadFlag;
 	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
 
-	public LeadResponseDto(Long studentId, String studentName, String contactNo, String emailId, String courseName,
+	
+	public EmpLeadResponseDto(Long studentId, String studentName, String contactNo, String emailId, String courseName,
 			String city, String area, String modeOfCourse, String address, String budget, String modificationStage,
-			String remark, String comments,String instituteName, Long categoryId,String categoryName,Long remarkId,String remarkName) {
+			String remark, String comments,String instituteName,String employeeName, boolean assignLeadFlag) {
+		super();
 		this.studentId = studentId;
 		this.studentName = studentName;
 		this.contactNo = contactNo;
@@ -76,52 +74,27 @@ public class LeadResponseDto {
 		this.remark = remark;
 		this.comments = comments;
 		this.instituteName = instituteName;
-		this.categoryId = categoryId;
-		this.categoryName = categoryName;
-		this.remarkId= remarkId;
-		this.remarkName = remarkName;
-		
+		this.employeeName = employeeName;
+		this.assignLeadFlag = assignLeadFlag;
 	}
-	
-	
-	
-	
-
-
-
-
 
 	public boolean isAssignLeadFlag() {
 		return assignLeadFlag;
 	}
 
-
-
-
-
 	public void setAssignLeadFlag(boolean assignLeadFlag) {
 		this.assignLeadFlag = assignLeadFlag;
 	}
-
-
-
-
 
 	public String getEmployeeName() {
 		return employeeName;
 	}
 
-
-
-
-
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
 	}
 
-
-
-
+	
 
 	public Long getStudentId() {
 		return studentId;
@@ -187,6 +160,33 @@ public class LeadResponseDto {
 		this.modeOfCourse = modeOfCourse;
 	}
 
+	public int getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(int updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	
+	public boolean isDeletedFlag() {
+		return deletedFlag;
+	}
+
+	public void setDeletedFlag(boolean deletedFlag) {
+		this.deletedFlag = deletedFlag;
+	}
+
+	
+
+	public Date getUpdatedOn() {
+		return updatedOn;
+	}
+
+	public void setUpdatedOn(Date updatedOn) {
+		this.updatedOn = updatedOn;
+	}
+
 	public String getAddress() {
 		return address;
 	}
@@ -211,14 +211,6 @@ public class LeadResponseDto {
 		this.modificationStage = modificationStage;
 	}
 
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
 	public String getComments() {
 		return comments;
 	}
@@ -227,36 +219,12 @@ public class LeadResponseDto {
 		this.comments = comments;
 	}
 
-	public int getUpdatedBy() {
-		return updatedBy;
+	public String getRemark() {
+		return remark;
 	}
 
-	public void setUpdatedBy(int updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-	public Date getUpdatedOn() {
-		return updatedOn;
-	}
-
-	public void setUpdatedOn(Date updatedOn) {
-		this.updatedOn = updatedOn;
-	}
-
-	public boolean isDeletedFlag() {
-		return deletedFlag;
-	}
-
-	public void setDeletedFlag(boolean deletedFlag) {
-		this.deletedFlag = deletedFlag;
-	}
-
-	public String getFileType() {
-		return fileType;
-	}
-
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public String getInstituteName() {
@@ -267,54 +235,7 @@ public class LeadResponseDto {
 		this.instituteName = instituteName;
 	}
 
-	public Long getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(Long categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public Long getSubCategoryId() {
-		return subCategoryId;
-	}
-
-	public void setSubCategoryId(Long subCategoryId) {
-		this.subCategoryId = subCategoryId;
-	}
-
-	public Long getRemarkId() {
-		return remarkId;
-	}
-
-	public void setRemarkId(Long remarkId) {
-		this.remarkId = remarkId;
-	}
-
-	public String getCategoryName() {
-		return categoryName;
-	}
-
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
-
-	public String getSubCategoryName() {
-		return subCategoryName;
-	}
-
-	public void setSubCategoryName(String subCategoryName) {
-		this.subCategoryName = subCategoryName;
-	}
-
-	public String getRemarkName() {
-		return remarkName;
-	}
-
-	public void setRemarkName(String remarkName) {
-		this.remarkName = remarkName;
-	}
-		
-		
 	
+	
+
 }

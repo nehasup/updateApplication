@@ -8,6 +8,7 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
@@ -70,7 +71,6 @@ public class LeadMasterRepositoryImpl implements LeadMasterRepository {
             		+"c.categoryName as categoryName,\r\n"
             		+ "rmk.remarkId as remarkId,\r\n"
             		+ "rmk.remarkName as remarkName)"
-//            		+ "subCat.subCategoryId as subCategoryId)"
             		+ " from LeadMaster as lead inner join lead.categoryMaster as c inner join lead.remarkMaster as rmk where lead.deletedFlag=1");
              list = query.getResultList();
 
@@ -108,9 +108,25 @@ try{
            return false;
        }
 }
+
+
+
+	@Override
+	public List<LeadMaster> getAllLeadByassignFlag() {
+		 List<LeadMaster> leadMasterDtos =null;
+		try {
+	            Query query = entityManager.createQuery("Select lead from LeadMaster as lead where lead.deletedFlag=1");
+	            leadMasterDtos = query.getResultList();
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return leadMasterDtos;
+	    }
+	}
 	
 	
 
 
  
-}
+

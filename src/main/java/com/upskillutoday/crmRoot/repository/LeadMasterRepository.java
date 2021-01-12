@@ -2,6 +2,7 @@ package com.upskillutoday.crmRoot.repository;
 
 import java.util.List;
 
+import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.CategoryMaster;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
@@ -17,6 +18,8 @@ public interface LeadMasterRepository {
 	LeadMaster getRecordByStudentIdDao(LeadMaster leadMaster);
 
 	boolean updateLeadRepository(LeadMaster leadMaster);
+
+	public List<LeadMaster> getAllLeadByassignFlag();
 
 	
 

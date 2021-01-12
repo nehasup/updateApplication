@@ -45,6 +45,23 @@ public class EmployeeResponseDto {
 		this.categoryName = categoryName;
 		this.categoryId = categoryId;
 	}
+	
+	
+
+	public EmployeeResponseDto(Long employeeId, String employeeName, String contactNo, String guardianNo,
+			String emailId, String address, Date birthDate, String gender) {
+		super();
+		this.employeeId = employeeId;
+		this.employeeName = employeeName;
+		this.contactNo = contactNo;
+		this.guardianNo = guardianNo;
+		this.emailId = emailId;
+		this.address = address;
+		this.birthDate = birthDate;
+		this.gender = gender;
+	}
+
+
 
 	public Long getEmployeeId() {
 		return employeeId;

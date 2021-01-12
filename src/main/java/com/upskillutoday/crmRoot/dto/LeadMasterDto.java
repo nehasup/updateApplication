@@ -3,6 +3,7 @@ package com.upskillutoday.crmRoot.dto;
 import java.util.Date;
 
 import com.upskillutoday.crmRoot.model.CategoryMaster;
+import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.RemarkMaster;
 import com.upskillutoday.crmRoot.model.SubCategoryMaster;
 
@@ -58,6 +59,42 @@ public class LeadMasterDto {
 	  private RemarkMaster remarkMaster;
 	  
 	  private String remarkName;
+	  
+	  private String employeeName;
+	  
+	  
+	  private boolean assignLeadFlag;
+
+		private Long employeeId;
+	  
+	  
+	  
+	  
+	  
+	
+	public Long getEmployeeId() {
+			return employeeId;
+		}
+
+		public void setEmployeeId(Long employeeId) {
+			this.employeeId = employeeId;
+		}
+
+	public boolean isAssignLeadFlag() {
+		return assignLeadFlag;
+	}
+
+	public void setAssignLeadFlag(boolean assignLeadFlag) {
+		this.assignLeadFlag = assignLeadFlag;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
 
 	public String getRemarkName() {
 		return remarkName;
