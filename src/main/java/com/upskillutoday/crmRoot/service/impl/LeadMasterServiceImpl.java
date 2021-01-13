@@ -111,9 +111,83 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	}
 
 	@Override
-	public List getAllLeadRecordService() {
-        List  list=leadRepostiory.getAllLeadListDao();
-        return list;
+	public List<LeadMasterDto> getAllLeadRecordService() {
+      //  List  list=leadRepostiory.getAllLeadListDao();
+		
+		
+     
+        
+		//List<LeadMaster> leadMasterlist = leadMasterService.getAllLeadByAssignFlag();
+		List<LeadMaster> leadMasterlist=leadRepostiory.getAllLeadByassignFlag();
+		
+		
+		List<EmpLead> empList =  new ArrayList<EmpLead>();
+		
+		empList=empleadJparepository.findByDeletedFlag(true);
+		
+		List<LeadMasterDto> leadMasterarraylist = new ArrayList<LeadMasterDto>();
+		if(leadMasterlist!=null) {
+			for(LeadMaster lead:leadMasterlist) {
+				
+				Long studentId=lead.getStudentId();
+				
+				LeadMaster leadMaster= leadJpaMasterRepository.findByStudentId(studentId);
+				if(leadMaster==null) {
+				System.out.println("not list");	
+				}else {
+					LeadMasterDto leadMasterDto1 = new LeadMasterDto();
+					EmpLead empLead1 = empleadJparepository.findByLeadMaster(leadMaster);
+						if(empLead1==null) {
+								leadMasterDto1.setEmployeeName("Not Assign");
+								leadMasterDto1.setEmployeeId(null);
+				
+							}else {
+								EmployeeMaster employeeMaster = employeeJpaRepository.findByEmployeeIdAndDeletedFlag(empLead1.getEmployeeMaster().getEmployeeId(), true);
+				
+								leadMasterDto1.setEmployeeName(employeeMaster.getEmployeeName());
+								leadMasterDto1.setEmployeeId(employeeMaster.getEmployeeId());
+								}
+					
+				
+		        	 
+					leadMasterDto1.setStudentId(leadMaster.getStudentId());
+					leadMasterDto1.setStudentName(leadMaster.getStudentName());
+					leadMasterDto1.setCourseName(leadMaster.getCourseName());
+					leadMasterDto1.setContactNo(leadMaster.getContactNo());
+					leadMasterDto1.setArea(leadMaster.getArea());
+					leadMasterDto1.setCity(leadMaster.getCity());
+					leadMasterDto1.setEmailId(leadMaster.getEmailId());
+					leadMasterDto1.setModeOfCourse(leadMaster.getModeOfCourse());
+					leadMasterDto1.setAddress(leadMaster.getAddress());
+					leadMasterDto1.setBudget(leadMaster.getBudget());		
+					leadMasterDto1.setComments(leadMaster.getComments());
+					leadMasterDto1.setInstituteName(leadMaster.getInstituteName());
+					
+					CategoryMaster categoryMaster = categoryJpaRepository.findByCategoryId(leadMaster.getCategoryMaster().getCategoryId());
+					//leadMasterDto1.setCategoryMaster(categoryMaster);
+					leadMasterDto1.setCategoryName(categoryMaster.getCategoryName());
+					leadMasterDto1.setCategoryId(categoryMaster.getCategoryId());
+					
+					RemarkMaster remarkMaster = remarkJpaRepository.findByRemarkId(leadMaster.getRemarkMaster().getRemarkId());
+				//	leadMasterDto1.setRemarkMaster(remarkMaster);
+					leadMasterDto1.setRemarkId(remarkMaster.getRemarkId());
+					leadMasterDto1.setRemarkName(remarkMaster.getRemarkName());
+				
+				
+		     		//leadMaster.setUpdatedOn(new Date());
+		     		//leadMaster.setDeletedFlag(true);
+		     		//leadMaster.setAssignLeadFlag(false);
+					
+					leadMasterarraylist.add(leadMasterDto1);      
+					
+				}
+				
+			}
+				}
+				
+				
+			
+		return leadMasterarraylist;
     }
 	
 	@Override
@@ -261,7 +335,7 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 				leadMasterDto.setDeletedFlag(true);
 				leadMasterDto.setCategoryName(leadMaster.getCategoryMaster().getCategoryName());
 			//	leadMasterDto.setAssignLeadFlag(leadMaster.isAssignLeadFlag());
-				//leadMasterDto.setEmployeeName(employeeMaster.getEmployeeName());
+				leadMasterDto.setEmployeeName(employeeMaster.getEmployeeName());
 				//leadMasterDto.setSubCategoryName(leadMaster.getSubCategoryMaster().getSubCategoryName());
 				leadMasterDto.setRemarkName(leadMaster.getRemarkMaster().getRemarkName());
 				
