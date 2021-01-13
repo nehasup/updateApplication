@@ -22,20 +22,16 @@ public class RemarkServiceImpl implements RemarkService {
 	public boolean insertRemarkService(RemarkDto remarkDto) {
 		RemarkMaster remark =new RemarkMaster();
 		remark.setRemarkName(remarkDto.getRemarkName());
-	
 	    Date date = new Date();
 	    remark.setUpdatedOn(date);
 	    remark.setDeletedFlag(true);
-        
-
         boolean flag=remarkRepository.insertRemarkDao(remark);
-
         return flag;
 	}
 
 	@Override
 	public List getAllRecordRemarkService() {
-		List  list=remarkRepository.getRemarkListDao();
+		List  list = remarkRepository.getRemarkListDao();
         return list;
 	}
 
@@ -45,12 +41,18 @@ public class RemarkServiceImpl implements RemarkService {
 		RemarkMaster remark = new RemarkMaster();
 		remark.setRemarkId(remarkDto.getRemarkId());
 	    
-		boolean flag=remarkRepository.getRecordByRemarkIdDao(remark);   
+		boolean flag = remarkRepository.getRecordByRemarkIdDao(remark);
         remarkDto.setRemarkName(remark.getRemarkName());
       
         return flag;
 	}
-	
-	
 
+	@Override
+	public String getRemarkStatus(Long id) {
+		for(Object remarkMaster : this.getAllRecordRemarkService()) {
+			if(id.equals(((RemarkMaster)remarkMaster).getRemarkId()))
+				return ((RemarkMaster)remarkMaster).getRemarkName();
+		}
+		return null;
+	}
 }

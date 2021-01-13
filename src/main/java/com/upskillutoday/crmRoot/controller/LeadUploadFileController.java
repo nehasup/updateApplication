@@ -10,6 +10,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.upskillutoday.crmRoot.response.*;
+import com.upskillutoday.crmRoot.service.RemarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,9 +43,6 @@ import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
 import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
 import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
 import com.upskillutoday.crmRoot.repository.UserMasterRepository;
-import com.upskillutoday.crmRoot.response.EmpLeadResponseDto;
-import com.upskillutoday.crmRoot.response.ResponseMessage;
-import com.upskillutoday.crmRoot.response.ResponseVO;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
@@ -75,6 +74,9 @@ public class LeadUploadFileController {
 	
 	@Autowired
 	EmpLeadService empLeadService;
+
+	@Autowired
+	RemarkService remarkService;
 
 	//import excel sheet
 	@PostMapping("/upload")
@@ -290,11 +292,7 @@ public class LeadUploadFileController {
 	 //update Lead by id
 	 @PutMapping("/updateLeadByid/{id}")
 	 @ResponseBody public ResponseVO updateLeadController(@PathVariable(value = "id") Long studentId,@RequestBody LeadMasterDto leadMasterDto) throws ResourceNotFoundException {
-		 
 		 ResponseVO<LeadMasterDto> responseVO = new ResponseVO<LeadMasterDto>();
-		 
-		
-		 
 		 boolean flag = leadMasterService.updateLeadService(leadMasterDto);
 		 
 		
@@ -414,9 +412,16 @@ public class LeadUploadFileController {
 	        return response;
 	    }
 	  
-	
-	
+	//get lead report by laukik
+		@GetMapping("/leadSentReport")
+		public ArrayList<LeadReportRes> LeadSentReport() {
+			List<LeadResponseDto> leadMasterList = leadMasterService.getAllLeadRecordService();
+			ArrayList<LeadReportRes> leadReportRess = new ArrayList<>();
+			for(LeadResponseDto leadMaster : leadMasterList) {
+				String status = remarkService.getRemarkStatus(leadMaster.getRemarkId());
+				leadReportRess.add(new LeadReportRes(leadMaster.getStudentName(), leadMaster.getContactNo(), leadMaster.getCity(), leadMaster.getArea(), leadMaster.getAddress(), leadMaster.getEmailId(), leadMaster.getCourseName(), leadMaster.getComments(), leadMaster.getInstituteName(), status));
+			}
+			return leadReportRess;
+		}
 
-	 
-	
 }
