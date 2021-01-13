@@ -173,7 +173,8 @@ public class LeadUploadFileController {
 		        		else {
 		        			//Admin // All leads
 		        			
-		        			List list=leadMasterService.getAllLeadRecordService();
+		        			//List list=leadMasterService.getAllLeadRecordService();
+		        			List<LeadMasterDto> list = leadMasterService.getAllLeadRecordService();
 		        		
 		        			if(list!=null) {
 		        				 response.setResult(list);

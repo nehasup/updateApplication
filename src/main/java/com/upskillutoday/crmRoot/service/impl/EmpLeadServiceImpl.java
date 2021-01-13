@@ -118,52 +118,7 @@ public class EmpLeadServiceImpl implements EmpLeadService {
 				}
 				
 				
-		
-		
-		
-//		
-//        for(EmpLead empLead:empList) {
-//        	LeadMasterDto leadMasterDto = new LeadMasterDto();
-//        	 LeadMaster leadMaster= leadJpaMasterRepository.findByStudentId(empLead.getLeadMaster().getStudentId());
-//        	 
-//        	 
-//        	 String employeeNames=empLead.getEmployeeMaster().getEmployeeName();
-//        	 
-//        	 leadMasterDto.setEmployeeName(empLead.getEmployeeMaster().getEmployeeName());
-//        	 
-//        	 
-//        	 
-//        	 
-//        	 
-//        	 leadMasterDto.setStudentId(leadMaster.getStudentId());
-//        	 leadMasterDto.setStudentName(leadMaster.getStudentName());
-//        	 
-//        
-//        	 leadMasterDto.setCourseName(leadMaster.getCourseName());
-//        	 leadMasterDto.setContactNo(leadMaster.getContactNo());
-//        	 leadMasterDto.setArea(leadMaster.getArea());
-//        	 leadMasterDto.setCity(leadMaster.getCity());
-//        	 leadMasterDto.setEmailId(leadMaster.getEmailId());
-//        	 leadMasterDto.setModeOfCourse(leadMaster.getModeOfCourse());
-//        	 leadMasterDto.setAddress(leadMaster.getAddress());
-//        	 leadMasterDto.setBudget(leadMaster.getBudget());
-//     		
-//        	 leadMasterDto.setComments(leadMaster.getComments());
-//        	 leadMasterDto.setInstituteName(leadMaster.getInstituteName());
-//     		//leadMaster.setUpdatedOn(new Date());
-//     		//leadMaster.setDeletedFlag(true);
-//     		//leadMaster.setAssignLeadFlag(false);
-//     		
-////     		
-////     		leadMasterDto.setCategoryMaster(categoryMaster);
-////     		leadMasterDto.setSubCategoryMaster(subCategoryMaster);
-////     		leadMasterDto.setRemarkMaster(remarkMaster);
-//        	 
-//        	 
-//        	 
-//        	 
-//        	// leadMasterDtos.add(leadMasterDto);        	 
-//        }		
+			
 		return leadMasterDtos;
 	}
 	

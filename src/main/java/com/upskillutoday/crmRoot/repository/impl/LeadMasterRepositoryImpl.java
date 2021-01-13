@@ -50,8 +50,8 @@ public class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	
 	
 	@Override
-    public List getAllLeadListDao() {
-        List<String> list = null;
+    public List<LeadMaster> getAllLeadListDao() {
+        List<LeadMaster> list = null;
         try {
             Query query = entityManager.createQuery("Select NEW com.upskillutoday.crmRoot.response.LeadResponseDto(lead.studentId as studentId,\r\n"
             		+ "lead.studentName as studentName,\r\n"
