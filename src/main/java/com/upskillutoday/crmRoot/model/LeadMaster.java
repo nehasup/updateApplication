@@ -72,7 +72,7 @@ public class LeadMaster {
 	  private int updatedBy;
 	  
 	  @Column(name="updatedOn")	 
-	  @Temporal(TemporalType.TIMESTAMP)
+	  @Temporal(TemporalType.DATE)
 	  private Date updatedOn;
 	  
 	  @Column(name="deleted_flag") 

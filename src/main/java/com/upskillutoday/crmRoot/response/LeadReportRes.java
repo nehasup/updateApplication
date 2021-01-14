@@ -14,6 +14,8 @@ public class LeadReportRes {
     private String comments;
     private String instituteName;
     private String leadStatus;
+    private String updatedOn;
+    
 
     public String getArea() {
         return area;
@@ -53,6 +55,7 @@ public class LeadReportRes {
         this.comments = comments;
         this.instituteName = instituteName;
         this.leadStatus = leadStatus;
+       
     }
 
     public String getStudentName() {

@@ -55,7 +55,7 @@ public class EmployeeMaster {
 	private int updatedBy;
 
 	@Column(name = "updated_on")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date updatedOn;
 
 	@Column(name = "deleted_flag")

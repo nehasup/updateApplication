@@ -1,5 +1,6 @@
 package com.upskillutoday.crmRoot.controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
 import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
 import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
 import com.upskillutoday.crmRoot.repository.UserMasterRepository;
+import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
@@ -413,16 +415,6 @@ public class LeadUploadFileController {
 	        return response;
 	    }
 	  
-	//get lead report by laukik
-		@GetMapping("/leadSentReport")
-		public ArrayList<LeadReportRes> LeadSentReport() {
-			List<LeadResponseDto> leadMasterList = leadMasterService.getAllLeadRecordService();
-			ArrayList<LeadReportRes> leadReportRess = new ArrayList<>();
-			for(LeadResponseDto leadMaster : leadMasterList) {
-				String status = remarkService.getRemarkStatus(leadMaster.getRemarkId());
-				leadReportRess.add(new LeadReportRes(leadMaster.getStudentName(), leadMaster.getContactNo(), leadMaster.getCity(), leadMaster.getArea(), leadMaster.getAddress(), leadMaster.getEmailId(), leadMaster.getCourseName(), leadMaster.getComments(), leadMaster.getInstituteName(), status));
-			}
-			return leadReportRess;
-		}
+	
 
 }
