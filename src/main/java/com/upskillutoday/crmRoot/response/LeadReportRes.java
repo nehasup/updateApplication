@@ -15,9 +15,28 @@ public class LeadReportRes {
     private String instituteName;
     private String leadStatus;
     private String updatedOn;
+    private String employeeName;
+    
+    
     
 
-    public String getArea() {
+    public String getUpdatedOn() {
+		return updatedOn;
+	}
+
+	public void setUpdatedOn(String updatedOn) {
+		this.updatedOn = updatedOn;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+	public String getArea() {
         return area;
     }
 
@@ -44,7 +63,7 @@ public class LeadReportRes {
     public LeadReportRes() {
     }
 
-    public LeadReportRes(String studentName, String contactNo, String city, String area, String address, String emailId, String courseName, String comments, String instituteName, String leadStatus) {
+    public LeadReportRes(String studentName, String contactNo, String city, String area, String address, String emailId, String courseName, String comments, String instituteName, String leadStatus,String employeeName) {
         this.studentName = studentName;
         this.contactNo = contactNo;
         this.city = city;
@@ -55,7 +74,7 @@ public class LeadReportRes {
         this.comments = comments;
         this.instituteName = instituteName;
         this.leadStatus = leadStatus;
-       
+        this.employeeName=employeeName;
     }
 
     public String getStudentName() {

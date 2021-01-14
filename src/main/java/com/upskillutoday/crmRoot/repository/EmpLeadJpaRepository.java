@@ -23,6 +23,8 @@ public interface EmpLeadJpaRepository extends JpaRepository<EmpLead, Long>{
 //	EmpLead findByLeadMaster(long studentId);
 
 	EmpLead findByLeadMaster(LeadMaster leadMaster);
+
+	
 	
 //	@Query(value = "SELECT lead FROM LeadMaster lead where lead.deletedFlag=true and lead.assignLeadFlag=false")
 //	//List<User> findAllUsers(Sort sort);

@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
+import com.upskillutoday.crmRoot.model.EmpLead;
+import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.repository.DailyLeadReportRepository;
+import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
+import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
 import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
 import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
 import com.upskillutoday.crmRoot.response.LeadReportRes;
@@ -32,6 +36,13 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 	
 	@Autowired
 	private RemarkService remarkService;
+	
+	@Autowired
+	private EmpLeadJpaRepository empLeadJpaRepository;
+	
+	@Autowired
+	private EmployeeJpaRepository employeeJpaRepository;
+	
 
 	@Override
 	public List<LeadReportRes> getDailyLeadReportService(DailyLeadReportDto dailyLeadReportDto) throws ParseException {
@@ -39,16 +50,25 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 		List<LeadMaster> leadMasterList = dailyLeadReportRepository.findByUpdatedOn(dailyLeadReportDto.getUpdatedOn());
 		ArrayList<LeadReportRes> leadReportRess = new ArrayList<>();
 
-
+		
 
 		for(LeadMaster leadMaster : leadMasterList) {
-			String status = remarkService.getRemarkStatus(leadMaster.getRemarkMaster().getRemarkId());
-			leadReportRess.add(new LeadReportRes(leadMaster.getStudentName(), 
-					leadMaster.getContactNo(), 
-					leadMaster.getCity(),
-					leadMaster.getArea(), leadMaster.getAddress(), 
-					leadMaster.getEmailId(), leadMaster.getCourseName(), leadMaster.getComments(), 
-					leadMaster.getInstituteName(), status));
+			
+			EmpLead empLead =empLeadJpaRepository.findByLeadMaster(leadMaster);
+			if(empLead!=null) {
+				
+		
+				EmployeeMaster employeeMaster =employeeJpaRepository.findByEmployeeIdAndDeletedFlag(empLead.getEmployeeMaster().getEmployeeId(), true);
+				String status = remarkService.getRemarkStatus(leadMaster.getRemarkMaster().getRemarkId());
+				leadReportRess.add(new LeadReportRes(leadMaster.getStudentName(), 
+						leadMaster.getContactNo(), 
+						leadMaster.getCity(),
+						leadMaster.getArea(), leadMaster.getAddress(), 
+						leadMaster.getEmailId(), leadMaster.getCourseName(), leadMaster.getComments(), 
+						leadMaster.getInstituteName(), status,employeeMaster.getEmployeeName()));
+			}
+		
+		
 		}
 		
 		return leadReportRess;
