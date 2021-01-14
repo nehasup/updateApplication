@@ -10,8 +10,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.upskillutoday.crmRoot.exception.ErrorDetails;
+import com.upskillutoday.crmRoot.model.*;
+import com.upskillutoday.crmRoot.repository.*;
 import com.upskillutoday.crmRoot.response.*;
-import com.upskillutoday.crmRoot.service.RemarkService;
+import com.upskillutoday.crmRoot.service.*;
+import com.upskillutoday.crmRoot.service.impl.EmpCategyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,17 +39,6 @@ import com.upskillutoday.crmRoot.dto.EmployeeDto;
 import com.upskillutoday.crmRoot.dto.EmployeeLeadDto;
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
-import com.upskillutoday.crmRoot.model.EmpLead;
-import com.upskillutoday.crmRoot.model.EmployeeMaster;
-import com.upskillutoday.crmRoot.model.LeadMaster;
-import com.upskillutoday.crmRoot.model.UserMaster;
-import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
-import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
-import com.upskillutoday.crmRoot.repository.UserMasterRepository;
-import com.upskillutoday.crmRoot.service.EmpLeadService;
-import com.upskillutoday.crmRoot.service.FileStorageService;
-import com.upskillutoday.crmRoot.service.LeadMasterService;
 import com.upskillutoday.crmRoot.util.SessionUtils;
 ;
 
@@ -77,6 +70,12 @@ public class LeadUploadFileController {
 
 	@Autowired
 	RemarkService remarkService;
+
+	@Autowired
+	EmpCategyServiceImpl empCategyService;
+
+	@Autowired
+	RoleRepository roleRepository;
 
 	//import excel sheet
 	@PostMapping("/upload")
@@ -151,52 +150,83 @@ public class LeadUploadFileController {
 	        ResponseVO<List> response=new ResponseVO<List>();
 	        System.out.println("List Successfully!!");
 	        //user obj
-	        if(userId!=null) {
-		        UserMaster userMaster = userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true);
-		        if(userMaster!=null) {
-		        	EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMaster);
-		        	if(employeeMaster!=null) {
-		        		if(employeeMaster.getCategory()!=null && !employeeMaster.getCategory().equals("") ) {
-		        			//Cousler     //Category based leads
-		        			//List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster, pageName);
-		        			List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
-		        			if(leadMasterDtoList!=null) {
-		        				response.setResult(leadMasterDtoList);
-		        			}
-		        			else {
-		        				//Data not present
-		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
-		        				response.setMessage("Data is not Present");	
-		        				response.setResult(leadMasterDtoList);
-		        			}		        			
-		        		}		        
-		        		else {
-		        			//Admin // All leads
-		        			
-		        			//List list=leadMasterService.getAllLeadRecordService();
-		        			List<LeadMasterDto> list = leadMasterService.getAllLeadRecordService();
-		        		
-		        			if(list!=null) {
-		        				 response.setResult(list);
-		        			}
-		        			else {
-		        				//Data not present
-		        				 response.setResult(list);
-		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
-		        				response.setMessage("Data is not Present");		        				
-		        			}
-		      			   
-		        			
-		        		}
-		        		
-		        	}
-		        }
-	        
-	        }
-	        
-	        
-			  
-			
+
+		 try {
+			 EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
+			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
+			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
+				//Admin // All leads
+//						 List list=leadMasterService.getAllLeadRecordService();
+				 List list = leadMasterService.getAllLeadRecordService();
+
+				 if(list!=null) {
+					 response.setResult(list);
+				 }
+				 else {
+					 //Data not present
+					 response.setResult(list);
+					 response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+					 response.setMessage("Data is not Present");
+				 }
+			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
+				// Cousler     //Category based leads
+//				 List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster, pageName);
+				 List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
+				 if(leadMasterDtoList!=null) {
+					 response.setResult(leadMasterDtoList);
+				 }
+				 else {
+					 //Data not present
+					 response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+					 response.setMessage("Data is not Present");
+					 response.setResult(leadMasterDtoList);
+				 }
+			}
+
+		 } catch (NullPointerException nullPointerException) {}
+
+//		 if(userId!=null) {
+//			 UserMaster userMaster = userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true);
+//			 if(userMaster!=null) {
+//				 EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMaster);
+//				 if(employeeMaster!=null) {
+//					 if(empCategyService.isEmployeeHasCategory(employeeMaster.getEmployeeId())) {
+//						 //Cousler     //Category based leads
+//						 //List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster, pageName);
+//						 List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
+//						 if(leadMasterDtoList!=null) {
+//							 response.setResult(leadMasterDtoList);
+//						 }
+//						 else {
+//							 //Data not present
+//							 response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+//							 response.setMessage("Data is not Present");
+//							 response.setResult(leadMasterDtoList);
+//						 }
+//					 }
+//					 else {
+//						 //Admin // All leads
+//
+//						 //List list=leadMasterService.getAllLeadRecordService();
+//						 List<LeadMasterDto> list = leadMasterService.getAllLeadRecordService();
+//
+//						 if(list!=null) {
+//							 response.setResult(list);
+//						 }
+//						 else {
+//							 //Data not present
+//							 response.setResult(list);
+//							 response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+//							 response.setMessage("Data is not Present");
+//						 }
+//
+//
+//					 }
+//
+//				 }
+//			 }
+//
+//		 }
 
 	        return response;
 	    }
@@ -206,50 +236,77 @@ public class LeadUploadFileController {
 		 System.out.println("user"+userId);
 	        ResponseVO<List> response=new ResponseVO<List>();
 	        System.out.println("List Successfully!!");
-	        //user obj
-	        if(userId!=null) {
-		        UserMaster userMaster = userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true);
-		        if(userMaster!=null) {
-		        	EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMaster);
-		        	if(employeeMaster!=null) {
-		        		if(employeeMaster.getCategory()!=null && !employeeMaster.getCategory().equals("") ) {
-		        			//Cousler     //Category based leads
-		        			List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getCategoryWiseandverifyLeadService(employeeMaster);
-		        			if(leadMasterDtoList!=null) {
-		        				response.setResult(leadMasterDtoList);
-		        			}
-		        			else {
-		        				//Data not present
-		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
-		        				response.setMessage("Data is not Present");	
-		        				response.setResult(leadMasterDtoList);
-		        			}		        			
-		        		}		        
-		        		else {
-		        			//Admin // All leads
-		        			List list=leadMasterService.getAllLeadRecordService();
-		        			if(list!=null) {
-		        				 response.setResult(list);
-		        			}
-		        			else {
-		        				//Data not present
-		        				 response.setResult(list);
-		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
-		        				response.setMessage("Data is not Present");		        				
-		        			}
-		      			   
-		        			
-		        		}
-		        	}
-		        }
-		        
-	        
-	        }
-	        
-	        
-	        
-			  
-			
+
+		 try {
+			 EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
+			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
+			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
+//				 Admin // All leads
+					List list=leadMasterService.getAllLeadRecordService();
+					if(list!=null) {
+						 response.setResult(list);
+					}
+					else {
+						//Data not present
+						 response.setResult(list);
+						response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+						response.setMessage("Data is not Present");
+					}
+			 } else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
+				 //Cousler     //Category based leads
+					List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getCategoryWiseandverifyLeadService(employeeMaster);
+					if(leadMasterDtoList!=null) {
+						response.setResult(leadMasterDtoList);
+					}
+					else {
+						//Data not present
+						response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+						response.setMessage("Data is not Present");
+						response.setResult(leadMasterDtoList);
+					}
+			 }
+
+		 } catch (NullPointerException nullPointerException) {}
+
+//	        //user obj
+//	        if(userId!=null) {
+//		        UserMaster userMaster = userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true);
+//		        if(userMaster!=null) {
+//		        	EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMaster);
+//		        	if(employeeMaster!=null) {
+//		        		if(empCategyService.isEmployeeHasCategory(employeeMaster.getEmployeeId())) {
+//		        			//Cousler     //Category based leads
+//		        			List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getCategoryWiseandverifyLeadService(employeeMaster);
+//		        			if(leadMasterDtoList!=null) {
+//		        				response.setResult(leadMasterDtoList);
+//		        			}
+//		        			else {
+//		        				//Data not present
+//		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+//		        				response.setMessage("Data is not Present");
+//		        				response.setResult(leadMasterDtoList);
+//		        			}
+//		        		}
+//		        		else {
+//		        			//Admin // All leads
+//		        			List list=leadMasterService.getAllLeadRecordService();
+//		        			if(list!=null) {
+//		        				 response.setResult(list);
+//		        			}
+//		        			else {
+//		        				//Data not present
+//		        				 response.setResult(list);
+//		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+//		        				response.setMessage("Data is not Present");
+//		        			}
+//
+//
+//		        		}
+//		        	}
+//		        }
+//
+//
+//	        }
 
 	        return response;
 	    }
@@ -371,44 +428,77 @@ public class LeadUploadFileController {
 		 System.out.println("user"+userId);
 	        ResponseVO<List> response=new ResponseVO<List>();
 	        System.out.println("List Successfully!!");
-	        //user obj
-	        if(userId!=null) {
-		        UserMaster userMaster = userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true);
-		        if(userMaster!=null) {
-		        	EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMaster);
-		        	if(employeeMaster!=null) {
-		        		if(employeeMaster.getCategory()!=null && !employeeMaster.getCategory().equals("") ) {
-		        			        		
-		        		List<LeadMasterDto> leadMasterDtoList=leadMasterService.getAllAssignLeadListService(employeeMaster);
-		        			if(leadMasterDtoList!=null) {
-		        				response.setResult(leadMasterDtoList);
-		        			}
-		        			else {
-		        				//Data not present
-		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
-		        				response.setMessage("Data is not Present");	
-		        				response.setResult(leadMasterDtoList);
-		        			}		        			
-		        		}		        
-		        		else {
-		        			//Admin // All leads
-		        			//List list=leadMasterService.getAllLeadRecordService();
-		        			List<LeadMasterDto> list =empLeadService.getAllAssignEmpLeadRecordService();
-		        			if(list!=null) {
-		        				 response.setResult(list);
-		        			}
-		        			else {
-		        				//Data not present
-		        				 response.setResult(list);
-		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
-		        				response.setMessage("Data is not Present");		        				
-		        			}
-		      			   
-		        			
-		        		}
-		        	}
-		        	}
-		        }
+
+		 try {
+			 EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
+			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
+			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
+				//Admin // All leads
+				//List list=leadMasterService.getAllLeadRecordService();
+				List<LeadMasterDto> list =empLeadService.getAllAssignEmpLeadRecordService();
+				if(list!=null) {
+					 response.setResult(list);
+				}
+				else {
+					//Data not present
+					 response.setResult(list);
+					response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+					response.setMessage("Data is not Present");
+				}
+			 } else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
+				 //Cousler     //Category based leads
+				 List<LeadMasterDto> leadMasterDtoList=leadMasterService.getAllAssignLeadListService(employeeMaster);
+				if(leadMasterDtoList!=null) {
+					response.setResult(leadMasterDtoList);
+				}
+				else {
+					//Data not present
+					response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+					response.setMessage("Data is not Present");
+					response.setResult(leadMasterDtoList);
+				}
+			 }
+
+		 } catch (NullPointerException nullPointerException) {}
+
+//	        //user obj
+//	        if(userId!=null) {
+//		        UserMaster userMaster = userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true);
+//		        if(userMaster!=null) {
+//		        	EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMaster);
+//		        	if(employeeMaster!=null) {
+//		        		if(empCategyService.isEmployeeHasCategory(employeeMaster.getEmployeeId())) {
+//
+//		        		List<LeadMasterDto> leadMasterDtoList=leadMasterService.getAllAssignLeadListService(employeeMaster);
+//		        			if(leadMasterDtoList!=null) {
+//		        				response.setResult(leadMasterDtoList);
+//		        			}
+//		        			else {
+//		        				//Data not present
+//		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+//		        				response.setMessage("Data is not Present");
+//		        				response.setResult(leadMasterDtoList);
+//		        			}
+//		        		}
+//		        		else {
+//		        			//Admin // All leads
+//		        			//List list=leadMasterService.getAllLeadRecordService();
+//		        			List<LeadMasterDto> list =empLeadService.getAllAssignEmpLeadRecordService();
+//		        			if(list!=null) {
+//		        				 response.setResult(list);
+//		        			}
+//		        			else {
+//		        				//Data not present
+//		        				 response.setResult(list);
+//		        				response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+//		        				response.setMessage("Data is not Present");
+//		        			}
+//
+//
+//		        		}
+//		        	}
+//		        	}
+//		        }
 	        
 	        return response;
 	    }

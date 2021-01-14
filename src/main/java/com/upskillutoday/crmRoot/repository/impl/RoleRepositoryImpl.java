@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.upskillutoday.crmRoot.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
@@ -78,7 +79,12 @@ public class RoleRepositoryImpl implements RoleRepository {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
+
+	@Override
+	public Long getRoleIdFromUserId(Long userId) {
+		Query query = entityManager.createQuery("SELECT role.roleId FROM UserRole as u inner join u.users as user inner join u.roles as role WHERE user.userId = " + userId);
+		return (Long) query.getSingleResult();
+	}
+
 
 }

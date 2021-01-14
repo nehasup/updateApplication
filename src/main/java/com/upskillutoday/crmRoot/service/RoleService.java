@@ -10,4 +10,6 @@ public interface RoleService {
 
 	List getAllRoleService();
 
+	Long roleIdByEmpId(Long empId);
+
 }

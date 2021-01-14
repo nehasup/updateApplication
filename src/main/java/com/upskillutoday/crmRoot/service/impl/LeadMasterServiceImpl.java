@@ -7,28 +7,14 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.upskillutoday.crmRoot.model.*;
+import com.upskillutoday.crmRoot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
 import com.upskillutoday.crmRoot.dto.EmployeeLeadDto;
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
-import com.upskillutoday.crmRoot.model.CategoryMaster;
-import com.upskillutoday.crmRoot.model.EmpLead;
-import com.upskillutoday.crmRoot.model.EmployeeMaster;
-import com.upskillutoday.crmRoot.model.LeadMaster;
-import com.upskillutoday.crmRoot.model.RemarkMaster;
-import com.upskillutoday.crmRoot.model.RoleMaster;
-import com.upskillutoday.crmRoot.model.SubCategoryMaster;
-import com.upskillutoday.crmRoot.model.UserMaster;
-import com.upskillutoday.crmRoot.model.UserRole;
-import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
-import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
-import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
-import com.upskillutoday.crmRoot.repository.RemarkJpaRepository;
-import com.upskillutoday.crmRoot.repository.SubCategoryJpaRepository;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
 
 
@@ -56,6 +42,9 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	
 	@Autowired
 	EmpLeadJpaRepository empleadJparepository;
+
+	@Autowired
+	EmpCategyRepository empCategyRepository;
 
 	@Override
 	public boolean insertLeadService(LeadMasterDto leadMasterDto) {
@@ -301,7 +290,13 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		System.out.println("asdfa"+employeeMaster.getEmployeeName());
 		//if(pageName.equals("Lead")) {
 			System.out.println("leadd");
-			leadMasterList = leadJpaMasterRepository.findByCategoryMasterAndDeletedFlag(employeeMaster.getCategory(), true);
+
+			ArrayList<EmpCategy> list = (ArrayList<EmpCategy>) empCategyRepository.findAll();
+			for(EmpCategy empCategy : list) {
+				if(empCategy.getEmployeeMaster().getEmployeeId().equals(employeeMaster.getEmployeeId()))
+					leadMasterList.addAll(leadJpaMasterRepository.findByCategoryMasterAndDeletedFlag(empCategy.getCategoryMaster(), true));
+			}
+
 		//}
 		
 //		if(pageName.equals("Assign")) {
@@ -353,7 +348,12 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		
 		RemarkMaster remarkMaster = remarkJpaRepository.findByRemarkId((long) 7);
 		
-		List<LeadMaster> leadMasterList = leadJpaMasterRepository.findByCategoryMasterAndRemarkMasterAndDeletedFlag(employeeMaster.getCategory(),remarkMaster, true);
+		List<LeadMaster> leadMasterList = new ArrayList<>();
+		ArrayList<EmpCategy> list = (ArrayList<EmpCategy>) empCategyRepository.findAll();
+		for(EmpCategy empCategy : list) {
+			if(empCategy.getEmployeeMaster().getEmployeeId().equals(employeeMaster.getEmployeeId()))
+				leadMasterList.addAll(leadJpaMasterRepository.findByCategoryMasterAndRemarkMasterAndDeletedFlag(empCategy.getCategoryMaster(),remarkMaster, true));
+		}
 
 		List<LeadMasterDto> leadMasterDtoList = new ArrayList<LeadMasterDto>();
 		
@@ -425,13 +425,12 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		leadMasterDto.setEmployeeName(employeeMaster.getEmployeeName());
 		
 		CategoryMaster categoryMaster = categoryJpaRepository.findByCategoryId(leadMaster.getCategoryId());
-		leadMasterDto.setCategoryMaster(categoryMaster);	
-		
+		leadMasterDto.setCategoryMaster(categoryMaster);
 		leadMasterDto.setCategoryName(leadMaster.getCategoryMaster().getCategoryName());
 		leadMasterDto.setCategoryId(leadMaster.getCategoryMaster().getCategoryId());
+
 		RemarkMaster remarkMaster=remarkJpaRepository.findByRemarkId(leadMaster.getRemarkId());
 
-		
 		leadMasterDto.setRemarkMaster(remarkMaster);
 		
 		//leadMasterDto.setSubCategoryName(leadMaster.getSubCategoryMaster().getSubCategoryName());

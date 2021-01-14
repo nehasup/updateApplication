@@ -101,5 +101,17 @@ public class CategoryServiceImpl implements CategoryService {
 
         return flag;
     }
-	
+
+    // Added By Laukik
+	@Override
+	public CategoryMaster getCatgoryById(Long id) {
+		List list = categoryRepository.getCategoryListDao();
+		for(CategoryMaster categoryMaster : ((List<CategoryMaster>) list)) {
+			if(id.equals(categoryMaster.getCategoryId()))
+				return categoryMaster;
+		}
+		return null;
+	}
+
+
 }

@@ -41,4 +41,9 @@ public class RoleServiceImpl implements RoleService {
 		return list;
 	}
 
+    @Override
+    public Long roleIdByEmpId(Long empId) {
+        return null;
+    }
+
 }

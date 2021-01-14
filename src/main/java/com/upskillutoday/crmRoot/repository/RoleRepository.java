@@ -15,4 +15,5 @@ public interface RoleRepository {
 	
 	Optional<RoleMaster> findByRoleName(String roleName);
 
+	Long getRoleIdFromUserId(Long userId);
 }

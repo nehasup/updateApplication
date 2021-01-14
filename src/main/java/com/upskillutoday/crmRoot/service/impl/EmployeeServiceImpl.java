@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.upskillutoday.crmRoot.model.*;
+import com.upskillutoday.crmRoot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -14,18 +16,6 @@ import org.springframework.stereotype.Service;
 import com.upskillutoday.crmRoot.common.LoginData;
 import com.upskillutoday.crmRoot.common.WebSession;
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
-import com.upskillutoday.crmRoot.model.CategoryMaster;
-import com.upskillutoday.crmRoot.model.EmployeeMaster;
-import com.upskillutoday.crmRoot.model.RoleMaster;
-import com.upskillutoday.crmRoot.model.UserMaster;
-import com.upskillutoday.crmRoot.model.UserRole;
-import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmployeeRepository;
-import com.upskillutoday.crmRoot.repository.RoleRepository;
-import com.upskillutoday.crmRoot.repository.SubCategoryRepository;
-import com.upskillutoday.crmRoot.repository.UserMasterRepository;
-import com.upskillutoday.crmRoot.repository.UserRoleRepository;
 import com.upskillutoday.crmRoot.request.EmpLoginReqDto;
 import com.upskillutoday.crmRoot.response.EmpLoginResDto;
 
@@ -55,8 +45,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Autowired
 	EmployeeJpaRepository emplJpaRepository;
-	
 
+	@Autowired
+	EmpCategyRepository empCategyRepository;
+
+	@Autowired
+	CategoryServiceImpl categoryService;
 
 	@Override
 	public boolean insertEmployeeService(EmployeeDto employeeDto) throws Exception {
@@ -100,12 +94,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setDeletedFlag(true);
 		
 		//save category id
-		CategoryMaster category = subCategoryRepository.getCategorybyidDao(employeeDto.getCategoryId());	
-		employee.setCategory(category);
-		employee.setUserMaster(user);
+		// Commented By Laukik
+//		CategoryMaster category = subCategoryRepository.getCategorybyidDao(employeeDto.getCategoryId());
+//		employee.setCategory(category);
+//		employee.setUserMaster(user);
 
-		
         boolean flag=employeeRepository.insertEmployeeDao(employee);
+
+        // Added By Laukik
+		for (Long catId: employeeDto.getCategories()) {
+			EmpCategy empCategy = new EmpCategy();
+			empCategy.setEmployeeMaster(employee);
+			empCategy.setCategoryMaster(categoryService.getCatgoryById(catId));
+			empCategyRepository.save(empCategy);
+		}
     
         return flag;
 	}
@@ -140,8 +142,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         	employeeDto2.setEmailId(employee2.getEmailId());
         	employeeDto2.setGuardianNo(employee2.getGuardianNo());
         	employeeDto2.setGender(employee2.getGender());
-        	employeeDto2.setCategoryId(employee2.getCategory().getCategoryId());
-        	employeeDto2.setCategory(employee2.getCategory());
+//        	employeeDto2.setCategoryId(employee2.getCategory().getCategoryId());
+//        	employeeDto2.setCategory(employee2.getCategory());
         	employeeDto2.setUsers(employee2.getUserMaster());
         	
         	
@@ -182,14 +184,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setEmailId(employeeDto.getEmailId());
 		employee.setGuardianNo(employeeDto.getGuardianNo());
 		employee.setGender(employeeDto.getGender());
-		employee.setCategory(employeeDto.getCategory());
+//		employee.setCategory(employeeDto.getCategory());
 		employee.setUserMaster(employeeDto.getUsers());
 		employee.setUpdatedOn(new Date());
 		employee.setDeletedFlag(true);
 	
 		category.setCategoryId(employeeDto.getCategoryId());
 		
-		employee.setCategory(category);
+//		employee.setCategory(category);
 		employee.setCategoryId(employeeDto.getCategoryId());
 		
 	
@@ -258,11 +260,11 @@ public class EmployeeServiceImpl implements EmployeeService {
                     empLoginResDto.setEmployeeName(employeeMaster.getEmployeeName());
                     empLoginResDto.setEmailId(employeeMaster.getEmailId());
                     empLoginResDto.setContactNo(employeeMaster.getContactNo());  
-                    empLoginResDto.setCategory(employeeMaster.getCategory());
+//                    empLoginResDto.setCategory(employeeMaster.getCategory());
                    empLoginResDto.setRoleMaster(userRole.getRoles());
                     
 
-                }                else
+                } else
                {
                     empLoginResDto.setResponseCode(HttpStatus.FORBIDDEN.value());
                     empLoginResDto.setMessage("Account Has Been Blocked");

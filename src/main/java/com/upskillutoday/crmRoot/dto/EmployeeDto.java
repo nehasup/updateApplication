@@ -32,7 +32,7 @@ public class EmployeeDto {
 
 	private boolean deletedFlag;
 	
-	private CategoryMaster category;
+//	private CategoryMaster category;
 	    
 	private Long categoryId;
 	
@@ -45,7 +45,17 @@ public class EmployeeDto {
 	private UserMaster users;
 	
 	private Long userId;
-	   
+
+	public Long[] categories;
+
+	public Long[] getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Long[] categories) {
+		this.categories = categories;
+	}
+
 	public Long getUserId() {
 		return userId;
 	}
@@ -147,13 +157,13 @@ public class EmployeeDto {
 		this.deletedFlag = deletedFlag;
 	}
 
-	public CategoryMaster getCategory() {
-		return category;
-	}
-
-	public void setCategory(CategoryMaster category) {
-		this.category = category;
-	}
+//	public CategoryMaster getCategory() {
+//		return category;
+//	}
+//
+//	public void setCategory(CategoryMaster category) {
+//		this.category = category;
+//	}
 
 	public Long getCategoryId() {
 		return categoryId;
