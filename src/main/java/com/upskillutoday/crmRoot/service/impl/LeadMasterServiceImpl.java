@@ -1,8 +1,15 @@
 package com.upskillutoday.crmRoot.service.impl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -15,6 +22,24 @@ import org.springframework.stereotype.Service;
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
 import com.upskillutoday.crmRoot.dto.EmployeeLeadDto;
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
+import com.upskillutoday.crmRoot.model.CategoryMaster;
+import com.upskillutoday.crmRoot.model.EmpLead;
+import com.upskillutoday.crmRoot.model.EmployeeMaster;
+import com.upskillutoday.crmRoot.model.LeadMaster;
+import com.upskillutoday.crmRoot.model.RemarkMaster;
+import com.upskillutoday.crmRoot.model.RoleMaster;
+import com.upskillutoday.crmRoot.model.SubCategoryMaster;
+import com.upskillutoday.crmRoot.model.UserMaster;
+import com.upskillutoday.crmRoot.model.UserRole;
+import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
+import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
+import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
+import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
+import com.upskillutoday.crmRoot.repository.RemarkJpaRepository;
+import com.upskillutoday.crmRoot.repository.SubCategoryJpaRepository;
+import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
+import com.upskillutoday.crmRoot.response.LeadResponseDto;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
 
 
@@ -454,6 +479,8 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		return leadMasterDtos;
 	}
 
+
+	
 	
 	
 }

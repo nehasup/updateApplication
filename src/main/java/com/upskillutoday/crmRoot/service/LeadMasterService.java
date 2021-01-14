@@ -1,5 +1,7 @@
 package com.upskillutoday.crmRoot.service;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
@@ -7,6 +9,7 @@ import com.upskillutoday.crmRoot.dto.EmployeeLeadDto;
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
+import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
 
 public interface LeadMasterService {
 
@@ -25,6 +28,10 @@ public interface LeadMasterService {
 	List<LeadMasterDto> getAllAssignLeadListService(EmployeeMaster employeeMaster);
 
 	public List<LeadMaster> getAllLeadByAssignFlag();
+
+	//public List getDailyLeadReportService(DailyLeadReportDto dailyLeadReportDto) throws ParseException;
+
+	
 
 	//public boolean insertEmpLeadService(EmployeeLeadDto employeeLeadDto);
 

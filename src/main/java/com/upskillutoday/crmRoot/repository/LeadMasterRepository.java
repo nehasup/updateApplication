@@ -21,6 +21,8 @@ public interface LeadMasterRepository {
 
 	public List<LeadMaster> getAllLeadByassignFlag();
 
+	//List getDailyLeadDao(LeadMaster leadMaster);
+
 	
 
 

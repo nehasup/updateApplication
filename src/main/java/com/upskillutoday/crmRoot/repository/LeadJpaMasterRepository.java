@@ -1,5 +1,7 @@
 package com.upskillutoday.crmRoot.repository;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,6 +33,12 @@ public interface LeadJpaMasterRepository extends JpaRepository<LeadMaster, Long>
 	public List<LeadMaster> findByCategoryMasterAndDeletedFlag(CategoryMaster category, boolean b);
 
 	public LeadMaster findByStudentId(Long studentId);
+
+	
+
+	//public List<LeadMaster> findByUpdatedOn(String updatedOn);
+
+
 
 //	@Query(value = "SELECT lead FROM LeadMaster lead where lead.deletedFlag=true and lead.assignLeadFlag=false")
 //	//List<User> findAllUsers(Sort sort);
