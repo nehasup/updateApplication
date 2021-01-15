@@ -361,9 +361,9 @@ public class LeadUploadFileController {
 	 
 	 //update Lead by id
 	 @PutMapping("/updateLeadByid/{id}")
-	 @ResponseBody public ResponseVO updateLeadController(@PathVariable(value = "id") Long studentId,@RequestBody LeadMasterDto leadMasterDto) throws ResourceNotFoundException {
+	 @ResponseBody public ResponseVO updateLeadController(@RequestParam(value = "userId") Long userId,@PathVariable(value = "id") Long studentId,@RequestBody LeadMasterDto leadMasterDto) throws ResourceNotFoundException {
 		 ResponseVO<LeadMasterDto> responseVO = new ResponseVO<LeadMasterDto>();
-		 boolean flag = leadMasterService.updateLeadService(leadMasterDto);
+		 boolean flag = leadMasterService.updateLeadService(userId, leadMasterDto);
 		 
 		
 		      if(flag){

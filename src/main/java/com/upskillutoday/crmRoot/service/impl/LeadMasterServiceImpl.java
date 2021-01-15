@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +71,9 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 
 	@Autowired
 	EmpCategyRepository empCategyRepository;
+
+	@Autowired
+	EmployeeService employeeService;
 
 	@Override
 	public boolean insertLeadService(LeadMasterDto leadMasterDto) {
@@ -267,7 +271,7 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	
 	
 	@Override
-	public boolean updateLeadService(LeadMasterDto leadMasterDto) {
+	public boolean updateLeadService(Long userId, LeadMasterDto leadMasterDto) {
 		//cat obj by id
 		CategoryMaster category = categoryJpaRepository.findById(leadMasterDto.getCategoryId()).orElse(null);
 		//SubCategoryMaster subCategoryMaster = subCategoryRepository.findById(leadMasterDto.getSubCategoryId()).orElse(null);
@@ -291,6 +295,7 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		leadMaster.setComments(leadMasterDto.getComments());
 		leadMaster.setInstituteName(leadMasterDto.getInstituteName());
 		leadMaster.setUpdatedOn(new Date());
+		leadMaster.setUpdatedBy(employeeService.getEmpIdFromUserId(userId));
 		leadMaster.setDeletedFlag(true);
 		leadMaster.setCategoryMaster(category);
 		leadMaster.setSubCategoryMaster(leadMasterDto.getSubCategoryMaster());

@@ -278,7 +278,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	}
 
-	
-	
+	@Override
+	public Long getEmpIdFromUserId(Long userId) {
+		return employeeRepository.getEmployeeIdByUserId(userId);
+	}
+
 
 }

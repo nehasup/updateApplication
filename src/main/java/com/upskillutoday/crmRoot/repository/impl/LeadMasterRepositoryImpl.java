@@ -73,7 +73,7 @@ public class LeadMasterRepositoryImpl implements LeadMasterRepository {
             		+ "lead.comments as comments,\r\n"
             		+ "lead.instituteName as instituteName,\r\n"
             		+ "c.categoryId as categoryId,\r\n"
-            		+"c.categoryName as categoryName,\r\n"
+            		+ "c.categoryName as categoryName,\r\n"
             		+ "rmk.remarkId as remarkId,\r\n"
             		+ "rmk.remarkName as remarkName)"
             		+ " from LeadMaster as lead inner join lead.categoryMaster as c inner join lead.remarkMaster as rmk where lead.deletedFlag=1");

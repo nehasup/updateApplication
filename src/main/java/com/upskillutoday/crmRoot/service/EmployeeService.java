@@ -20,4 +20,5 @@ public interface EmployeeService {
 
 	EmpLoginResDto login(EmpLoginReqDto empLoginReqDto, HttpServletRequest request);
 
+	Long getEmpIdFromUserId(Long userId);
 }

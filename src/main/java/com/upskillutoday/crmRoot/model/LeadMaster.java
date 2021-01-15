@@ -69,7 +69,7 @@ public class LeadMaster {
 	  private String instituteName;
 	 
 	  @Column(name="updated_by") 
-	  private int updatedBy;
+	  private Long updatedBy;
 	  
 	  @Column(name="updatedOn")	 
 	  @Temporal(TemporalType.DATE)
@@ -269,14 +269,14 @@ public void setRemarkId(Long remarkId) {
 
 
 
-	public int getUpdatedBy() {
+	public Long getUpdatedBy() {
 		return updatedBy;
 	}
 
 
 
 
-	public void setUpdatedBy(int updatedBy) {
+	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 
