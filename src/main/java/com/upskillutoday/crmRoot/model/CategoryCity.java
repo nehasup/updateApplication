@@ -24,14 +24,14 @@ public class CategoryCity {
 	@Column(name = "category_city_id")
 	private Long categoryCityId;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="city_id")
 	private CityMaster city;
 	
 	@Column(name="city_id",insertable = false, updatable = false)
 	private Long cityId;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="category_id")
 	private CategoryMaster category;
 	

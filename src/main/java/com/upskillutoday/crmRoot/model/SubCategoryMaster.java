@@ -42,7 +42,7 @@ public class SubCategoryMaster {
 	
 	@JoinColumn(name="category_id",referencedColumnName="category_id")
 	@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private CategoryMaster category;
 	
 	@Transient

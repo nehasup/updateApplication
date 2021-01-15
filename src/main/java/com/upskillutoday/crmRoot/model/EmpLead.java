@@ -27,12 +27,12 @@ public class EmpLead {
 	
 	@JoinColumn(name="employee_id",referencedColumnName="employee_id")
 	@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private EmployeeMaster employeeMaster;
 	
 	@JoinColumn(name="student_id",referencedColumnName="student_id")
 	@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private LeadMaster leadMaster;
 	
 	@Column(name = "updated_by")

@@ -10,8 +10,6 @@ public interface CategoryRepository {
 	boolean insertCategoryDao(CategoryMaster category);
 
 	boolean insertCategoryCityDao(CategoryCity categoryCity);
-	
-	
 
 	//Category getCategorybyNameDao(String categoryName);
 
@@ -19,6 +17,6 @@ public interface CategoryRepository {
 
 	boolean getRecordByCategoryIdDao(CategoryMaster category);
 
-
+	CategoryMaster getCatIdByName(String name);
 
 }

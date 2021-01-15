@@ -29,12 +29,12 @@ public class EmpCategy {
 	
 	@JoinColumn(name="employee_id",referencedColumnName="employee_id")
 	@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private EmployeeMaster employeeMaster;
 	
 	@JoinColumn(name="category_id",referencedColumnName="category_id")
 	@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private CategoryMaster categoryMaster;
 	
 	

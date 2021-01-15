@@ -110,7 +110,13 @@ try{
     }
 }
 
+	@Override
+	public CategoryMaster getCatIdByName(String name) {
+		for(CategoryMaster categoryMaster : ((List<CategoryMaster>)this.getCategoryListDao())) {
+			if(categoryMaster.getCategoryName().equalsIgnoreCase(name))
+				return categoryMaster;
+		}
+		return null;
+	}
 
-
-	
 }

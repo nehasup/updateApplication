@@ -63,16 +63,13 @@ public class EmployeeMaster {
 	
 	@JoinColumn(name="category_id",referencedColumnName="category_id")
 	@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private CategoryMaster category;
 
-	 @OneToOne(fetch = FetchType.LAZY, optional = false)
+	 @OneToOne(fetch = FetchType.EAGER, optional = false)
 	 @JoinColumn(name = "user_id", nullable = false)
 	 private UserMaster userMaster;
-	
-	
-	
-	
+
 	@Transient
 	private Long categoryId;
 	

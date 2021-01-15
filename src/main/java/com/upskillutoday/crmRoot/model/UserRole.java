@@ -29,12 +29,12 @@ public class UserRole {
 	
 	@JoinColumn(name="user_id",referencedColumnName="user_id")
 	@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private UserMaster users;
 	
 	@JoinColumn(name="role_id",referencedColumnName="role_id")
 	@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private RoleMaster roles;
 	
 	@Column(name = "updated_by")
