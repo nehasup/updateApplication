@@ -19,7 +19,7 @@ public interface LeadMasterService {
 
 	LeadMasterDto getRecordByStudentIdService(LeadMasterDto leadMasterDto);
 
-	boolean updateLeadService(LeadMasterDto leadMasterDto);
+	boolean updateLeadService(Long userId, LeadMasterDto leadMasterDto);
 
 	public List<LeadMasterDto> getAllLeadListCategoryWiseService(EmployeeMaster employeeMaster);
 

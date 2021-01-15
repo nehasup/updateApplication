@@ -67,8 +67,6 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 						leadMaster.getEmailId(), leadMaster.getCourseName(), leadMaster.getComments(), 
 						leadMaster.getInstituteName(), status,employeeMaster.getEmployeeName()));
 			}
-		
-		
 		}
 		
 		return leadReportRess;
