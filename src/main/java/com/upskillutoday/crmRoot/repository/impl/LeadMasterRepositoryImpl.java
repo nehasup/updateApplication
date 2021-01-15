@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import com.upskillutoday.crmRoot.model.EmpLead;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.Transformers;
@@ -21,8 +22,6 @@ import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
 public class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	  @Autowired
 	     private EntityManager entityManager;
-	  
-	 
 
 	@Override
 	public LeadMaster findByEmail(String email) {
@@ -128,31 +127,12 @@ try{
 	        }
 	        return leadMasterDtos;
 	    }
-	
-	
-//@Override
-//public List getDailyLeadDao(LeadMaster leadMaster) {
-//	// TODO Auto-generated method stub
-//	Session session=null;
-//	List list=null;
-//	try {
-//		session=sessionFactory.openSession();
-//		Query query=session.createQuery("select * from LeadMaster as em where em.updatedOn=?");
-//		query.setParameter(0, leadMaster.getUpdatedOn());
-//		list =query.getResultList();
-//		return list;
-//		
-//	} catch (Exception e) {
-//		// TODO: handle exception
-//		e.printStackTrace();
-//		System.out.println("Error on getDailyLead: "+e);
-//		return null;
-//	}
-//	finally {
-//		session.close();
-//	}
-//	
-//}
+
+	@Override
+	public List getLeadsByRemark(Long remarkId) {
+		Query query = entityManager.createQuery("select lead from LeadMaster as lead where lead.remarkMaster.remarkId = " + remarkId, LeadMaster.class);
+		return query.getResultList();
+	}
 }
 
 

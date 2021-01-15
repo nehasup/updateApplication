@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.upskillutoday.crmRoot.repository.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,12 +26,6 @@ import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.model.RemarkMaster;
 import com.upskillutoday.crmRoot.model.SubCategoryMaster;
 import com.upskillutoday.crmRoot.model.UserMaster;
-import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
-import com.upskillutoday.crmRoot.repository.FileUploadRepository;
-import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
-import com.upskillutoday.crmRoot.repository.RemarkJpaRepository;
-import com.upskillutoday.crmRoot.repository.SubCategoryJpaRepository;
-import com.upskillutoday.crmRoot.repository.UserMasterRepository;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 
 @Service
@@ -47,10 +42,12 @@ public class FileStorageServiceImpl implements FileStorageService {
 	
 	@Autowired
 	private SubCategoryJpaRepository subCategoryJpaRepository;
-	
-	
+
 	@Autowired
-	private RemarkJpaRepository remarkJpaRepository;	
+	private RemarkJpaRepository remarkJpaRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	@Override
 	public Long save(MultipartFile file) {
@@ -97,14 +94,11 @@ public class FileStorageServiceImpl implements FileStorageService {
 				String contactNo = null;
 				if(row.getCell(1).getCellType()== Cell.CELL_TYPE_NUMERIC) {
 					 contactNo = NumberToTextConverter.toText(row.getCell(1).getNumericCellValue());
-					
 				}else if (row.getCell(1).getCellType()== Cell.CELL_TYPE_STRING ) {
 					
 				}
-				
+
 				String emailId = row.getCell(2).toString();
-				
-				
 				LeadMaster presentLead = fileuploadrepository.findByStudentNameAndContactNoAndEmailIdAndDeletedFlag(studentName, contactNo, emailId, false); 
 				
 				if(presentLead==null) {
@@ -120,27 +114,17 @@ public class FileStorageServiceImpl implements FileStorageService {
 					leadMaster.setModeOfCourse(row.getCell(6).toString());
 					
 					
-					CategoryMaster categoryMaster = categoryJpaRepository.findByCategoryNameAndDeletedFlag(row.getCell(7).toString(), true);
+					CategoryMaster categoryMaster = categoryRepository.getCatIdByName(row.getCell(7).toString());
 					if(categoryMaster!= null) {
 						leadMaster.setCategoryMaster(categoryMaster);
+					} else {
+						leadMaster.setCategoryMaster(categoryRepository.getCatIdByName("Aviation"));
 					}
-					
-					//leadMaster.setSubCategoryMaster(row.getCell(8).getStringCellValue());
-					
-//					SubCategoryMaster subCategoryMaster = subCategoryJpaRepository.findBySubCategoryNameAndDeletedFlag(row.getCell(8).toString(), true);
-//					
-//					if(subCategoryMaster!=null) {
-//						leadMaster.setSubCategoryMaster(subCategoryMaster);
-//					}
 					
 					long id = 3;
 					RemarkMaster remarkMaster = remarkJpaRepository.findById(id).orElse(null);
-					
 					leadMaster.setRemarkMaster(remarkMaster);
-					
-					
-					//insert using by session user id
-					//leadMaster.setUpdatedBy(userId);
+
 					leadMaster.setUpdatedOn(new Date());
 					leadMaster.setDeletedFlag(true);
 					leadMaster.setAssignLeadFlag(false);

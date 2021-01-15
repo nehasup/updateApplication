@@ -2,18 +2,7 @@ package com.upskillutoday.crmRoot.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -89,26 +78,26 @@ public class LeadMaster {
 
 	@Transient
 	  private MultipartFile file;
-	
-	
+
+
 	  public LeadMaster() {
-		
+
 	   }
-	
-	
+
+
 	  @JoinColumn(name="category_id",referencedColumnName="category_id")
 		@JsonIgnore
-	    @ManyToOne(fetch = FetchType.LAZY)
+	    @ManyToOne(fetch = FetchType.EAGER)
 	    private CategoryMaster categoryMaster;
 	  
 	  @JoinColumn(name="subcategory_id",referencedColumnName="subcategory_id")
 		@JsonIgnore
-	    @ManyToOne(fetch = FetchType.LAZY)
+	    @ManyToOne(fetch = FetchType.EAGER)
 	    private SubCategoryMaster subCategoryMaster;
 	  
 	  @JoinColumn(name="remark_status_id",referencedColumnName="remark_status_id")
 		@JsonIgnore
-	    @ManyToOne(fetch = FetchType.LAZY)
+	    @ManyToOne(fetch = FetchType.EAGER)
 	    private RemarkMaster remarkMaster;
 
 	

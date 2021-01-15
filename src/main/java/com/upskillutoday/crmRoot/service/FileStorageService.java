@@ -10,8 +10,6 @@ import com.upskillutoday.crmRoot.model.LeadMaster;
 
 public interface FileStorageService {
 	// public void init();
-
-	  public Long save(MultipartFile file);
-
-	public List<LeadMaster> findAll();
+	  Long save(MultipartFile file);
+	  List<LeadMaster> findAll();
 }

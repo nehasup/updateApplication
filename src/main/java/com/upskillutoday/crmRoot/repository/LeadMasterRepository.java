@@ -19,7 +19,9 @@ public interface LeadMasterRepository {
 
 	boolean updateLeadRepository(LeadMaster leadMaster);
 
-	public List<LeadMaster> getAllLeadByassignFlag();
+	List<LeadMaster> getAllLeadByassignFlag();
+
+	List getLeadsByRemark(Long remarkId);
 
 	//List getDailyLeadDao(LeadMaster leadMaster);
 
