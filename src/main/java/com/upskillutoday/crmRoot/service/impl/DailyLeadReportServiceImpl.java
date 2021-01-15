@@ -54,11 +54,11 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 
 		for(LeadMaster leadMaster : leadMasterList) {
 			
-			EmpLead empLead =empLeadJpaRepository.findByLeadMaster(leadMaster);
-			if(empLead!=null) {
-				
+//			EmpLead empLead =empLeadJpaRepository.findByLeadMaster(leadMaster);
+//			if(empLead!=null) {
+				Long employeeId =leadMaster.getUpdatedBy();
 		
-				EmployeeMaster employeeMaster =employeeJpaRepository.findByEmployeeIdAndDeletedFlag(empLead.getEmployeeMaster().getEmployeeId(), true);
+				EmployeeMaster employeeMaster =employeeJpaRepository.findByEmployeeIdAndDeletedFlag(employeeId, true);
 				String status = remarkService.getRemarkStatus(leadMaster.getRemarkMaster().getRemarkId());
 				leadReportRess.add(new LeadReportRes(leadMaster.getStudentName(), 
 						leadMaster.getContactNo(), 
@@ -66,7 +66,7 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 						leadMaster.getArea(), leadMaster.getAddress(), 
 						leadMaster.getEmailId(), leadMaster.getCourseName(), leadMaster.getComments(), 
 						leadMaster.getInstituteName(), status,employeeMaster.getEmployeeName()));
-			}
+			//}
 		}
 		
 		return leadReportRess;
