@@ -66,22 +66,17 @@ public class LeadMaster {
 	  
 	  @Column(name="deleted_flag") 
 	  private boolean deletedFlag;
-	 
 
 	  @Column(name="file_type")
 	  private String fileType;
 	  
 	  @Column(name="assign_lead_flag")
 	  private boolean assignLeadFlag;
-	
-	
 
 	@Transient
 	  private MultipartFile file;
 
-
 	  public LeadMaster() {
-
 	   }
 
 

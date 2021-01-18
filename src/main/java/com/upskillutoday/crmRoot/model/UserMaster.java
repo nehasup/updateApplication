@@ -59,34 +59,15 @@ public class UserMaster implements Serializable  {
 	  
 	public UserMaster() {
 	}
-	
-	
+
 	public UserMaster(String userName, String pass) {
 		this.userName = userName;
 		this.pass = pass;
 	}
 
-
-
-
-//
-//	public Set<RoleMaster> getRoles() {
-//		return role;
-//	}
-//
-//
-//
-//	public void setRoles(Set<RoleMaster> roles) {
-//		this.role = roles;
-//	}
-
-
-
 	public boolean isDeletedFlag() {
 		return deletedFlag;
 	}
-
-
 
 	public Long getUserId() {
 		return userId;
