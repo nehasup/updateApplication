@@ -12,6 +12,22 @@ public class History {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "empId")
+    private Long empId;
+
+    @Column(name = "leadId")
+    private Long leadId;
+
+    @Column(name = "remark_id")
+    private Long remarkId;
+
+    @Column(name = "comment")
+    private String comment;
+
+    @Column(name = "updatedOn")
+    @Temporal(TemporalType.DATE)
+    private Date updatedOn;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
     private EmployeeMaster employeeMaster;
@@ -23,14 +39,6 @@ public class History {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "remark_status_id")
     private RemarkMaster remarkMaster;
-
-
-    @Column(name = "comment")
-    private String comment;
-
-    @Column(name = "updatedOn")
-    @Temporal(TemporalType.DATE)
-    private Date updatedOn;
 
     public Long getId() {
         return id;
@@ -77,6 +85,38 @@ public class History {
     }
 
     public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
+    public Long getEmpId() {
+        return empId;
+    }
+
+    public void setEmpId(Long empId) {
+        this.empId = empId;
+    }
+
+    public Long getLeadId() {
+        return leadId;
+    }
+
+    public void setLeadId(Long leadId) {
+        this.leadId = leadId;
+    }
+
+    public Long getRemarkId() {
+        return remarkId;
+    }
+
+    public void setRemarkId(Long remarkId) {
+        this.remarkId = remarkId;
+    }
+
+    public History(Long empId, Long leadId, Long remarkId, String comment, Date updatedOn) {
+        this.empId = empId;
+        this.leadId = leadId;
+        this.remarkId = remarkId;
+        this.comment = comment;
         this.updatedOn = updatedOn;
     }
 }

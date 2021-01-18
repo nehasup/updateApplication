@@ -41,24 +41,18 @@ public class UserLoginController {
 	 @PostMapping("/loginuser")
 	 @ResponseBody
 	 public ResponseVO<UserLoginResponseDto> userLoginController(@RequestBody  UserLoginDto userLoginDto) {
-
 	        ResponseVO<UserLoginResponseDto> response = new ResponseVO<UserLoginResponseDto>();
-
-	        UserLoginResponseDto dto=userloginService.loginuserService(userLoginDto);
-
-	        if(userLoginDto.isFlag())
-	        {
+	        UserLoginResponseDto dto = userloginService.loginuserService(userLoginDto);
+	        if(userLoginDto.isFlag()) {
 	            response.setStatusCode(String.valueOf(HttpStatus.OK));
 	            System.out.println(response.getStatusCode());
 	            response.setMessage(userLoginDto.getLoginMsg());
 	            response.setResult(dto);
-	        }
-	        else {
+	        } else {
 	            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 	            System.out.println(response.getStatusCode());
 	            response.setMessage(userLoginDto.getLoginMsg());
 	            response.setResult(dto);
-
 	        }
 	        return response;
 	    }

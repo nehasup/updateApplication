@@ -80,9 +80,14 @@ public class LeadUploadFileController {
 	@Autowired
 	LeadMasterRepository leadMasterRepository;
 
+	@Autowired
+	HistoryRepository historyRepository;
+
 	//import excel sheet
 	@PostMapping("/upload")
-	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+	public ResponseEntity<ResponseMessage> uploadFile(
+			@RequestParam("file") MultipartFile file
+	) {
 		String message = "";
 		try {
 
@@ -112,7 +117,11 @@ public class LeadUploadFileController {
 	//insert lead master
 	@PostMapping("/insertLeadMaster")
 	@ResponseBody
-	public ResponseVO insertLead(@RequestBody LeadMasterDto leadMasterDto ,HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception {
+	public ResponseVO insertLead(
+			@RequestBody LeadMasterDto leadMasterDto ,
+			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse
+	) throws Exception {
 		ResponseVO<LeadMasterDto> responseVO = new ResponseVO<LeadMasterDto>();
 		
 		boolean flag = leadMasterService.insertLeadService(leadMasterDto);
@@ -174,13 +183,17 @@ public class LeadUploadFileController {
 	        return response;
 	    }
 
-	    @GetMapping(value = "getAllLeadFromStatus", params = {"lead_status"})
-		public List getAllLeadFromStatus(@RequestParam("lead_status") Long leadStatus) {
-			return leadMasterRepository.getLeadsByRemark(leadStatus);
-		}
-	
+	@GetMapping(value = "getAllLeadFromStatus", params = {"lead_status"})
+	public List getAllLeadFromStatus(
+			@RequestParam("lead_status") Long leadStatus
+	) {
+		return leadMasterRepository.getLeadsByRemark(leadStatus);
+	}
+
 	 @GetMapping("/getAllVerifiedLeadList")	  
-	 public @ResponseBody ResponseVO<List> getAllVerifiedLeadList(@RequestParam(name = "userId") Long userId) {
+	 public @ResponseBody ResponseVO<List> getAllVerifiedLeadList(
+	 		@RequestParam(name = "userId") Long userId
+	 ) {
 		 System.out.println("user"+userId);
 	        ResponseVO<List> response=new ResponseVO<List>();
 	        System.out.println("List Successfully!!");
@@ -220,7 +233,9 @@ public class LeadUploadFileController {
 
 	//getRecordByidForEdit.........By neha
 	 @GetMapping("/getAllLeadbyid/{id}")	  
-	 @ResponseBody public ResponseVO<LeadMasterDto> getRecordByLeadIdController(@PathVariable(value = "id") Long studentId) {
+	 @ResponseBody public ResponseVO<LeadMasterDto> getRecordByLeadIdController(
+	 		@PathVariable(value = "id") Long studentId
+	 ) {
 	     ResponseVO<LeadMasterDto> response = new ResponseVO<LeadMasterDto>();
 
 	     LeadMasterDto leadMasterDto = new LeadMasterDto();
@@ -248,24 +263,21 @@ public class LeadUploadFileController {
 	 
 	 
 	 //update Lead by id
-	 @PutMapping("/updateLeadByid/{id}")
-	 @ResponseBody public ResponseVO updateLeadController(@RequestParam(value = "userId") Long userId,@PathVariable(value = "id") Long studentId,@RequestBody LeadMasterDto leadMasterDto) throws ResourceNotFoundException {
+	// updated by Laukik
+	 @PutMapping("/updateLeadByid/")
+	 @ResponseBody public ResponseVO updateLeadController(@RequestParam(value = "userId") Long userId, @RequestParam(value = "empId") Long empId, @RequestBody LeadMasterDto leadMasterDto) throws ResourceNotFoundException {
 		 ResponseVO<LeadMasterDto> responseVO = new ResponseVO<LeadMasterDto>();
 		 boolean flag = leadMasterService.updateLeadService(userId, leadMasterDto);
-		 
-		
-		      if(flag){
-		          responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
-		          responseVO.setMessage("Update Successfully!!");
-		      }
-		      else {
-		          responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-		          responseVO.setMessage("Updation Failed!!");
-		      }
+		  if(flag){
+			  responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
+			  responseVO.setMessage("Update Successfully!!");
+			  historyRepository.insertHistory(new History(empId, leadMasterDto.getStudentId(), leadMasterDto.getRemarkId(), leadMasterDto.getComments(), leadMasterDto.getUpdatedOn()));
+		  }
+		  else {
+			  responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+			  responseVO.setMessage("Updation Failed!!");
+		  }
 	      return responseVO;
-		 
-		
-		 
 	 }
 	 
 	//delete Lead by id
@@ -274,7 +286,6 @@ public class LeadUploadFileController {
 	     throws ResourceNotFoundException {
 		LeadMaster leadMaster = leadJpaMasterRepository.findById(studentId)
 	   .orElseThrow(() -> new ResourceNotFoundException("Student Id not found for this id :: " + studentId));
-
 		leadMaster.setDeletedFlag(false);
 		leadJpaMasterRepository.save(leadMaster);
 	    Map<String, Boolean> response = new HashMap<>();
