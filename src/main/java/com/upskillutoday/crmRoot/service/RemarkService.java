@@ -11,4 +11,6 @@ public interface RemarkService {
 	List getAllRecordRemarkService();
 	boolean getRecordByRemarkIdService(RemarkDto remarkDto);
 	String getRemarkStatus(Long id);
+	Long getRemarkById(String str);
+	RemarkMaster getRemarkById(Long id);
 }

@@ -66,9 +66,9 @@ public class EmployeeMaster {
     @ManyToOne(fetch = FetchType.EAGER)
     private CategoryMaster category;
 
-	 @OneToOne(fetch = FetchType.EAGER, optional = false)
-	 @JoinColumn(name = "user_id", nullable = false)
-	 private UserMaster userMaster;
+	@OneToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "user_id", nullable = false)
+	private UserMaster userMaster;
 
 	@Transient
 	private Long categoryId;
@@ -81,8 +81,7 @@ public class EmployeeMaster {
 	
 	@Transient
 	private Long remarkId;
-	
-	
+
 	public Long getRemarkId() {
 		return remarkId;
 	}

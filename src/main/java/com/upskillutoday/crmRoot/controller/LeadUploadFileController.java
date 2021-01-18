@@ -41,6 +41,7 @@ import com.upskillutoday.crmRoot.repository.UserMasterRepository;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -83,6 +84,9 @@ public class LeadUploadFileController {
 	@Autowired
 	HistoryRepository historyRepository;
 
+	@Autowired
+	EmployeeService employeeService;
+
 	//import excel sheet
 	@PostMapping("/upload")
 	public ResponseEntity<ResponseMessage> uploadFile(
@@ -90,15 +94,16 @@ public class LeadUploadFileController {
 	) {
 		String message = "";
 		try {
-
 			Long result = storageService.save(file);
 			if(result==0L) {
 				message = "File import successfully: " + file.getOriginalFilename();
 			} else if(result==1L) {
 				message = "Data already exist " + file.getOriginalFilename();
 			}
-
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+		} catch (ResourceNotFoundException e) {
+			message = "Could not upload the file: " + file.getOriginalFilename() + "! : " + e.getMessage();
+			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
 		} catch (Exception e) {
 			message = "Could not upload the file: " + file.getOriginalFilename() + "!";
 			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
@@ -110,7 +115,6 @@ public class LeadUploadFileController {
 	public List<LeadMaster> getuploadleadlist(Model model) {
 		model.addAttribute("leadMaster", new LeadMaster());
 		List<LeadMaster> leadList = storageService.findAll();
-
 		return leadList;
 	}
 
@@ -121,74 +125,64 @@ public class LeadUploadFileController {
 			@RequestBody LeadMasterDto leadMasterDto ,
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse
-	) throws Exception {
+	) {
 		ResponseVO<LeadMasterDto> responseVO = new ResponseVO<LeadMasterDto>();
-		
 		boolean flag = leadMasterService.insertLeadService(leadMasterDto);
 		if (flag) {
 			responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
 			responseVO.setMessage("Insert Successfully");
 			responseVO.setResult(leadMasterDto);
-		}
-
-		else {
+		} else {
 			responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 			responseVO.setMessage("Insert Failed!!");
 			responseVO.setResult(leadMasterDto);
 		}
 		return responseVO;
-
 	}
 	
 	 @GetMapping( value = "/getAllLeadList")
-	 public @ResponseBody ResponseVO<List> getAllLeadList(@RequestParam(name = "userId") Long userId) {
-		 //, @RequestParam(name = "pageName") String pageName
-		 System.out.println("user"+userId);
-	        ResponseVO<List> response=new ResponseVO<List>();
-	        System.out.println("List Successfully!!");
-	        //user obj
-
-		 try {
-			 EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
-			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
-
-			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
+	 public @ResponseBody
+	 ResponseVO<List> getAllLeadList(
+	 		@RequestParam(name = "userId") Long userId
+	 ) {
+		ResponseVO<List> response = new ResponseVO<>();
+		//user obj
+		List list = leadMasterService.getAllLeadRecordService();
+		try {
+			EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
+			RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
+			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 				//Admin // All leads
-				 List list = leadMasterService.getAllLeadRecordService();
-
-				 if(list!=null) {
-					 response.setResult(list);
-				 }
-				 else {
-					 //Data not present
-					 response.setResult(list);
-					 response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
-					 response.setMessage("Data is not Present");
-				 }
+				if(list!=null) {
+					response.setResult(list);
+				}
+				else {
+					//Data not present
+					response.setResult(list);
+					response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+					response.setMessage("Data is not Present");
+				}
 			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
 				// Cousler     //Category based leads
-				 List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
-				 if(leadMasterDtoList!=null) {
-					 response.setResult(leadMasterDtoList);
-				 }
-				 else {
-					 //Data not present
-					 response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
-					 response.setMessage("Data is not Present");
-					 response.setResult(leadMasterDtoList);
-				 }
+				List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
+				if(leadMasterDtoList!=null) {
+					response.setResult(leadMasterDtoList);
+				}
+				else {
+					//Data not present
+					response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+					response.setMessage("Data is not Present");
+					response.setResult(leadMasterDtoList);
+				}
 			}
-
-		 } catch (NullPointerException nullPointerException) {}
-	        return response;
-	    }
+		} catch (NullPointerException nullPointerException) {}
+		return response;
+	}
 
 	@GetMapping(value = "getAllLeadFromStatus", params = {"lead_status"})
 	public List getAllLeadFromStatus(
 			@RequestParam("lead_status") Long leadStatus
-	) {
-		return leadMasterRepository.getLeadsByRemark(leadStatus);
-	}
+	) { return leadMasterRepository.getLeadsByRemark(leadStatus); }
 
 	 @GetMapping("/getAllVerifiedLeadList")	  
 	 public @ResponseBody ResponseVO<List> getAllVerifiedLeadList(
@@ -197,7 +191,6 @@ public class LeadUploadFileController {
 		 System.out.println("user"+userId);
 	        ResponseVO<List> response=new ResponseVO<List>();
 	        System.out.println("List Successfully!!");
-
 		 try {
 			 EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
 			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
@@ -226,10 +219,9 @@ public class LeadUploadFileController {
 						response.setResult(leadMasterDtoList);
 					}
 			 }
-
 		 } catch (NullPointerException nullPointerException) {}
-	        return response;
-	    }
+		return response;
+	}
 
 	//getRecordByidForEdit.........By neha
 	 @GetMapping("/getAllLeadbyid/{id}")	  
@@ -237,22 +229,15 @@ public class LeadUploadFileController {
 	 		@PathVariable(value = "id") Long studentId
 	 ) {
 	     ResponseVO<LeadMasterDto> response = new ResponseVO<LeadMasterDto>();
-
 	     LeadMasterDto leadMasterDto = new LeadMasterDto();
 	     leadMasterDto.setStudentId(studentId);
-	     
-	    
 	     LeadMasterDto leadMasterDto2=leadMasterService.getRecordByStudentIdService(leadMasterDto);
-	    
-	  
-	     
-	     if(leadMasterDto2!=null)
-	     {
+
+	     if(leadMasterDto2!=null) {
 	         response.setMessage("Search By Data Sucessfully");
 	         response.setStatusCode(String.valueOf(HttpStatus.OK));
 	         response.setResult(leadMasterDto2);
-	     }
-	     else {
+	     } else {
 	         response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 	         response.setMessage("Search Failed!!");
 	         response.setResult(leadMasterDto2);
@@ -260,18 +245,21 @@ public class LeadUploadFileController {
 	     }
 	     return response;
 	 }
-	 
-	 
+
 	 //update Lead by id
 	// updated by Laukik
 	 @PutMapping("/updateLeadByid/")
-	 @ResponseBody public ResponseVO updateLeadController(@RequestParam(value = "userId") Long userId, @RequestParam(value = "empId") Long empId, @RequestBody LeadMasterDto leadMasterDto) throws ResourceNotFoundException {
+	 @ResponseBody public ResponseVO updateLeadController(
+	 		@RequestParam(value = "userId") Long userId,
+			@RequestParam(value = "empId") Long empUserId,
+			@RequestBody LeadMasterDto leadMasterDto
+	 ) {
 		 ResponseVO<LeadMasterDto> responseVO = new ResponseVO<LeadMasterDto>();
 		 boolean flag = leadMasterService.updateLeadService(userId, leadMasterDto);
 		  if(flag){
 			  responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
 			  responseVO.setMessage("Update Successfully!!");
-			  historyRepository.insertHistory(new History(empId, leadMasterDto.getStudentId(), leadMasterDto.getRemarkId(), leadMasterDto.getComments(), leadMasterDto.getUpdatedOn()));
+			  historyRepository.insertHistory(new History(leadMasterDto.getComments(), new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(leadMasterDto.getStudentId()), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
 		  }
 		  else {
 			  responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
@@ -282,23 +270,26 @@ public class LeadUploadFileController {
 	 
 	//delete Lead by id
 	@DeleteMapping("/deleteLead/{id}")
-	public Map<String, Boolean> deleteLead(@PathVariable(value = "id") Long studentId)
-	     throws ResourceNotFoundException {
+	public Map<String, Boolean> deleteLead(
+			@PathVariable(value = "id") Long studentId,
+			@RequestParam(value = "empId") Long empUserId
+	) throws ResourceNotFoundException {
 		LeadMaster leadMaster = leadJpaMasterRepository.findById(studentId)
 	   .orElseThrow(() -> new ResourceNotFoundException("Student Id not found for this id :: " + studentId));
 		leadMaster.setDeletedFlag(false);
 		leadJpaMasterRepository.save(leadMaster);
 	    Map<String, Boolean> response = new HashMap<>();
 	    response.put("deletedFlag", Boolean.TRUE);
-	    return response;
+		historyRepository.insertHistory(new History("Deleted Lead by Employee", new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(remarkService.getRemarkById("Deleted"))));
+		return response;
 	} 
-	
-	
-	
-//assign lead to employee
+
+	//assign lead to employee
 	@PostMapping(value = "/saveleadassignemp", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody 
-	public ResponseVO assignLeadtoEmployee(@RequestBody EmployeeLeadDto employeeLeadDto) {	
+	public ResponseVO assignLeadtoEmployee(
+			@RequestBody EmployeeLeadDto employeeLeadDto
+	) {
 		
 		ResponseVO response = new ResponseVO();
 		LeadMaster leadMasterObj = null;
@@ -326,16 +317,14 @@ public class LeadUploadFileController {
 			leadJpaMasterRepository.save(leadMasterObj);
 
 			}
-		
-	
-	     
-		return response;
-	
 
+		return response;
     }
 	  
 	 @GetMapping("/getAssignLeadbyempId")	  
-	 public @ResponseBody ResponseVO<List> getListAssignLeadbyEmpId(@RequestParam(name = "userId") Long userId) {
+	 public @ResponseBody ResponseVO<List> getListAssignLeadbyEmpId(
+	 		@RequestParam(name = "userId") Long userId
+	 ) {
 		 System.out.println("user"+userId);
 	        ResponseVO<List> response=new ResponseVO<List>();
 	        System.out.println("List Successfully!!");
@@ -369,11 +358,7 @@ public class LeadUploadFileController {
 					response.setResult(leadMasterDtoList);
 				}
 			 }
-
 		 } catch (NullPointerException nullPointerException) {}
-	        
 	        return response;
 	    }
-	  
-
 }

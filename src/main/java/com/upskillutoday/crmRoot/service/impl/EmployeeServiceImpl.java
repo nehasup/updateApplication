@@ -283,5 +283,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return employeeRepository.getEmployeeIdByUserId(userId);
 	}
 
+	@Override
+	public EmployeeMaster getEmployeeByUserId(Long userId) {
+		return employeeRepository.getEmployeeByUserId(userId);
+	}
+
 
 }

@@ -24,49 +24,41 @@ public class RoleController {
 	
 	@Autowired
 	private RoleService roleService;
-	
-	
+
 	@PostMapping("/saveRoles")
 	@ResponseBody 
-	public ResponseVO insertRoles(@RequestBody RoleDto roleDto) {
-		  ResponseVO response = new ResponseVO();
-	      
-	        boolean flag=roleService.insertRole(roleDto);
-	        if(flag)
-	        {	response.setResult(flag);
-	            response.setMessage("Insert Role Sucessfully");
-	            response.setStatusCode(String.valueOf(HttpStatus.OK));
-	        }
-	        else {
-	            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-	            response.setMessage("Insert Failed!!");
-	            response.setResult(flag);
-	        }
-	        return response;
-
+	public ResponseVO insertRoles(
+			@RequestBody RoleDto roleDto
+	) {
+		ResponseVO response = new ResponseVO();
+		boolean flag = roleService.insertRole(roleDto);
+		if(flag) {
+			response.setResult(flag);
+			response.setMessage("Insert Role Sucessfully");
+			response.setStatusCode(String.valueOf(HttpStatus.OK));
+		} else {
+			response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+			response.setMessage("Insert Failed!!");
+			response.setResult(flag);
+		}
+		return response;
     }
 	
 	//get role active list
-		 @GetMapping("/getActiveRoleList")	  
-		 @ResponseBody  public ResponseVO<List> getRoleAllList() {
-		        ResponseVO<List> response=new ResponseVO<List>();
-		        System.out.println("List Successfully!!");
-		        List list=roleService.getAllRoleService();
-		        response.setResult(list);
-
-		        if(list.size()!=0){
-		            response.setStatusCode(String.valueOf(HttpStatus.OK));
-		            response.setMessage("Data is Present Successfully!!");
-		        }
-		        else {
-		            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-		            response.setMessage("Data is Not Present!!");
-		        }
-
-		        return response;
-		    }
-	
-
-	
-
+	 @GetMapping("/getActiveRoleList")
+	 @ResponseBody
+	 public ResponseVO<List> getRoleAllList() {
+		ResponseVO<List> response=new ResponseVO<List>();
+		System.out.println("List Successfully!!");
+		List list=roleService.getAllRoleService();
+		response.setResult(list);
+		if(list.size()!=0) {
+			response.setStatusCode(String.valueOf(HttpStatus.OK));
+			response.setMessage("Data is Present Successfully!!");
+		} else {
+			response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+			response.setMessage("Data is Not Present!!");
+		}
+		return response;
+	}
 }

@@ -1,52 +1,22 @@
 package com.upskillutoday.crmRoot.dto;
 
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 
 public class EmployeeLeadDto {
-	
-	
-	
-	
+
 	private Long empleadId;
-	
     private EmployeeMaster employeeMaster;
-	
     private LeadMaster leadMaster;
-    
 	private int updatedBy;
-
 	private Date updatedOn;
-
 	private boolean deletedFlag;
-	
 	private Long employeeId;
-	
-	//private String studentId;
-	
 	private String[] studentId;
-	
-	
-
-
-	
-
-
-
-	
-
-	
-	public EmployeeLeadDto() {
-		
-	}
 
 	public String[] getStudentId() {
-	
 		return studentId;
 	}
 
@@ -109,7 +79,4 @@ public class EmployeeLeadDto {
 	public void setEmployeeId(Long employeeId) {
 		this.employeeId = employeeId;
 	}
-	
-	
-
 }

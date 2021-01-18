@@ -15,5 +15,7 @@ public interface EmployeeRepository {
 	boolean updateEmployeeRepository(EmployeeMaster employee);
 
 	Long getEmployeeIdByUserId(Long userId);
+
+	EmployeeMaster getEmployeeByUserId(Long userId);
 	
 }

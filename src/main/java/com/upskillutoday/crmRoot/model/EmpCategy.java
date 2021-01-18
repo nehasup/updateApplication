@@ -19,25 +19,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="emp_category")
 public class EmpCategy {
-	
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="idemp_category")
 	private Long empcatId;
-	
-	
-	@JoinColumn(name="employee_id",referencedColumnName="employee_id")
-	@JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    private EmployeeMaster employeeMaster;
-	
-	@JoinColumn(name="category_id",referencedColumnName="category_id")
-	@JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    private CategoryMaster categoryMaster;
-	
-	
+
 	@Column(name = "updated_by")
 	private int updatedBy;
 
@@ -47,6 +34,16 @@ public class EmpCategy {
 
 	@Column(name = "deleted_flag")
 	private boolean deletedFlag;
+
+	@JoinColumn(name="employee_id", referencedColumnName="employee_id")
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	private EmployeeMaster employeeMaster;
+
+	@JoinColumn(name="category_id", referencedColumnName="category_id")
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	private CategoryMaster categoryMaster;
 
 	public Long getEmpcatId() {
 		return empcatId;
@@ -95,7 +92,4 @@ public class EmpCategy {
 	public void setDeletedFlag(boolean deletedFlag) {
 		this.deletedFlag = deletedFlag;
 	}
-
-
-	
 }

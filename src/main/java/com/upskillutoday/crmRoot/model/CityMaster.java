@@ -38,9 +38,6 @@ public class CityMaster {
 
 	@Column(name = "deleted_flag")
 	private boolean deletedFlag;
-	
-	
-	
 
 	public Long getCityId() {
 		return cityId;
@@ -89,8 +86,4 @@ public class CityMaster {
 	public void setState(String state) {
 		this.state = state;
 	}
-
-
-	  
-
 }

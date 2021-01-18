@@ -13,7 +13,7 @@ import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
 
 public interface LeadMasterService {
 
-	public boolean insertLeadService(LeadMasterDto leadMasterDto);
+	boolean insertLeadService(LeadMasterDto leadMasterDto);
 
 	List getAllLeadRecordService();
 
@@ -21,21 +21,11 @@ public interface LeadMasterService {
 
 	boolean updateLeadService(Long userId, LeadMasterDto leadMasterDto);
 
-	public List<LeadMasterDto> getAllLeadListCategoryWiseService(EmployeeMaster employeeMaster);
+	List<LeadMasterDto> getAllLeadListCategoryWiseService(EmployeeMaster employeeMaster);
 
 	List<LeadMasterDto> getCategoryWiseandverifyLeadService(EmployeeMaster employeeMaster);
 
 	List<LeadMasterDto> getAllAssignLeadListService(EmployeeMaster employeeMaster);
 
-	public List<LeadMaster> getAllLeadByAssignFlag();
-
-	//public List getDailyLeadReportService(DailyLeadReportDto dailyLeadReportDto) throws ParseException;
-
-	
-
-	//public boolean insertEmpLeadService(EmployeeLeadDto employeeLeadDto);
-
-	//EmployeeDto getRecordByemployeIdService(EmployeeDto employeeDto);
-
-
+	List<LeadMaster> getAllLeadByAssignFlag();
 }

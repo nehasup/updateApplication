@@ -7,13 +7,9 @@ import java.util.Date;
 public class RemarkDto {
 	
 	private Long remarkId;
-	
 	private String remarkName;
-		
 	private int updatedBy;
-	
 	private Date updatedOn;
-	
 	private boolean deletedFlag;
 
 	public Long getRemarkId() {
@@ -55,6 +51,4 @@ public class RemarkDto {
 	public void setDeletedFlag(boolean deletedFlag) {
 		this.deletedFlag = deletedFlag;
 	}
-
-	
 }

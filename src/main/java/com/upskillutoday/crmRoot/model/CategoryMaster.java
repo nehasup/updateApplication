@@ -101,7 +101,4 @@ public class CategoryMaster {
 	public void setEmployeeList(List<EmployeeMaster> employeeList) {
 		this.employeeList = employeeList;
 	}
-	
-	
-
 }

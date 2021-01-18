@@ -55,4 +55,22 @@ public class RemarkServiceImpl implements RemarkService {
 		}
 		return null;
 	}
+
+	@Override
+	public Long getRemarkById(String str) {
+		for(Object obj : this.getAllRecordRemarkService()) {
+			if(str.equalsIgnoreCase(((RemarkMaster) obj).getRemarkName()))
+				return ((RemarkMaster) obj).getRemarkId();
+		}
+		return 11L;
+	}
+
+	@Override
+	public RemarkMaster getRemarkById(Long id) {
+		for(Object obj : this.getAllRecordRemarkService()) {
+			if(id.equals(((RemarkMaster) obj).getRemarkId()))
+				return ((RemarkMaster) obj);
+		}
+		return null;
+	}
 }

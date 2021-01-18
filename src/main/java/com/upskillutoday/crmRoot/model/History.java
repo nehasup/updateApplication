@@ -12,15 +12,6 @@ public class History {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "empId")
-    private Long empId;
-
-    @Column(name = "leadId")
-    private Long leadId;
-
-    @Column(name = "remark_id")
-    private Long remarkId;
-
     @Column(name = "comment")
     private String comment;
 
@@ -29,15 +20,15 @@ public class History {
     private Date updatedOn;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "empId", referencedColumnName = "employee_id")
     private EmployeeMaster employeeMaster;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    private CategoryMaster categoryMaster;
+    @JoinColumn(name = "leadId", referencedColumnName = "student_id")
+    private LeadMaster leadMaster;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "remark_status_id")
+    @JoinColumn(name = "remark_id", referencedColumnName = "remark_status_id")
     private RemarkMaster remarkMaster;
 
     public Long getId() {
@@ -56,12 +47,12 @@ public class History {
         this.employeeMaster = employeeMaster;
     }
 
-    public CategoryMaster getCategoryMaster() {
-        return categoryMaster;
+    public LeadMaster getLeadMaster() {
+        return leadMaster;
     }
 
-    public void setCategoryMaster(CategoryMaster categoryMaster) {
-        this.categoryMaster = categoryMaster;
+    public void setLeadMaster(LeadMaster leadMaster) {
+        this.leadMaster = leadMaster;
     }
 
     public RemarkMaster getRemarkMaster() {
@@ -88,35 +79,11 @@ public class History {
         this.updatedOn = updatedOn;
     }
 
-    public Long getEmpId() {
-        return empId;
-    }
-
-    public void setEmpId(Long empId) {
-        this.empId = empId;
-    }
-
-    public Long getLeadId() {
-        return leadId;
-    }
-
-    public void setLeadId(Long leadId) {
-        this.leadId = leadId;
-    }
-
-    public Long getRemarkId() {
-        return remarkId;
-    }
-
-    public void setRemarkId(Long remarkId) {
-        this.remarkId = remarkId;
-    }
-
-    public History(Long empId, Long leadId, Long remarkId, String comment, Date updatedOn) {
-        this.empId = empId;
-        this.leadId = leadId;
-        this.remarkId = remarkId;
+    public History(String comment, Date updatedOn, EmployeeMaster employeeMaster, LeadMaster leadMaster, RemarkMaster remarkMaster) {
         this.comment = comment;
         this.updatedOn = updatedOn;
+        this.employeeMaster = employeeMaster;
+        this.leadMaster = leadMaster;
+        this.remarkMaster = remarkMaster;
     }
 }

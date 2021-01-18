@@ -38,110 +38,96 @@ public class RemarkController {
 	@Autowired
 	private RemarkJpaRepository remarkJpaRepository;
 	
-//add remark
+    //add remark
 	@PostMapping("/saveRemark")
 	@ResponseBody 
-	public ResponseVO insertRemark(@RequestBody RemarkDto remarkDto) {
-		  ResponseVO response = new ResponseVO();
-	      
-	        boolean flag=remarkService.insertRemarkService(remarkDto);
-	        if(flag)
-	        {
-	            response.setMessage("Insert Remarks Sucessfully");
-	            response.setStatusCode(String.valueOf(HttpStatus.OK));
-	        }
-	        else {
-	            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-	            response.setMessage("Insert Failed!!");
-
-	        }
-	        return response;
-
+	public ResponseVO insertRemark(
+	        @RequestBody RemarkDto remarkDto
+    ) {
+      ResponseVO response = new ResponseVO();
+        boolean flag=remarkService.insertRemarkService(remarkDto);
+        if(flag) {
+            response.setMessage("Insert Remarks Sucessfully");
+            response.setStatusCode(String.valueOf(HttpStatus.OK));
+        } else {
+            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+            response.setMessage("Insert Failed!!");
+        }
+        return response;
     }
 	
 	//get all active remark list
- @GetMapping("/getAllRemarkList")	  
- @ResponseBody  public ResponseVO<List> getRemarkAllList() {
+     @GetMapping("/getAllRemarkList")
+     @ResponseBody
+     public ResponseVO<List> getRemarkAllList() {
         ResponseVO<List> response=new ResponseVO<List>();
         System.out.println("List Successfully!!");
         List list=remarkService.getAllRecordRemarkService();
         response.setResult(list);
-
-        if(list.size()!=0){
+        if(list.size()!=0) {
             response.setStatusCode(String.valueOf(HttpStatus.OK));
             response.setMessage("Data is Present Successfully!!");
-        }
-        else {
+        } else {
             response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
             response.setMessage("Data is Not Present!!");
         }
-
         return response;
     }
  
- //getRecordByidForEdit.........By neha
- @GetMapping("/getAllremarkbyid/{id}")	  
- @ResponseBody public ResponseVO<RemarkDto> getRecordByRemarkIdController(@PathVariable(value = "id") Long remarkId) {
-     ResponseVO<RemarkDto> response = new ResponseVO<RemarkDto>();
-
+    //getRecordByidForEdit.........By neha
+     @GetMapping("/getAllremarkbyid/{id}")
+     @ResponseBody public ResponseVO<RemarkDto> getRecordByRemarkIdController(
+             @PathVariable(value = "id") Long remarkId
+     ) {
+         ResponseVO<RemarkDto> response = new ResponseVO<RemarkDto>();
+         RemarkDto remarkDto = new RemarkDto();
+         remarkDto.setRemarkId(remarkId);
+         boolean flag=remarkService.getRecordByRemarkIdService(remarkDto);
+         if(flag) {
+             response.setMessage("Search By Data Sucessfully");
+             response.setStatusCode(String.valueOf(HttpStatus.OK));
+             response.setResult(remarkDto);
+         } else {
+             response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+             response.setMessage("Search Failed!!");
+             response.setResult(remarkDto);
+         }
+         return response;
+    }
  
-     
-     RemarkDto remarkDto = new RemarkDto();
-     remarkDto.setRemarkId(remarkId);
-
-     boolean flag=remarkService.getRecordByRemarkIdService(remarkDto);
-
-     if(flag)
-     {
-         response.setMessage("Search By Data Sucessfully");
-         response.setStatusCode(String.valueOf(HttpStatus.OK));
-         response.setResult(remarkDto);
+     //update remark by id
+     @PutMapping("/updateRemarkByid/{id}")
+     public ResponseEntity<RemarkMaster> updateRemarbyid(
+             @PathVariable(value = "id") Long remarkId,
+             @RequestBody RemarkMaster remarkDetails
+     ) throws ResourceNotFoundException {
+         RemarkMaster remark = remarkJpaRepository.findById(remarkId)
+         .orElseThrow(() -> new ResourceNotFoundException("Remark not found for this id :: " + remarkId));
+         remark.setRemarkName(remarkDetails.getRemarkName());
+         remark.setUpdatedOn(new Date());
+         remark.setDeletedFlag(true);
+         final RemarkMaster updatedRemark = remarkJpaRepository.save(remark);
+         return ResponseEntity.ok(updatedRemark);
      }
-     else {
-         response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-         response.setMessage("Search Failed!!");
-         response.setResult(remarkDto);
-
+ 
+ 
+    //delete remark by id
+     @DeleteMapping("/deleteRemark/{id}")
+     public Map<String, Boolean> deleteRemark(
+             @PathVariable(value = "id") Long remarkId
+     ) throws ResourceNotFoundException {
+         RemarkMaster remark = remarkJpaRepository.findById(remarkId)
+        .orElseThrow(() -> new ResourceNotFoundException("Remark not found for this id :: " + remarkId));
+         remark.setDeletedFlag(false);
+         remarkJpaRepository.save(remark);
+         Map<String, Boolean> response = new HashMap<>();
+         response.put("deletedFlag", Boolean.TRUE);
+         return response;
      }
-     return response;
- }
- 
- //update remark by id
- @PutMapping("/updateRemarkByid/{id}")
- public ResponseEntity<RemarkMaster> updateRemarbyid(@PathVariable(value = "id") Long remarkId,@RequestBody RemarkMaster remarkDetails) throws ResourceNotFoundException {
-     RemarkMaster remark = remarkJpaRepository.findById(remarkId)
-     .orElseThrow(() -> new ResourceNotFoundException("Remark not found for this id :: " + remarkId));
-     
-     remark.setRemarkName(remarkDetails.getRemarkName());
-     
-     remark.setUpdatedOn(new Date());
-     remark.setDeletedFlag(true);
-   
-     final RemarkMaster updatedRemark = remarkJpaRepository.save(remark);
-     return ResponseEntity.ok(updatedRemark);
- }
- 
- 
-//delete remark by id
- @DeleteMapping("/deleteRemark/{id}")
- public Map<String, Boolean> deleteRemark(@PathVariable(value = "id") Long remarkId)
-      throws ResourceNotFoundException {
-	 RemarkMaster remark = remarkJpaRepository.findById(remarkId)
-    .orElseThrow(() -> new ResourceNotFoundException("Remark not found for this id :: " + remarkId));
-
-	 remark.setDeletedFlag(false);
-	 remarkJpaRepository.save(remark);
-     Map<String, Boolean> response = new HashMap<>();
-     response.put("deletedFlag", Boolean.TRUE);
-     return response;
- }
   
-//get All Remark list
- @GetMapping("/getRemarks")
+    //get All Remark list
+    @GetMapping("/getRemarks")
     public List<RemarkMaster> getAllRemark() {
         return remarkJpaRepository.findAll();
     }
-
-	
-
 }

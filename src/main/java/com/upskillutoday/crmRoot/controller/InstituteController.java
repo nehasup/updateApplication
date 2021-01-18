@@ -18,7 +18,6 @@ import com.upskillutoday.crmRoot.service.InstituteService;
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin(value = "*")
-
 public class InstituteController {
 
 	@Autowired
@@ -26,26 +25,22 @@ public class InstituteController {
 	
 	@Autowired
 	InstituteService instituteService;
-	
+
 	 @PostMapping("/saveinsitute")
-	 @ResponseBody public ResponseVO  createInstitute(@RequestBody InstituteDto instituteDto) {
-		 
+	 @ResponseBody public ResponseVO  createInstitute(
+	 		@RequestBody InstituteDto instituteDto
+	 ) {
 		 ResponseVO<InstituteDto>responseVO=new ResponseVO<InstituteDto>();
 	        boolean flag= instituteService.insertInstituteservice(instituteDto);
-	        
-
-	        if(flag){
+	        if(flag) {
 	            responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
 	            responseVO.setMessage("Insert Successfully!!");
 	            responseVO.setResult(instituteDto);
-	        }
-	        else {
+	        } else {
 	            responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 	            responseVO.setMessage("Insert Failed!!");
 	            responseVO.setResult(instituteDto);
 	        }
 	        return responseVO;
-		//return instituteRepository.save(institute);
-		
 	}
 }

@@ -25,16 +25,6 @@ public class EmpLead {
 	@Column(name="idemp_lead")
 	private Long empleadId;
 	
-	@JoinColumn(name="employee_id",referencedColumnName="employee_id")
-	@JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    private EmployeeMaster employeeMaster;
-	
-	@JoinColumn(name="student_id",referencedColumnName="student_id")
-	@JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    private LeadMaster leadMaster;
-	
 	@Column(name = "updated_by")
 	private int updatedBy;
 
@@ -44,6 +34,16 @@ public class EmpLead {
 
 	@Column(name = "deleted_flag")
 	private boolean deletedFlag;
+
+	@JoinColumn(name="employee_id",referencedColumnName="employee_id")
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	private EmployeeMaster employeeMaster;
+
+	@JoinColumn(name="student_id",referencedColumnName="student_id")
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	private LeadMaster leadMaster;
 
 	public Long getEmpleadId() {
 		return empleadId;
@@ -92,7 +92,4 @@ public class EmpLead {
 	public void setDeletedFlag(boolean deletedFlag) {
 		this.deletedFlag = deletedFlag;
 	}
-	
-	
-
 }

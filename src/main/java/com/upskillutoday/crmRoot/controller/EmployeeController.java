@@ -37,8 +37,6 @@ import com.upskillutoday.crmRoot.response.ResponseVO;
 import com.upskillutoday.crmRoot.service.EmployeeService;
 import com.upskillutoday.crmRoot.util.SessionUtils;
 
-
-
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin(value = "*")
@@ -52,130 +50,101 @@ public class EmployeeController {
 	
 	@PostMapping("/saveEmployee")
 	@ResponseBody 
-	public ResponseVO insertEmployee(@RequestBody EmployeeDto employeeDto,HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception {
-		  ResponseVO response = new ResponseVO();
-		  
-
-//	       System.out.println("UserName : "+httpServletRequest.getSession().getAttribute("userName")+" OR : "+httpServletRequest.getSession().getAttribute("userId") );
-//			  
-//			  WebSession webSession = SessionUtils.getWebSession(httpServletRequest);
-//		        long userId = webSession.getLoginData().getUserId();
-//		        
-//		        System.out.println("userId : "+userId + " ; UserName : "+httpServletRequest.getSession().getAttribute("userName")+" OR : "+httpServletRequest.getSession().getAttribute("userId") );
-//		   
-//			
-	        boolean flag=employeeService.insertEmployeeService(employeeDto);
-	        
-	        
-	        if(flag)
-	        {
-	            response.setMessage("Insert Employee Sucessfully");
-	            response.setStatusCode(String.valueOf(HttpStatus.OK));
-	        }
-	        else {
-	            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-	            response.setMessage("Insert Failed!!");
-
-	        }
-	        return response;
-
+	public ResponseVO insertEmployee(
+	        @RequestBody EmployeeDto employeeDto,
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse
+    ) throws Exception {
+        ResponseVO response = new ResponseVO();
+        boolean flag=employeeService.insertEmployeeService(employeeDto);
+        if(flag) {
+            response.setMessage("Insert Employee Sucessfully");
+            response.setStatusCode(String.valueOf(HttpStatus.OK));
+        } else {
+            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+            response.setMessage("Insert Failed!!");
+        }
+        return response;
     }
 	
- @GetMapping("/getAllEmployeeList")	  
- @ResponseBody  public ResponseVO<List> getEmployeeAllList() {
+     @GetMapping("/getAllEmployeeList")
+     @ResponseBody
+     public ResponseVO<List> getEmployeeAllList() {
         ResponseVO<List> response=new ResponseVO<List>();
         System.out.println("List Successfully!!");
         List list=employeeService.getAllEmpRecordService();
         response.setResult(list);
-
-        if(list.size()!=0){
+        if(list.size()!=0) {
             response.setStatusCode(String.valueOf(HttpStatus.OK));
             response.setMessage("Data is Present Successfully!!");
-        }
-        else {
+        } else {
             response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
             response.setMessage("Data is Not Present!!");
         }
-
         return response;
     }
  
- //getRecordByidForEdit.........By neha
- @GetMapping("/getAllEmpbyid/{id}")	  
- @ResponseBody public ResponseVO<EmployeeDto> getRecordByEmployeeIdController(@PathVariable(value = "id") Long employeeId) {
-     ResponseVO<EmployeeDto> response = new ResponseVO<EmployeeDto>();
-
-     EmployeeDto employeeDto = new EmployeeDto();
-     employeeDto.setEmployeeId(employeeId);
-     
-    
-     //boolean flag=employeeService.getRecordByEmpIdService(employeeDto);
-
-     EmployeeDto resultEmployeeDto =employeeService.getRecordByEmpIdService(employeeDto);
-     
-     if(resultEmployeeDto!=null)
-     {
-         response.setMessage("Search By Data Sucessfully");
-         response.setStatusCode(String.valueOf(HttpStatus.OK));
-         response.setResult(resultEmployeeDto);
+     //getRecordByidForEdit.........By neha
+     @GetMapping("/getAllEmpbyid/{id}")
+     @ResponseBody public ResponseVO<EmployeeDto> getRecordByEmployeeIdController(
+             @PathVariable(value = "id") Long employeeId
+     ) {
+         ResponseVO<EmployeeDto> response = new ResponseVO<EmployeeDto>();
+         EmployeeDto employeeDto = new EmployeeDto();
+         employeeDto.setEmployeeId(employeeId);
+         EmployeeDto resultEmployeeDto =employeeService.getRecordByEmpIdService(employeeDto);
+         if(resultEmployeeDto!=null) {
+             response.setMessage("Search By Data Sucessfully");
+             response.setStatusCode(String.valueOf(HttpStatus.OK));
+             response.setResult(resultEmployeeDto);
+         } else {
+             response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+             response.setMessage("Search Failed!!");
+             response.setResult(resultEmployeeDto);
+         }
+         return response;
      }
-     else {
-         response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-         response.setMessage("Search Failed!!");
-         response.setResult(resultEmployeeDto);
-
+ 
+ 
+     //update employee by id
+     @PutMapping("/updateEmployeeByid/{id}")
+     @ResponseBody public ResponseVO updateEmloyeeController(
+             @PathVariable(value = "id") Long employeeId,
+             @RequestBody EmployeeDto employeeDto
+     ) {
+         ResponseVO<EmployeeDto> responseVO = new ResponseVO<EmployeeDto>();
+         boolean flag = employeeService.updateEmployeeService(employeeDto);
+              if(flag) {
+                  responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
+                  responseVO.setMessage("Update Successfully!!");
+              } else {
+                  responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+                  responseVO.setMessage("Updation Failed!!");
+              }
+          return responseVO;
      }
-     return response;
- }
  
- 
- //update employee by id
- @PutMapping("/updateEmployeeByid/{id}")
- @ResponseBody public ResponseVO updateEmloyeeController(@PathVariable(value = "id") Long employeeId,@RequestBody EmployeeDto employeeDto) throws ResourceNotFoundException {
-	 
-	 ResponseVO<EmployeeDto> responseVO = new ResponseVO<EmployeeDto>();
-	 
-	// System.out.println("Cata : "+subCategoryDetails.getCategory().getCategoryId() +" // "+subCategoryDetails.getCategory().getCategoryName()+" // "+subCategoryDetails.getCategoryId());
-	 //subCategoryDetails.setCategoryId(subCategoryDetails.getCategoryId());
-	 
-	 boolean flag = employeeService.updateEmployeeService(employeeDto);
-	 
-	
-	      if(flag){
-	          responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
-	          responseVO.setMessage("Update Successfully!!");
-	      }
-	      else {
-	          responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-	          responseVO.setMessage("Updation Failed!!");
-	      }
-      return responseVO;
-	 
-	
-	 
- }
- 
-//delete employee by id
-@DeleteMapping("/deleteEmp/{id}")
-public Map<String, Boolean> deleteEmployeeCategory(@PathVariable(value = "id") Long employeeId)
-     throws ResourceNotFoundException {
-    EmployeeMaster employeeMaster = employeeJpaRepository.findById(employeeId)
-   .orElseThrow(() -> new ResourceNotFoundException("employee Id not found for this id :: " + employeeId));
+    //delete employee by id
+    @DeleteMapping("/deleteEmp/{id}")
+    public Map<String, Boolean> deleteEmployeeCategory(
+            @PathVariable(value = "id") Long employeeId
+    ) throws ResourceNotFoundException {
+        EmployeeMaster employeeMaster = employeeJpaRepository.findById(employeeId)
+       .orElseThrow(() -> new ResourceNotFoundException("employee Id not found for this id :: " + employeeId));
+        employeeMaster.setDeletedFlag(false);
+        employeeJpaRepository.save(employeeMaster);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deletedFlag", Boolean.TRUE);
+        return response;
+    }
 
-    employeeMaster.setDeletedFlag(false);
-    employeeJpaRepository.save(employeeMaster);
-    Map<String, Boolean> response = new HashMap<>();
-    response.put("deletedFlag", Boolean.TRUE);
-    return response;
-}
-
-@PostMapping(value = "/login")
-public ResponseEntity login(@RequestBody EmpLoginReqDto empLoginReqDto, HttpServletRequest request, HttpServletResponse response)
-{
-    EmpLoginResDto empLoginResDto = employeeService.login(empLoginReqDto, request);
-    return new ResponseEntity(empLoginResDto,HttpStatus.OK);
-}
-
- 
-
+    @PostMapping(value = "/login")
+    public ResponseEntity login(
+            @RequestBody EmpLoginReqDto empLoginReqDto,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        EmpLoginResDto empLoginResDto = employeeService.login(empLoginReqDto, request);
+        return new ResponseEntity(empLoginResDto,HttpStatus.OK);
+    }
 }

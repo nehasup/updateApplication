@@ -45,126 +45,100 @@ public class SubCategoryController {
 	
 	@Autowired
 	private SubCategoryRepository subcategoryRepository;
-	
-	
 
 	@PostMapping("/saveSubCategory")
 	@ResponseBody 
-	public ResponseVO insertSubCategory(@RequestBody SubCategoryDto subCategoryDto) {
-		  ResponseVO response = new ResponseVO();
-	      
-	        boolean flag=subCategoryService.insertSubCategoryService(subCategoryDto);
-	        if(flag)
-	        {
-	            response.setMessage("Insert SubCategory Sucessfully");
-	            response.setStatusCode(String.valueOf(HttpStatus.OK));
-	            response.setResult(flag);
-	        }
-	        else {
-	            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-	            response.setMessage("Insert Failed!!");
-	            response.setResult(flag);
+	public ResponseVO insertSubCategory(
+	        @RequestBody SubCategoryDto subCategoryDto
+    ) {
+        ResponseVO response = new ResponseVO();
+        boolean flag=subCategoryService.insertSubCategoryService(subCategoryDto);
+        if(flag) {
+            response.setMessage("Insert SubCategory Sucessfully");
+            response.setStatusCode(String.valueOf(HttpStatus.OK));
+            response.setResult(flag);
+        } else {
+            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+            response.setMessage("Insert Failed!!");
+            response.setResult(flag);
 
-	        }
-	        return response;
-
+        }
+        return response;
     }
 	
- @GetMapping("/getAllSubCateList")	  
- @ResponseBody  public ResponseVO<List> getSubCategoryAllList() {
+     @GetMapping("/getAllSubCateList")
+     @ResponseBody
+     public ResponseVO<List> getSubCategoryAllList() {
         ResponseVO<List> response=new ResponseVO<List>();
         System.out.println("List Successfully!!");
-        
         List list=subCategoryService.getAllSubCategoryService();
         response.setResult(list);
-
-        if(list.size()!=0){
+        if(list.size()!=0) {
             response.setStatusCode(String.valueOf(HttpStatus.OK));
             response.setMessage("Data is Present Successfully!!");
-        }
-        else {
+        } else {
             response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
             response.setMessage("Data is Not Present!!");
         }
-
         return response;
     }
  
- //getRecordByidForEdit.........By neha
- @GetMapping("/getAllSubCatbyid/{id}")	  
- @ResponseBody public ResponseVO<SubCategoryDto> getBySubCatIdController(@PathVariable(value = "id") Long subCategoryId) {
-     ResponseVO<SubCategoryDto> response = new ResponseVO<SubCategoryDto>();
-
-     SubCategoryDto subCategoryDto = new SubCategoryDto();
-     subCategoryDto.setSubCategoryId(subCategoryId);
-    
-     SubCategoryDto resultSubCatgdto=subCategoryService.getSubCatebyIdService(subCategoryDto);
-    
-
-     if(resultSubCatgdto!=null)
-     {
-         response.setMessage("Search By Data Sucessfully");
-         response.setStatusCode(String.valueOf(HttpStatus.OK));
-         response.setResult(resultSubCatgdto);
+     //getRecordByidForEdit.........By neha
+     @GetMapping("/getAllSubCatbyid/{id}")
+     @ResponseBody public ResponseVO<SubCategoryDto> getBySubCatIdController(
+             @PathVariable(value = "id") Long subCategoryId
+     ) {
+         ResponseVO<SubCategoryDto> response = new ResponseVO<SubCategoryDto>();
+         SubCategoryDto subCategoryDto = new SubCategoryDto();
+         subCategoryDto.setSubCategoryId(subCategoryId);
+         SubCategoryDto resultSubCatgdto=subCategoryService.getSubCatebyIdService(subCategoryDto);
+         if(resultSubCatgdto!=null) {
+             response.setMessage("Search By Data Sucessfully");
+             response.setStatusCode(String.valueOf(HttpStatus.OK));
+             response.setResult(resultSubCatgdto);
+         } else {
+             response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+             response.setMessage("Search Failed!!");
+             response.setResult(resultSubCatgdto);
+         }
+         return response;
      }
-     else {
-         response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-         response.setMessage("Search Failed!!");
-         response.setResult(resultSubCatgdto);
+ 
+     //update sub category by id
+     @PutMapping("/updateSubCategoryByid/{id}")
+     @ResponseBody public ResponseVO update(
+             @PathVariable(value = "id") Long subCategoryId,
+             @RequestBody SubCategoryDto subCategoryDetails
+     ) {
+         ResponseVO<SubCategoryDto> responseVO = new ResponseVO<SubCategoryDto>();
+         boolean flag = subCategoryService.updateService(subCategoryDetails);
+          if(flag) {
+              responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
+              responseVO.setMessage("Update Successfully!!");
+          } else {
+              responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+              responseVO.setMessage("Updation Failed!!");
+          }
+          return responseVO;
+    }
 
+    //delete Sub category by id
+     @DeleteMapping("/deleteSubCategory/{id}")
+     public Map<String, Boolean> deleteSubCategory(
+             @PathVariable(value = "id") Long subCategoryId
+     ) throws ResourceNotFoundException {
+         SubCategoryMaster subCategory = subCategoryJpaRepository.findById(subCategoryId)
+        .orElseThrow(() -> new ResourceNotFoundException("SubCategory not found for this id :: " + subCategoryId));
+         subCategory.setDeletedFlag(false);
+         subCategoryJpaRepository.save(subCategory);
+         Map<String, Boolean> response = new HashMap<>();
+         response.put("deletedFlag", Boolean.TRUE);
+         return response;
      }
-     return response;
- }
- 
- //update sub category by id
- @PutMapping("/updateSubCategoryByid/{id}")
- @ResponseBody public ResponseVO update(@PathVariable(value = "id") Long subCategoryId,@RequestBody SubCategoryDto subCategoryDetails) throws ResourceNotFoundException {
-	 
-	 ResponseVO<SubCategoryDto> responseVO = new ResponseVO<SubCategoryDto>();
-	 
-	// System.out.println("Cata : "+subCategoryDetails.getCategory().getCategoryId() +" // "+subCategoryDetails.getCategory().getCategoryName()+" // "+subCategoryDetails.getCategoryId());
-	 //subCategoryDetails.setCategoryId(subCategoryDetails.getCategoryId());
-	 
-	 boolean flag = subCategoryService.updateService(subCategoryDetails);
-	 
-	
-	      if(flag){
-	          responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
-	          responseVO.setMessage("Update Successfully!!");
-	      }
-	      else {
-	          responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-	          responseVO.setMessage("Updation Failed!!");
-	      }
-      return responseVO;
-	 
-	
-	 
- }
- 
-
- 
-//delete Sub category by id
- @DeleteMapping("/deleteSubCategory/{id}")
- public Map<String, Boolean> deleteSubCategory(@PathVariable(value = "id") Long subCategoryId)
-      throws ResourceNotFoundException {
-	 SubCategoryMaster subCategory = subCategoryJpaRepository.findById(subCategoryId)
-    .orElseThrow(() -> new ResourceNotFoundException("SubCategory not found for this id :: " + subCategoryId));
-
-	 subCategory.setDeletedFlag(false);
-	 subCategoryJpaRepository.save(subCategory);
-     Map<String, Boolean> response = new HashMap<>();
-     response.put("deletedFlag", Boolean.TRUE);
-     return response;
- }
   
-//get All SubCategory list
- @GetMapping("/getSubCategories")
+    //get All SubCategory list
+    @GetMapping("/getSubCategories")
     public List<SubCategoryMaster> getAllSubCategories() {
         return subCategoryJpaRepository.findAll();
     }
-
- 
-	
-	
 }

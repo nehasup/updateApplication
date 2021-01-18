@@ -26,11 +26,10 @@ public class DailyLeadReportController {
 	DailyLeadReportService dailyLeadReportService;
 	
 	@PostMapping("/dailydateReportLead")
-	public List<LeadReportRes> dailyLeadReport(@RequestBody DailyLeadReportDto dailyLeadReportDto) throws ParseException {
-		
+	public List<LeadReportRes> dailyLeadReport(
+			@RequestBody DailyLeadReportDto dailyLeadReportDto
+	) throws ParseException {
 		List<LeadReportRes> list=dailyLeadReportService.getDailyLeadReportService(dailyLeadReportDto);
-	
 		return list;
 	}
-
 }

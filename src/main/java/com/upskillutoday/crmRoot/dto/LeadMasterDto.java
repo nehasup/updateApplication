@@ -2,318 +2,303 @@ package com.upskillutoday.crmRoot.dto;
 
 import java.util.Date;
 
-import com.upskillutoday.crmRoot.model.CategoryMaster;
-import com.upskillutoday.crmRoot.model.EmployeeMaster;
-import com.upskillutoday.crmRoot.model.RemarkMaster;
-import com.upskillutoday.crmRoot.model.SubCategoryMaster;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.upskillutoday.crmRoot.model.*;
+import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
+import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LeadMasterDto {
 
-	 private Long studentId;
-		
-	  private String studentName;
-	
-	  private String contactNo;
-	
-	  private String emailId;
-	
-	  private String courseName;
-	  
-	  private String city;
-	  
-	  private String area;
-	  
-	  private String modeOfCourse;
-	  
-	  private String address;
-	  
-	  private String budget;
-	  
-	  private String modificationStage;
-	  
-	  private String remark;
-	  
-	  private String comments;
+	private Long studentId;
+  	private String studentName;
+  	private String contactNo;
+  	private String emailId;
+	private String courseName;
+	private String city;
+	private String area;
+	private String modeOfCourse;
+	private String address;
+	private String budget;
+	private String modificationStage;
+	private String remark;
+	private String comments;
+	private int updatedBy;
+	private Date updatedOn;
+	private boolean deletedFlag;
+	private String fileType;
+	private String instituteName;
+	private Long categoryId;
+	private Long subCategoryId;
+	private Long remarkId;
+	private String categoryName;
+	private String subCategoryName;
+	private CategoryMaster categoryMaster;
+	private SubCategoryMaster subCategoryMaster;
+	private RemarkMaster remarkMaster;
+	private String remarkName;
+	private String employeeName;
+	private boolean assignLeadFlag;
+	private Long employeeId;
 
-	  private int updatedBy;
-	  
-	  private Date updatedOn;
-	  
-	  private boolean deletedFlag;
-
-	  private String fileType;
-	  
-	  private String instituteName;
-	  private Long categoryId;
-	  private Long subCategoryId;
-	  private Long remarkId;
-	  
-	  private String categoryName;
-	  
-	  private String subCategoryName;
-	  
-	  private CategoryMaster categoryMaster;
-	  
-	  private SubCategoryMaster subCategoryMaster;
-	  
-	  private RemarkMaster remarkMaster;
-	  
-	  private String remarkName;
-	  
-	  private String employeeName;
-	  
-	  
-	  private boolean assignLeadFlag;
-
-		private Long employeeId;
-	  
-	  
-	  
-	  
-	  
-	
 	public Long getEmployeeId() {
-			return employeeId;
-		}
+	return employeeId;
+	}
 
-		public void setEmployeeId(Long employeeId) {
-			this.employeeId = employeeId;
-		}
+	public void setEmployeeId(Long employeeId) {
+	this.employeeId = employeeId;
+	}
 
 	public boolean isAssignLeadFlag() {
-		return assignLeadFlag;
+	return assignLeadFlag;
 	}
 
 	public void setAssignLeadFlag(boolean assignLeadFlag) {
-		this.assignLeadFlag = assignLeadFlag;
+	this.assignLeadFlag = assignLeadFlag;
 	}
 
 	public String getEmployeeName() {
-		return employeeName;
+	return employeeName;
 	}
 
 	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
+	this.employeeName = employeeName;
 	}
 
 	public String getRemarkName() {
-		return remarkName;
+	return remarkName;
 	}
 
 	public void setRemarkName(String remarkName) {
-		this.remarkName = remarkName;
+	this.remarkName = remarkName;
 	}
 
 	public Long getStudentId() {
-		return studentId;
+	return studentId;
 	}
 
 	public void setStudentId(Long studentId) {
-		this.studentId = studentId;
+	this.studentId = studentId;
 	}
 
 	public String getStudentName() {
-		return studentName;
+	return studentName;
 	}
 
 	public void setStudentName(String studentName) {
-		this.studentName = studentName;
+	this.studentName = studentName;
 	}
 
 	public String getContactNo() {
-		return contactNo;
+	return contactNo;
 	}
 
 	public void setContactNo(String contactNo) {
-		this.contactNo = contactNo;
+	this.contactNo = contactNo;
 	}
 
 	public String getEmailId() {
-		return emailId;
+	return emailId;
 	}
 
 	public void setEmailId(String emailId) {
-		this.emailId = emailId;
+	this.emailId = emailId;
 	}
 
 	public String getCourseName() {
-		return courseName;
+	return courseName;
 	}
 
 	public void setCourseName(String courseName) {
-		this.courseName = courseName;
+	this.courseName = courseName;
 	}
 
 	public String getCity() {
-		return city;
+	return city;
 	}
 
 	public void setCity(String city) {
-		this.city = city;
+	this.city = city;
 	}
 
 	public String getArea() {
-		return area;
+	return area;
 	}
 
 	public void setArea(String area) {
-		this.area = area;
+	this.area = area;
 	}
 
 	public String getModeOfCourse() {
-		return modeOfCourse;
+	return modeOfCourse;
 	}
 
 	public void setModeOfCourse(String modeOfCourse) {
-		this.modeOfCourse = modeOfCourse;
+	this.modeOfCourse = modeOfCourse;
 	}
 
 	public int getUpdatedBy() {
-		return updatedBy;
+	return updatedBy;
 	}
 
 	public void setUpdatedBy(int updatedBy) {
-		this.updatedBy = updatedBy;
+	this.updatedBy = updatedBy;
 	}
 
-	
 	public boolean isDeletedFlag() {
-		return deletedFlag;
+	return deletedFlag;
 	}
 
 	public void setDeletedFlag(boolean deletedFlag) {
-		this.deletedFlag = deletedFlag;
+	this.deletedFlag = deletedFlag;
 	}
 
 	public String getFileType() {
-		return fileType;
+	return fileType;
 	}
 
 	public void setFileType(String fileType) {
-		this.fileType = fileType;
+	this.fileType = fileType;
 	}
 
 	public Date getUpdatedOn() {
-		return updatedOn;
+	return updatedOn;
 	}
 
 	public void setUpdatedOn(Date updatedOn) {
-		this.updatedOn = updatedOn;
+	this.updatedOn = updatedOn;
 	}
 
 	public String getAddress() {
-		return address;
+	return address;
 	}
 
 	public void setAddress(String address) {
-		this.address = address;
+	this.address = address;
 	}
 
 	public String getBudget() {
-		return budget;
+	return budget;
 	}
 
 	public void setBudget(String budget) {
-		this.budget = budget;
+	this.budget = budget;
 	}
 
 	public String getModificationStage() {
-		return modificationStage;
+	return modificationStage;
 	}
 
 	public void setModificationStage(String modificationStage) {
-		this.modificationStage = modificationStage;
+	this.modificationStage = modificationStage;
 	}
 
 	public String getComments() {
-		return comments;
+	return comments;
 	}
 
 	public void setComments(String comments) {
-		this.comments = comments;
+	this.comments = comments;
 	}
 
 	public String getRemark() {
-		return remark;
+	return remark;
 	}
 
 	public void setRemark(String remark) {
-		this.remark = remark;
+	this.remark = remark;
 	}
 
 	public String getInstituteName() {
-		return instituteName;
+	return instituteName;
 	}
 
 	public void setInstituteName(String instituteName) {
-		this.instituteName = instituteName;
+	this.instituteName = instituteName;
 	}
 
 	public CategoryMaster getCategoryMaster() {
-		return categoryMaster;
+	return categoryMaster;
 	}
 
 	public void setCategoryMaster(CategoryMaster categoryMaster) {
-		this.categoryMaster = categoryMaster;
+	this.categoryMaster = categoryMaster;
 	}
 
 	public SubCategoryMaster getSubCategoryMaster() {
-		return subCategoryMaster;
+	return subCategoryMaster;
 	}
 
 	public void setSubCategoryMaster(SubCategoryMaster subCategoryMaster) {
-		this.subCategoryMaster = subCategoryMaster;
+	this.subCategoryMaster = subCategoryMaster;
 	}
 
 	public RemarkMaster getRemarkMaster() {
-		return remarkMaster;
+	return remarkMaster;
 	}
 
 	public void setRemarkMaster(RemarkMaster remarkMaster) {
-		this.remarkMaster = remarkMaster;
+	this.remarkMaster = remarkMaster;
 	}
 
 	public Long getCategoryId() {
-		return categoryId;
+	return categoryId;
 	}
 
 	public void setCategoryId(Long categoryId) {
-		this.categoryId = categoryId;
+	this.categoryId = categoryId;
 	}
 
 	public Long getSubCategoryId() {
-		return subCategoryId;
+	return subCategoryId;
 	}
 
 	public void setSubCategoryId(Long subCategoryId) {
-		this.subCategoryId = subCategoryId;
+	this.subCategoryId = subCategoryId;
 	}
 
 	public Long getRemarkId() {
-		return remarkId;
+	return remarkId;
 	}
 
 	public void setRemarkId(Long remarkId) {
-		this.remarkId = remarkId;
+	this.remarkId = remarkId;
 	}
 
 	public String getCategoryName() {
-		return categoryName;
+	return categoryName;
 	}
 
 	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	this.categoryName = categoryName;
 	}
 
 	public String getSubCategoryName() {
-		return subCategoryName;
+	return subCategoryName;
 	}
 
 	public void setSubCategoryName(String subCategoryName) {
 		this.subCategoryName = subCategoryName;
 	}
-	
-	
-	
-	  
+
+	public LeadMasterDto(LeadMaster leadMaster) {
+		this.setStudentId(leadMaster.getStudentId());
+		this.setStudentName(leadMaster.getStudentName());
+		this.setCourseName(leadMaster.getCourseName());
+		this.setContactNo(leadMaster.getContactNo());
+		this.setArea(leadMaster.getArea());
+		this.setCity(leadMaster.getCity());
+		this.setEmailId(leadMaster.getEmailId());
+		this.setModeOfCourse(leadMaster.getModeOfCourse());
+		this.setAddress(leadMaster.getAddress());
+		this.setBudget(leadMaster.getBudget());
+		this.setComments(leadMaster.getComments());
+		this.setInstituteName(leadMaster.getInstituteName());
+		this.setCategoryId(leadMaster.getCategoryMaster().getCategoryId());
+		this.setCategoryName(leadMaster.getCategoryMaster().getCategoryName());
+		this.setRemarkId(leadMaster.getRemarkMaster().getRemarkId());
+		this.setRemarkName(leadMaster.getRemarkMaster().getRemarkName());
+	}
+
+	public LeadMasterDto () {}
 } 

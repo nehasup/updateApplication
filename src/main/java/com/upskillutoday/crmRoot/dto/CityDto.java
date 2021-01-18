@@ -6,15 +6,10 @@ import java.util.Date;
 public class CityDto {
 
 	private Long cityId;
-
 	private String cityName;
-	
 	private String state;
-	
 	private int updatedBy;
-
 	private Date updatedOn;
-
 	private boolean deletedFlag;
 
 	public Long getCityId() {
@@ -64,7 +59,4 @@ public class CityDto {
 	public void setState(String state) {
 		this.state = state;
 	}
-	
-	
-	
 }

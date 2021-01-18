@@ -1,16 +1,19 @@
 package com.upskillutoday.crmRoot.dto;
 
-
-
 public class UserLoginDto {
 
 	private String contactNo;
-
     private String pass;
-
     private String loginMsg;
-
     private boolean flag;
+
+	public UserLoginDto(String contactNo, String pass, String loginMsg, boolean flag) {
+		super();
+		this.contactNo = contactNo;
+		this.pass = pass;
+		this.loginMsg = loginMsg;
+		this.flag = flag;
+	}
 
 	public String getContactNo() {
 		return contactNo;
@@ -43,15 +46,4 @@ public class UserLoginDto {
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
-
-	public UserLoginDto(String contactNo, String pass, String loginMsg, boolean flag) {
-		super();
-		this.contactNo = contactNo;
-		this.pass = pass;
-		this.loginMsg = loginMsg;
-		this.flag = flag;
-	}
-    
-	
-	    
 }

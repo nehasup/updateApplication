@@ -14,11 +14,7 @@ import com.upskillutoday.crmRoot.response.EmpLeadResponseDto;
 
 @Repository
 public interface EmpLeadJpaRepository extends JpaRepository<EmpLead, Long>{
-
 	List<EmpLead> findByEmployeeMasterAndDeletedFlag(EmployeeMaster employeeMaster, boolean b);
-
 	List<EmpLead> findByDeletedFlag(boolean b);
-
 	EmpLead findByLeadMaster(LeadMaster leadMaster);
-
 }

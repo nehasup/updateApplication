@@ -39,127 +39,117 @@ public class CityController {
 	
 	@Autowired
 	private CityJpaRepository cityjpaRepository;
-	
 
 	@PostMapping("/saveCity")
 	@ResponseBody 
-	public ResponseVO insertCity(@RequestBody CityDto cityDto) {
+	public ResponseVO insertCity(
+	        @RequestBody CityDto cityDto
+    ) {
 		  ResponseVO response = new ResponseVO();
-	      
+
 	        boolean flag=cityservice.insertCityService(cityDto);
-	        if(flag)
-	        {
+	        if(flag) {
 	            response.setMessage("Insert City Sucessfully");
 	            response.setStatusCode(String.valueOf(HttpStatus.OK));
-	        }
-	        else {
+	        } else {
 	            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 	            response.setMessage("Insert Failed!!");
-
 	        }
 	        return response;
-
     }
-	
-	
-	 
+
 	//get active city list
- @GetMapping("/getAllcityList")	  
- @ResponseBody  public ResponseVO<List> getCityAllList() {
+    @GetMapping("/getAllcityList")
+    @ResponseBody
+    public ResponseVO<List> getCityAllList() {
         ResponseVO<List> response=new ResponseVO<List>();
         System.out.println("List Successfully!!");
         List list=cityservice.getAllRecordCityService();
         response.setResult(list);
-
-        if(list.size()!=0){
+        if(list.size()!=0) {
             response.setStatusCode(String.valueOf(HttpStatus.OK));
             response.setMessage("Data is Present Successfully!!");
-        }
-        else {
+        } else {
             response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
             response.setMessage("Data is Not Present!!");
         }
-
         return response;
     }
  
-//get All city list
-
- @GetMapping("/getCities")
+    //get All city list
+    @GetMapping("/getCities")
     public List<CityMaster> getAllCities() {
         return cityjpaRepository.findAll();
     }
  
- //getRecordByidForEdit.........By neha
- @GetMapping("/getAllcitybyid/{id}")	  
- @ResponseBody public ResponseVO<CityDto> getRecordByCityIdController(@PathVariable(value = "id") Long cityId) {
-     ResponseVO<CityDto> response = new ResponseVO<CityDto>();
-
-     CityDto cityDto=new CityDto();
-     cityDto.setCityId(cityId);
-
-     boolean flag=cityservice.getRecordByCityIdService(cityDto);
-
-     if(flag)
-     {
-         response.setMessage("Search By Data Sucessfully");
-         response.setStatusCode(String.valueOf(HttpStatus.OK));
-         response.setResult(cityDto);
-     }
-     else {
-         response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-         response.setMessage("Search Failed!!");
-         response.setResult(cityDto);
-
-     }
-     return response;
- }
+    //getRecordByidForEdit.........By neha
+    @GetMapping("/getAllcitybyid/{id}")
+    @ResponseBody public ResponseVO<CityDto> getRecordByCityIdController(
+            @PathVariable(value = "id") Long cityId
+    ) {
+         ResponseVO<CityDto> response = new ResponseVO<CityDto>();
+         CityDto cityDto=new CityDto();
+         cityDto.setCityId(cityId);
+         boolean flag=cityservice.getRecordByCityIdService(cityDto);
+         if(flag) {
+             response.setMessage("Search By Data Sucessfully");
+             response.setStatusCode(String.valueOf(HttpStatus.OK));
+             response.setResult(cityDto);
+         } else {
+             response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+             response.setMessage("Search Failed!!");
+             response.setResult(cityDto);
+         }
+         return response;
+    }
  
  
-//for update City...by neha
- @PatchMapping("/updateCity")
- @ResponseBody  public ResponseVO updateCity(@RequestBody CityDto cityDto) {
-     ResponseVO<CityDto>responseVO=new ResponseVO<CityDto>();
-     boolean flag= cityservice.updateCityService(cityDto);
-    
-
-     if(flag){
-         responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
-         responseVO.setMessage("Update Successfully!!");
-         responseVO.setResult(cityDto);
+    //for update City...by neha
+     @PatchMapping("/updateCity")
+     @ResponseBody  public ResponseVO updateCity(
+             @RequestBody CityDto cityDto
+     ) {
+         ResponseVO<CityDto>responseVO=new ResponseVO<CityDto>();
+         boolean flag= cityservice.updateCityService(cityDto);
+         if(flag) {
+             responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
+             responseVO.setMessage("Update Successfully!!");
+             responseVO.setResult(cityDto);
+         } else {
+             responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+             responseVO.setMessage("Updation Failed!!");
+             responseVO.setResult(cityDto);
+         }
+         return responseVO;
      }
-     else {
-         responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-         responseVO.setMessage("Updation Failed!!");
-         responseVO.setResult(cityDto);
+
+     @PutMapping("/updateCityByid/{id}")
+     public ResponseEntity<CityMaster> updateCityid(
+             @PathVariable(value = "id") Long cityId,
+             @RequestBody CityMaster cityDetails
+     ) throws ResourceNotFoundException {
+         CityMaster city = cityjpaRepository.findById(cityId)
+         .orElseThrow(() -> new ResourceNotFoundException("City not found for this id :: " + cityId));
+
+         city.setCityName(cityDetails.getCityName());
+         city.setState(cityDetails.getState());
+         city.setUpdatedOn(new Date());
+         city.setDeletedFlag(true);
+
+         final CityMaster updatedCity = cityjpaRepository.save(city);
+         return ResponseEntity.ok(updatedCity);
      }
-     return responseVO;
- }
- @PutMapping("/updateCityByid/{id}")
- public ResponseEntity<CityMaster> updateCityid(@PathVariable(value = "id") Long cityId,@RequestBody CityMaster cityDetails) throws ResourceNotFoundException {
-     CityMaster city = cityjpaRepository.findById(cityId)
-     .orElseThrow(() -> new ResourceNotFoundException("City not found for this id :: " + cityId));
 
-     city.setCityName(cityDetails.getCityName());
-     city.setState(cityDetails.getState());
-     city.setUpdatedOn(new Date());
- 	 city.setDeletedFlag(true);
-   
-     final CityMaster updatedCity = cityjpaRepository.save(city);
-     return ResponseEntity.ok(updatedCity);
- }
-
- @DeleteMapping("/deleteCity/{id}")
- public Map<String, Boolean> deleteCity(@PathVariable(value = "id") Long cityId)
-      throws ResourceNotFoundException {
-     CityMaster city = cityjpaRepository.findById(cityId)
-    .orElseThrow(() -> new ResourceNotFoundException("City not found for this id :: " + cityId));
-
-     city.setDeletedFlag(false);
-     cityjpaRepository.save(city);
-     Map<String, Boolean> response = new HashMap<>();
-     response.put("deletedFlag", Boolean.TRUE);
-     return response;
- }
-
+     @DeleteMapping("/deleteCity/{id}")
+     public Map<String, Boolean> deleteCity(
+             @PathVariable(value = "id") Long cityId
+     ) throws ResourceNotFoundException {
+         CityMaster city = cityjpaRepository.findById(cityId)
+        .orElseThrow(() -> new ResourceNotFoundException("City not found for this id :: " + cityId));
+         city.setDeletedFlag(false);
+         cityjpaRepository.save(city);
+         Map<String, Boolean> response = new HashMap<>();
+         response.put("deletedFlag", Boolean.TRUE);
+         return response;
+     }
 }

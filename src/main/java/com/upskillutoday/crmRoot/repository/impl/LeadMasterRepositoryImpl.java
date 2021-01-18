@@ -1,19 +1,21 @@
 package com.upskillutoday.crmRoot.repository.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.EmpLead;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.transform.Transformers;
+import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
+import com.upskillutoday.crmRoot.response.LeadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.upskillutoday.crmRoot.dto.LeadMasterDto;
-import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
 
@@ -22,6 +24,9 @@ import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
 public class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	  @Autowired
 	     private EntityManager entityManager;
+
+  	@Autowired
+	EmpLeadJpaRepository empLeadJpaRepository;
 
 	@Override
 	public LeadMaster findByEmail(String email) {
@@ -35,9 +40,7 @@ public class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	        }
 	        return lead;
 	}
-	
-		
-	
+
 	@Override
 	public boolean insertLeadRepository(LeadMaster leadMaster) {
 		 try {
@@ -51,7 +54,6 @@ public class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	            entityManager.close();
 	        }
 	}
-	
 	
 	@Override
     public List<LeadMaster> getAllLeadListDao() {
@@ -103,30 +105,49 @@ try{
     }
 }
 	@Override
-	public boolean updateLeadRepository(LeadMaster leadMaster) {
+	public void updateLeadRepository(LeadMaster leadMaster) {
 	 try {
            entityManager.merge(leadMaster);
-           return true;
-       } catch (Exception e) {
+     } catch (Exception e) {
            e.printStackTrace();
-           return false;
-       }
+     }
 }
 
 
 
 	@Override
 	public List<LeadMaster> getAllLeadByassignFlag() {
-		 List<LeadMaster> leadMasterDtos =null;
+	 	List<LeadMaster> leadMasterDtos = null;
 		try {
-	            Query query = entityManager.createQuery("Select lead from LeadMaster as lead where lead.deletedFlag=1");
-	            leadMasterDtos = query.getResultList();
+				Query query = entityManager.createQuery("Select lead from LeadMaster as lead where lead.deletedFlag=1");
+				leadMasterDtos = query.getResultList();
 
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        return leadMasterDtos;
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return leadMasterDtos;
+	}
+
+	@Override
+	public List<LeadMasterDto> getAllLeadForMe() {
+		List<LeadMasterDto> leadMasterDtos = null;
+		try {
+			Query query = entityManager.createQuery("SELECT lead FROM LeadMaster as lead where lead.deletedFlag=1", LeadMaster.class);
+			leadMasterDtos = new ArrayList<>();
+			for(LeadMaster leadMaster : ((List<LeadMaster>) query.getResultList())) {
+				LeadMasterDto leadMasterDto = new LeadMasterDto(leadMaster);
+				EmpLead empLead = empLeadJpaRepository.findByLeadMaster(leadMaster);
+				leadMasterDto.setEmployeeName( empLead != null ? empLead.getEmployeeMaster().getEmployeeName() : "Not Assign");
+				leadMasterDto.setEmployeeId(empLead != null ? empLead.getEmployeeMaster().getEmployeeId() : null);
+				leadMasterDto.setUpdatedOn(new Date());
+				leadMasterDtos.add(leadMasterDto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return leadMasterDtos;
+	}
 
 	@Override
 	public List getLeadsByRemark(Long remarkId) {
@@ -134,7 +155,3 @@ try{
 		return query.getResultList();
 	}
 }
-
-
- 
-

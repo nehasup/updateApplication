@@ -15,35 +15,21 @@ import com.upskillutoday.crmRoot.model.UserMaster;
  */
 public class LoginData {
     
-private Long employeeId;
-	
+	private Long employeeId;
 	private String employeeName;
-	
 	private String contactNo;
-	
 	private String guardianNo;
-	
 	private String emailId;
-	
 	private String address;
-	
 	private Date birthDate;
-	
 	private String gender;
-	
 	private Long categoryId;
-	
     private CategoryMaster category;
-
 	private UserMaster userMaster;
-	
 	private RoleMaster roleMaster;
-	
 	private Integer responseCode;
 	private String message;
-	
 	private Long userId;
-	
 	private String userName;
 
 	public Long getEmployeeId() {
@@ -173,6 +159,4 @@ private Long employeeId;
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
-   
 }

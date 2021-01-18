@@ -17,8 +17,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "category_city")
 public class CategoryCity {
-	
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "category_city_id")
@@ -37,8 +36,7 @@ public class CategoryCity {
 	
 	@Column(name="category_id",insertable = false, updatable = false)
 	private Long categoryId;
-	
-	
+
 	@Column(name = "updated_by")
 	private int updatedBy;
 
@@ -112,7 +110,4 @@ public class CategoryCity {
 	public void setDeletedFlag(boolean deletedFlag) {
 		this.deletedFlag = deletedFlag;
 	}
-	
-	
-
 }

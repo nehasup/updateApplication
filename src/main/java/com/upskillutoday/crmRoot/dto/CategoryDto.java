@@ -10,23 +10,12 @@ import com.upskillutoday.crmRoot.model.CityMaster;
 
 public class CategoryDto {
 	
-private Long categoryId;
-	
-
+	private Long categoryId;
 	private Long cityId;
-
 	private String categoryName;
-	
-	
 	private int updatedBy;
-
-	
 	private Date updatedOn;
-
-
 	private boolean deletedFlag;
-	
-
 
 	public Long getCityId() {
 		return cityId;
@@ -75,7 +64,4 @@ private Long categoryId;
 	public void setDeletedFlag(boolean deletedFlag) {
 		this.deletedFlag = deletedFlag;
 	}
-
-	
-    
 }

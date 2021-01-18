@@ -4,20 +4,13 @@ import java.util.Date;
 
 import com.upskillutoday.crmRoot.model.ERole;
 
-
-
 public class RoleDto {
 	
 	private Long roleId;
-	
 	private String roleName;
-	
 	private String department;
-	
 	private int updatedBy;
-	
 	private Date updatedOn;
-	
 	private boolean deletedFlag;
 
 	public Long getRoleId() {
@@ -27,22 +20,11 @@ public class RoleDto {
 	public void setRoleId(Long roleId) {
 		this.roleId = roleId;
 	}
-
-//	public String getRoleName() {
-//		return roleName;
-//	}
-//
-//	public void setRoleName(String roleName) {
-//		this.roleName = roleName;
-//	}
-
-	
 	
 	public String getDepartment() {
 		return department;
 	}
 
-	
 	public String getRoleName() {
 		return roleName;
 	}
@@ -78,8 +60,4 @@ public class RoleDto {
 	public void setDeletedFlag(boolean deletedFlag) {
 		this.deletedFlag = deletedFlag;
 	}
-
-	
-	
-
 }

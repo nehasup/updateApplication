@@ -40,43 +40,22 @@ public class UserLoginController {
 	
 	 @PostMapping("/loginuser")
 	 @ResponseBody
-	 public ResponseVO<UserLoginResponseDto> userLoginController(@RequestBody  UserLoginDto userLoginDto) {
-	        ResponseVO<UserLoginResponseDto> response = new ResponseVO<UserLoginResponseDto>();
-	        UserLoginResponseDto dto = userloginService.loginuserService(userLoginDto);
-	        if(userLoginDto.isFlag()) {
-	            response.setStatusCode(String.valueOf(HttpStatus.OK));
-	            System.out.println(response.getStatusCode());
-	            response.setMessage(userLoginDto.getLoginMsg());
-	            response.setResult(dto);
-	        } else {
-	            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-	            System.out.println(response.getStatusCode());
-	            response.setMessage(userLoginDto.getLoginMsg());
-	            response.setResult(dto);
-	        }
-	        return response;
-	    }
-	 
-//	 @PostMapping("/loginemploye")
-//	    public ResponseEntity login(@RequestBody EmpLoginReqDto empLoginReqDto)
-//	    {
-//		
-//	        EmpLoginResDto empLoginResDto = employeeServiceimpl.login(empLoginReqDto);
-//	        return new ResponseEntity(empLoginResDto,HttpStatus.OK);
-//	    }
-//	 
-//	   @PostMapping("/login")
-//	    public boolean login(@RequestBody UserMaster user) {
-//	        return
-//	          user.getUserName().equals("userName") && user.getPass().equals("pass");
-//	    }
-//		
-//	    @RequestMapping("/user")
-//	    public Principal user(HttpServletRequest request) {
-//	        String authToken = request.getHeader("Authorization")
-//	          .substring("Basic".length()).trim();
-//	        return () ->  new String(Base64.getDecoder()
-//	          .decode(authToken)).split(":")[0];
-//	    }
-
+	 public ResponseVO<UserLoginResponseDto> userLoginController(
+	 		@RequestBody  UserLoginDto userLoginDto
+	 ) {
+		ResponseVO<UserLoginResponseDto> response = new ResponseVO<UserLoginResponseDto>();
+		UserLoginResponseDto dto = userloginService.loginuserService(userLoginDto);
+		if(userLoginDto.isFlag()) {
+			response.setStatusCode(String.valueOf(HttpStatus.OK));
+			System.out.println(response.getStatusCode());
+			response.setMessage(userLoginDto.getLoginMsg());
+			response.setResult(dto);
+		} else {
+			response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+			System.out.println(response.getStatusCode());
+			response.setMessage(userLoginDto.getLoginMsg());
+			response.setResult(dto);
+		}
+		return response;
+	}
 }

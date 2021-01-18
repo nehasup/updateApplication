@@ -11,42 +11,26 @@ import com.upskillutoday.crmRoot.model.UserMaster;
 public class EmployeeDto {
 
 	private Long employeeId;
-	
 	private String employeeName;
-	
 	private String contactNo;
-	
 	private String guardianNo;
-	
 	private String emailId;
-	
 	private String address;
-	
 	private Date birthDate;
-	
 	private String gender;
-	
 	private int updatedBy;
-
 	private Date updatedOn;
-
 	private boolean deletedFlag;
-	
-//	private CategoryMaster category;
-	    
 	private Long categoryId;
-	
 	private Long roleId;
-	
 	private String userName;
-	
 	private String pass;
-	
 	private UserMaster users;
-	
 	private Long userId;
-
 	public Long[] categories;
+	private RoleMaster roles;
+	private Integer responseCode;
+	private String message;
 
 	public Long[] getCategories() {
 		return categories;
@@ -63,11 +47,6 @@ public class EmployeeDto {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-
-	private RoleMaster roles;
-
-	private Integer responseCode;
-	private String message;
 	
 	public Long getEmployeeId() {
 		return employeeId;
@@ -157,14 +136,6 @@ public class EmployeeDto {
 		this.deletedFlag = deletedFlag;
 	}
 
-//	public CategoryMaster getCategory() {
-//		return category;
-//	}
-//
-//	public void setCategory(CategoryMaster category) {
-//		this.category = category;
-//	}
-
 	public Long getCategoryId() {
 		return categoryId;
 	}
@@ -228,11 +199,4 @@ public class EmployeeDto {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	
-	
-	
-	
-	
-	
 }

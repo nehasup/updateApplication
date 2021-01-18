@@ -6,18 +6,12 @@ import com.upskillutoday.crmRoot.model.CategoryMaster;
 
 public class SubCategoryDto {
 	
-private Long subCategoryId;
-	
+	private Long subCategoryId;
 	private String subCategoryName;
-	
 	private int updatedBy;
-
 	private Date updatedOn;
-
 	private boolean deletedFlag;
-	
     private CategoryMaster category;
-    
 	private Long categoryId;
 
 	public Long getSubCategoryId() {
@@ -75,7 +69,4 @@ private Long subCategoryId;
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
-    
-    
-
 }

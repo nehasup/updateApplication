@@ -39,95 +39,90 @@ public class CategoryController {
 	@Autowired
 	private CategoryJpaRepository categoryJpaRepository;
 	
-//add category
+	//add category
 	@PostMapping("/saveCategory")
 	@ResponseBody 
-	public ResponseVO insertCategory(@RequestBody CategoryDto categoryDto) {
-		  ResponseVO response = new ResponseVO();
-	      
-	        boolean flag=categoryService.insertCategoryService(categoryDto);
-	        if(flag)
-	        {
-	            response.setMessage("Insert Category Sucessfully");
-	            response.setStatusCode(String.valueOf(HttpStatus.OK));
-	            response.setResult(flag);
-	        }
-	        else {
-	            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-	            response.setMessage("Insert Failed!!");
-	            response.setResult(flag);
+	public ResponseVO insertCategory(
+			@RequestBody CategoryDto categoryDto
+	) {
+	  	ResponseVO response = new ResponseVO();
+		boolean flag=categoryService.insertCategoryService(categoryDto);
+		if(flag) {
+			response.setMessage("Insert Category Sucessfully");
+			response.setStatusCode(String.valueOf(HttpStatus.OK));
+			response.setResult(flag);
+		} else {
+			response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+			response.setMessage("Insert Failed!!");
+			response.setResult(flag);
 
-	        }
-	        return response;
-
+		}
+		return response;
     }
+
 	//get category active list
 	 @GetMapping("/getAllCategoryList")	  
-	 @ResponseBody  public ResponseVO<List> getCategoryAllList() {
-	        ResponseVO<List> response=new ResponseVO<List>();
-	        System.out.println("List Successfully!!");
-	        List list=categoryService.getAllRecordCategoryService();
-	        response.setResult(list);
+	 @ResponseBody
+	 public ResponseVO<List> getCategoryAllList() {
+		ResponseVO<List> response=new ResponseVO<List>();
+		System.out.println("List Successfully!!");
+		List list=categoryService.getAllRecordCategoryService();
+		response.setResult(list);
 
-	        if(list.size()!=0){
-	            response.setStatusCode(String.valueOf(HttpStatus.OK));
-	            response.setMessage("Data is Present Successfully!!");
-	        }
-	        else {
-	            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-	            response.setMessage("Data is Not Present!!");
-	        }
+		if(list.size()!=0) {
+			response.setStatusCode(String.valueOf(HttpStatus.OK));
+			response.setMessage("Data is Present Successfully!!");
+		} else {
+			response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+			response.setMessage("Data is Not Present!!");
+		}
 
-	        return response;
-	    }
+		return response;
+	}
 	 
 	 //getRecordByidForEdit.........By neha
 	 @GetMapping("/getAllCategorybyid/{id}")	  
-	 @ResponseBody public ResponseVO<CategoryDto> getRecordByCategoryIdController(@PathVariable(value = "id") Long categoryId) {
+	 @ResponseBody public ResponseVO<CategoryDto> getRecordByCategoryIdController(
+	 		@PathVariable(value = "id") Long categoryId
+	 ) {
 	     ResponseVO<CategoryDto> response = new ResponseVO<CategoryDto>();
-
-	 
-	     
 	     CategoryDto categoryDto = new CategoryDto();
 	     categoryDto.setCategoryId(categoryId);
 
 	     boolean flag=categoryService.getRecordByCategoryIdService(categoryDto);
-
-	     if(flag)
-	     {
+	     if(flag) {
 	         response.setMessage("Search By Data Sucessfully");
 	         response.setStatusCode(String.valueOf(HttpStatus.OK));
 	         response.setResult(categoryDto);
-	     }
-	     else {
+	     } else {
 	         response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 	         response.setMessage("Search Failed!!");
 	         response.setResult(categoryDto);
-
 	     }
 	     return response;
 	 }
-		
 	
 	 //update category by id
 	 @PutMapping("/updateCategoryByid/{id}")
-	 public ResponseEntity<CategoryMaster> updateCategorybyid(@PathVariable(value = "id") Long categoryId,@RequestBody CategoryMaster categoryDetails) throws ResourceNotFoundException {
-	     CategoryMaster category = categoryJpaRepository.findById(categoryId)
-	     .orElseThrow(() -> new ResourceNotFoundException("Category not found for this id :: " + categoryId));
-
+	 public ResponseEntity<CategoryMaster> updateCategorybyid(
+	 		@PathVariable(value = "id") Long categoryId,
+			@RequestBody CategoryMaster categoryDetails
+	 ) throws ResourceNotFoundException {
+	     CategoryMaster category = categoryJpaRepository
+			 .findById(categoryId)
+	     	.orElseThrow(() -> new ResourceNotFoundException("Category not found for this id :: " + categoryId));
 	     category.setCategoryName(categoryDetails.getCategoryName());
 	     category.setUpdatedOn(new Date());
 	     category.setDeletedFlag(true);
-	   
 	     final CategoryMaster updatedCategory = categoryJpaRepository.save(category);
 	     return ResponseEntity.ok(updatedCategory);
 	 }
-	 
-	 
-//delete category by id
+
+	//delete category by id
 	 @DeleteMapping("/deleteCategory/{id}")
-	 public Map<String, Boolean> deleteCategory(@PathVariable(value = "id") Long categoryId)
-	      throws ResourceNotFoundException {
+	 public Map<String, Boolean> deleteCategory(
+	 		@PathVariable(value = "id") Long categoryId
+	 ) throws ResourceNotFoundException {
 		 CategoryMaster category = categoryJpaRepository.findById(categoryId)
 	    .orElseThrow(() -> new ResourceNotFoundException("Category not found for this id :: " + categoryId));
 
@@ -143,9 +138,4 @@ public class CategoryController {
 	    public List<CategoryMaster> getAllCategories() {
 	        return categoryJpaRepository.findAll();
 	    }
-	 
-	 
-	 
-	
-
 }

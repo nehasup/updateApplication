@@ -58,12 +58,10 @@ public class UserMaster implements Serializable  {
 //	private Set<RoleMaster> role = new HashSet<>();
 	  
 	public UserMaster() {
-		
 	}
 	
 	
 	public UserMaster(String userName, String pass) {
-	
 		this.userName = userName;
 		this.pass = pass;
 	}

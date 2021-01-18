@@ -2,46 +2,26 @@ package com.upskillutoday.crmRoot.dto;
 
 import java.util.Date;
 
-
-
 public class InstituteDto {
 	
 	private long instituteId;
-	
 	private String instituteName;
-		
 	private String legalName;
-	
 	private String contactNo;
-		
 	private String emailId;
-	
 	private String address;
-	
 	private String gstNo;
-		
 	private String upSkillExecutive;
-	
 	private String courseName;
-		
 	private String designMaker;
-		
 	private String headCounselor;
-	
 	private String counselor;
-	
 	private String eligibility;
-
 	private String targetLocality;
-
 	private String ageLimit;
-
 	private String perDayLead;
-	
 	private int updatedBy;
-	
 	private Date updated_on;
-	
 	private boolean deleted_flag;
 	private String userName;
 	private String pass;
@@ -213,7 +193,4 @@ public class InstituteDto {
 	public void setInstituteId(long instituteId) {
 		this.instituteId = instituteId;
 	}
-	
-	
-
 }
