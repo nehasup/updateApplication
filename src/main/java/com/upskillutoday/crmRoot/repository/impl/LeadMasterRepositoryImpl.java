@@ -136,7 +136,7 @@ try{
 	@Override
 	public List getAllLeadForMe() {
 		return entityManager.createQuery("SELECT new LeadResponseDto (" +
-				"el.leadMaster.studentId, " +
+				"lm.studentId, " +
 				"lm.studentName, " +
 				"lm.courseName, " +
 				"lm.contactNo, " +
@@ -147,8 +147,8 @@ try{
 				"lm.modificationStage, " +
 				"lm.address, " +
 				"lm.budget, " +
-				"lm.remarkMaster.remarkId, " +
-				"lm.remarkMaster.remarkName, " +
+				"rmk.remarkId, " +
+				"rmk.remarkName, " +
 				"lm.comments, " +
 				"lm.instituteName," +
 				"cm.categoryId," +
@@ -156,12 +156,12 @@ try{
 				"lm.updatedOn, " +
 				"emp.employeeName, " +
 				"rm.roleName) " +
-				"FROM LeadMaster as lm \n" +
-				"left join EmpLead as el on  lm.studentId = el.leadMaster.studentId \n" +
+				"FROM LeadMaster as lm inner join lm.categoryMaster as cm inner join lm.remarkMaster as rmk \n"+
+				"left join EmpLead as el on lm.studentId = el.leadMaster.studentId \n" +
+				//"left join CategoryMaster as cm on cm.categoryId = el.leadMaster.categoryMaster.categoryId" +
 				"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
 				"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
-				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId \n " +
-				"left join CategoryMaster as cm on cm.categoryId = el.leadMaster.categoryMaster.categoryId").getResultList();
+				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId \n ").getResultList();
 	}
 
 
