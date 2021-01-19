@@ -196,6 +196,65 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	}
 
 	@Override
+	public List<LeadMasterDto> getAllLeadListCategoryWiseService(EmployeeMaster employeeMaster) {
+		// TODO Auto-generated method stub
+		List<LeadMaster> leadMasterList =  new ArrayList<LeadMaster>();
+	
+		//if(pageName.equals("Lead")) {
+	
+
+			ArrayList<EmpCategy> list = (ArrayList<EmpCategy>) empCategyRepository.findAll();
+			for(EmpCategy empCategy : list) {
+				if(empCategy.getEmployeeMaster().getEmployeeId().equals(employeeMaster.getEmployeeId()))
+					leadMasterList.addAll(leadJpaMasterRepository.findByCategoryMasterAndDeletedFlag(empCategy.getCategoryMaster(), true));
+			}
+
+		//}
+		
+//		if(pageName.equals("Assign")) {
+//			System.out.println("asssing");
+//			 //leadMasterList = leadJpaMasterRepository.findByCategoryMasterAndDeletedFlagAndAssignLeadFlag(employeeMaster.getCategory(), true,false);
+//			leadMasterList=leadJpaMasterRepository.findAllAndDeletedFlagAndAssignLeadFlag(true,false);
+//		}
+//		
+		
+		List<LeadMasterDto> leadMasterDtoList = new ArrayList<LeadMasterDto>();
+	
+		if(leadMasterList!=null) {
+			for (LeadMaster leadMaster : leadMasterList) {
+				LeadMasterDto leadMasterDto = new LeadMasterDto();
+			
+				leadMasterDto.setStudentId(leadMaster.getStudentId());
+				leadMasterDto.setStudentName(leadMaster.getStudentName());
+				leadMasterDto.setCourseName(leadMaster.getCourseName());
+				leadMasterDto.setContactNo(leadMaster.getContactNo());
+				leadMasterDto.setArea(leadMaster.getArea());
+				leadMasterDto.setCity(leadMaster.getCity());
+				leadMasterDto.setEmailId(leadMaster.getEmailId());
+				leadMasterDto.setModeOfCourse(leadMaster.getModeOfCourse());
+				leadMasterDto.setAddress(leadMaster.getAddress());
+				leadMasterDto.setBudget(leadMaster.getBudget());
+				leadMasterDto.setModificationStage(leadMaster.getModificationStage());
+				leadMasterDto.setRemark(leadMaster.getRemark());
+				leadMasterDto.setComments(leadMaster.getComments());
+				leadMasterDto.setInstituteName(leadMaster.getInstituteName());
+				leadMasterDto.setUpdatedOn(new Date());
+				leadMasterDto.setDeletedFlag(true);
+				leadMasterDto.setCategoryName(leadMaster.getCategoryMaster().getCategoryName());
+			//	leadMasterDto.setAssignLeadFlag(leadMaster.isAssignLeadFlag());
+				leadMasterDto.setEmployeeName(employeeMaster.getEmployeeName());
+				//leadMasterDto.setSubCategoryName(leadMaster.getSubCategoryMaster().getSubCategoryName());
+				leadMasterDto.setRemarkName(leadMaster.getRemarkMaster().getRemarkName());
+				
+				leadMasterDtoList.add(leadMasterDto);
+			}
+		}		
+		return leadMasterDtoList;
+	}
+	
+	
+	@Override
+	
 	public List<LeadMasterDto> getCategoryWiseandverifyLeadService(EmployeeMaster employeeMaster) {
 		// TODO Auto-generated method stub
 		

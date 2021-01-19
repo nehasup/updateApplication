@@ -90,6 +90,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setEmailId(employeeDto.getEmailId());
 		employee.setGender(employeeDto.getGender());
 		employee.setGuardianNo(employeeDto.getGuardianNo());
+		employee.setUserMaster(user);
 		employee.setUpdatedOn(new Date());
 		employee.setDeletedFlag(true);
 		

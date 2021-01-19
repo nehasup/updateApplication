@@ -224,12 +224,12 @@ public class LeadResponseDto {
 		this.comments = comments;
 	}
 
-	public String getInstituteName() {
-		return instituteName;
+	public Long getUpdatedBy() {
+		return updatedBy;
 	}
 
-	public void setInstituteName(String instituteName) {
-		this.instituteName = instituteName;
+	public void setUpdatedBy(Long updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 
 	public Date getUpdatedOn() {

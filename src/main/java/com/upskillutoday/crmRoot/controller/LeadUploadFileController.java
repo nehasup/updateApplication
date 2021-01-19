@@ -44,7 +44,7 @@ import com.upskillutoday.crmRoot.repository.UserMasterRepository;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
-import reactor.core.publisher.Mono;
+
 
 @RestController
 @RequestMapping("/api/v1")
@@ -150,11 +150,17 @@ public class LeadUploadFileController {
 	 ) {
 		ResponseVO<List> response = new ResponseVO<>();
 		//user obj
+<<<<<<< HEAD
+=======
+		
+>>>>>>> db2b53be9082771d10f1998817eafb3cf7e5f7ac
 		try {
-			EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
+			//EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
 			RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
 
 			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
+				List list = leadMasterService.getAllLeadRecordService();
+				
 				//Admin // All leads
 				List list = leadMasterService.getAllLeadRecordService();
 				if(list!=null) {
@@ -168,7 +174,8 @@ public class LeadUploadFileController {
 				}
 			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
 				// Cousler     //Category based leads
-				List<LeadMasterDto>  leadMasterDtoList = leadMasterRepository.getAllLeadListByquery(userId);
+				List<LeadMasterDto>  leadMasterDtoList=leadMasterRepository.getAllLeadListByquery(userId);
+				//List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
 				if(leadMasterDtoList!=null) {
 					response.setResult(leadMasterDtoList);
 				}
@@ -253,18 +260,17 @@ public class LeadUploadFileController {
 
 	 //update Lead by id
 	// updated by Laukik
-	 @PutMapping("/updateLeadByid/")
-	 @ResponseBody public ResponseVO updateLeadController(
-	 		@RequestParam(value = "userId") Long userId,
-			@RequestParam(value = "empId") Long empUserId,
+	 @PutMapping("/updateLeadByid/{id}")
+	 @ResponseBody public ResponseVO updateLeadController(@RequestParam(value = "userId") Long userId,@PathVariable(value = "id") Long studentId,
 			@RequestBody LeadMasterDto leadMasterDto
 	 ) {
 		 ResponseVO<LeadMasterDto> responseVO = new ResponseVO<LeadMasterDto>();
 		 boolean flag = leadMasterService.updateLeadService(userId, leadMasterDto);
 		  if(flag){
 			  responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
+			  
+			//  historyRepository.insertHistory(new History(leadMasterDto.getComments() == null ? leadMasterDto.getComments():"null" ,new Date(), employeeService.getEmployeeByUserId(userId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
 			  responseVO.setMessage("Update Successfully!!");
-			  historyRepository.insertHistory(new History(leadMasterDto.getComments(), new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(leadMasterDto.getStudentId()), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
 		  }
 		  else {
 			  responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
@@ -285,7 +291,7 @@ public class LeadUploadFileController {
 		leadJpaMasterRepository.save(leadMaster);
 	    Map<String, Boolean> response = new HashMap<>();
 	    response.put("deletedFlag", Boolean.TRUE);
-		historyRepository.insertHistory(new History("Deleted Lead by Employee", new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(remarkService.getRemarkById("Deleted"))));
+		//historyRepository.insertHistory(new History("Deleted Lead by Employee", new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(remarkService.getRemarkById("Deleted"))));
 		return response;
 	} 
 
