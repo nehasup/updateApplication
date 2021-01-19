@@ -151,6 +151,8 @@ try{
 				"lm.remarkMaster.remarkName, " +
 				"lm.comments, " +
 				"lm.instituteName," +
+				"cm.categoryId," +
+				"cm.categoryName," +
 				"lm.updatedOn, " +
 				"emp.employeeName, " +
 				"rm.roleName) " +
@@ -158,7 +160,8 @@ try{
 				"left join EmpLead as el on  lm.studentId = el.leadMaster.studentId \n" +
 				"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
 				"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
-				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId ").getResultList();
+				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId \n " +
+				"left join CategoryMaster as cm on cm.categoryId = el.leadMaster.categoryMaster.categoryId").getResultList();
 	}
 
 

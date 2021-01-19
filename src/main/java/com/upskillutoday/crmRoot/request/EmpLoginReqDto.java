@@ -3,9 +3,7 @@ package com.upskillutoday.crmRoot.request;
 
 
 public class EmpLoginReqDto {
-	
 	private String userName;
-	
 	private String pass;
 
 	public String getUserName() {
@@ -23,8 +21,4 @@ public class EmpLoginReqDto {
 	public void setPass(String pass) {
 		this.pass = pass;
 	}
-	
-	
-	
-
 }

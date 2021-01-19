@@ -1,7 +1,6 @@
 package com.upskillutoday.crmRoot.response;
 
 public class MessageResponse {
-
 	private String message;
 
 	public MessageResponse(String message) {

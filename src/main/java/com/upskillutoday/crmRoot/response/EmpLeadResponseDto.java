@@ -2,64 +2,44 @@ package com.upskillutoday.crmRoot.response;
 
 import java.util.Date;
 
-
-
 public class EmpLeadResponseDto {
-	
 	 private Long studentId;
-		
 	  private String studentName;
-	
 	  private String contactNo;
-	
 	  private String emailId;
-	
 	  private String courseName;
-	  
 	  private String city;
-	  
 	  private String area;
-	  
 	  private String modeOfCourse;
-	  
 	  private String address;
-	  
 	  private String budget;
-	  
 	  private String modificationStage;
-	  
 	  private String remark;
-	  
 	  private String comments;
-
 	  private int updatedBy;
-	  
 	  private Date updatedOn;
-	  
 	  private boolean deletedFlag;
-
-	 
-	  
 	  private String instituteName;
-	
 	  private String employeeName;
-	  
-	  
 	  private boolean assignLeadFlag;
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
 
-	
-	public EmpLeadResponseDto(Long studentId, String studentName, String contactNo, String emailId, String courseName,
-			String city, String area, String modeOfCourse, String address, String budget, String modificationStage,
-			String remark, String comments,String instituteName,String employeeName, boolean assignLeadFlag) {
-		super();
+	public EmpLeadResponseDto(
+			Long studentId,
+			String studentName,
+			String contactNo,
+			String emailId,
+			String courseName,
+			String city,
+			String area,
+			String modeOfCourse,
+			String address,
+			String budget,
+			String modificationStage,
+			String remark,
+			String comments,
+			String instituteName,
+			String employeeName,
+			boolean assignLeadFlag) {
 		this.studentId = studentId;
 		this.studentName = studentName;
 		this.contactNo = contactNo;
@@ -93,8 +73,6 @@ public class EmpLeadResponseDto {
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
 	}
-
-	
 
 	public Long getStudentId() {
 		return studentId;
@@ -177,8 +155,6 @@ public class EmpLeadResponseDto {
 		this.deletedFlag = deletedFlag;
 	}
 
-	
-
 	public Date getUpdatedOn() {
 		return updatedOn;
 	}
@@ -234,8 +210,4 @@ public class EmpLeadResponseDto {
 	public void setInstituteName(String instituteName) {
 		this.instituteName = instituteName;
 	}
-
-	
-	
-
 }

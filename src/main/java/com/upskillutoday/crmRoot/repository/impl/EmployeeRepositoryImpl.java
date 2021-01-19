@@ -89,8 +89,6 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
 	@Override
 	public EmployeeMaster getEmployeeByUserId(Long userId) {
-		return (EmployeeMaster) entityManager.createQuery("SELECT emp FROM EmployeeMaster as emp inner join emp.userMaster as um where um.userId = " + userId);
+		return entityManager.createQuery("SELECT emp FROM EmployeeMaster as emp inner join emp.userMaster as um where um.userId = " + userId, EmployeeMaster.class).getSingleResult();
 	}
-
-
 }

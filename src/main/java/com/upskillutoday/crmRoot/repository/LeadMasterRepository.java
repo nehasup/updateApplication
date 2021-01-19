@@ -13,7 +13,6 @@ public interface LeadMasterRepository {
 	void updateLeadRepository(LeadMaster leadMaster);
 	List<LeadMaster> getAllLeadByassignFlag();
 	List<LeadMasterDto> getAllLeadForMe();
-	List<LeadMasterDto> getAllLeadListByquery(Long userId);
 	List getLeadsByRemark(Long remarkId);
 	List<LeadMasterDto> getAllLeadListByquery(Long userId);
 }

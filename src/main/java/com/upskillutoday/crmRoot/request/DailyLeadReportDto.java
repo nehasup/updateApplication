@@ -5,9 +5,7 @@ import java.util.Date;
 
 
 public class DailyLeadReportDto {
-	
-	
-	  private Date updatedOn;
+	private Date updatedOn;
 
 	public Date getUpdatedOn() {
 		return updatedOn;
@@ -16,7 +14,4 @@ public class DailyLeadReportDto {
 	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
-
-	
-
 }

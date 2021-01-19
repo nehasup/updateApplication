@@ -8,37 +8,21 @@ import com.upskillutoday.crmRoot.model.RoleMaster;
 import com.upskillutoday.crmRoot.model.UserMaster;
 
 public class EmpLoginResDto {
-
-	
 	private Long employeeId;
-	
 	private String employeeName;
-	
 	private String contactNo;
-	
 	private String guardianNo;
-	
 	private String emailId;
-	
 	private String address;
-	
 	private Date birthDate;
-	
 	private String gender;
-	
 	private Long categoryId;
-	
     private CategoryMaster category;
-
 	private UserMaster userMaster;
-	
 	private RoleMaster roleMaster;
-	
 	private Integer responseCode;
 	private String message;
-	
 	private Long userId;
-	
 	private String userName;
 
 	public Long getEmployeeId() {
@@ -168,9 +152,4 @@ public class EmpLoginResDto {
 	public void setRoleMaster(RoleMaster roleMaster) {
 		this.roleMaster = roleMaster;
 	}
-
-	
-	
-	
-
 }

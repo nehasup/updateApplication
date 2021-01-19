@@ -3,14 +3,9 @@ package com.upskillutoday.crmRoot.response;
 
 
 public class ResponseMessage {
-
-	
 	private String message;
-	
-	
 
 	public ResponseMessage(String message) {
-	
 		this.message = message;
 	}
 
@@ -21,7 +16,5 @@ public class ResponseMessage {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
 }
 

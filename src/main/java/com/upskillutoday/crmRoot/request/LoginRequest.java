@@ -1,9 +1,7 @@
 package com.upskillutoday.crmRoot.request;
 
 public class LoginRequest {
-	
 	private String userName;
-
 	private String pass;
 
 	public String getUserName() {
@@ -21,7 +19,4 @@ public class LoginRequest {
 	public void setPass(String pass) {
 		this.pass = pass;
 	}
-
-	
-
 }

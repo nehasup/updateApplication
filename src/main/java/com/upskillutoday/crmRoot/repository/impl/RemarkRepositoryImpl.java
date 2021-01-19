@@ -72,24 +72,29 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 
 	@Override
 	public List getRemarkWithCount() {
-		return entityManager.createQuery("SELECT new CountRemarkDto(remark.remarkId, remark.remarkName , COUNT(leadMaster.studentId)) \n" +
-				"FROM RemarkMaster as remark\n" +
-				"inner join LeadMaster as leadMaster \n" +
-				"on remark.remarkId = leadMaster.remarkMaster.remarkId").getResultList();
+    return entityManager
+        .createQuery(
+            "SELECT new CountRemarkDto(rmkm.remarkId, rmkm.remarkName, COUNT(l.studentId) ) FROM RemarkMaster as rmkm\n"
+                + "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId\n"
+                + "    group by rmkm.remarkId")
+        .getResultList();
 	}
 
 	@Override
 	public List getRemarkWithCountForEmployee(Long empId) {
-		return entityManager.createQuery("SELECT new CountRemarkDto( remark.remarkId, remark.remarkName , COUNT(leadMaster.studentId)) \n" +
-				"    FROM RemarkMaster as remark\n" +
-				"        inner join LeadMaster as leadMaster\n" +
-				"                   on remark.remarkId = leadMaster.remarkMaster.remarkId\n" +
-				"            inner join EmpLead as el\n" +
-				"                on el.leadMaster.studentId = leadMaster.studentId\n" +
-				"                inner join EmployeeMaster as e\n" +
-				"                    on e.employeeId = el.employeeMaster.employeeId\n" +
-				"                where e.employeeId = " + empId).getResultList();
+    return entityManager
+        .createQuery(
+            "SELECT new CountRemarkDto ( rmkm.remarkId, rmkm.remarkName, COUNT(l.studentId) ) FROM RemarkMaster as rmkm\n"
+                + "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId \n"
+                + "    inner join EmpLead as el on l.studentId = el.leadMaster.studentId \n"
+                + "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId \n"
+                + "    where e.employeeId = " + empId + " \n"
+                + "    group by rmkm.remarkId")
+        .getResultList();
 	}
 
-
+	@Override
+	public RemarkMaster getRemarkById(Long id) {
+		return entityManager.createQuery("SELECT rm FROM RemarkMaster as rm WHERE rm.remarkId = " + id, RemarkMaster.class).getSingleResult();
+	}
 }

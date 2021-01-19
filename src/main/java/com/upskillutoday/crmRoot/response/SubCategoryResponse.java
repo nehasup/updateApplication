@@ -5,27 +5,17 @@ import java.util.Date;
 import com.upskillutoday.crmRoot.model.CategoryMaster;
 
 public class SubCategoryResponse {
-private Long subCategoryId;
-	
+	private Long subCategoryId;
 	private String subCategoryName;
-	
 	private int updatedBy;
-
 	private Date updatedOn;
-
 	private boolean deletedFlag;
-	
     private String categoryName;
-    
 	private Long categoryId;
-	
-	
-	
 
 	public SubCategoryResponse(Long subCategoryId, String subCategoryName,Long categoryId,String categoryName) {
 		this.subCategoryId = subCategoryId;
 		this.subCategoryName = subCategoryName;
-	
 		this.categoryId = categoryId;
 		this.categoryName = categoryName;
 	}
@@ -85,7 +75,4 @@ private Long subCategoryId;
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
-	
-	
-
 }

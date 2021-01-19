@@ -37,7 +37,27 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
-
+		<!-- Added Spring web security for securing the apis Updated By Laukik-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-security</artifactId>-->
+<!--			<version>2.4.2</version>-->
+<!--		</dependency>-->
+<!--		-->
+<!--		&lt;!&ndash;Added Spring JJWT dependency for jwts Updated By Laukik &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>io.jsonwebtoken</groupId>-->
+<!--			<artifactId>jjwt</artifactId>-->
+<!--			<version>0.9.1</version>-->
+<!--		</dependency>-->
+<!--		-->
+<!--		&lt;!&ndash; Added Spring jax-b Dependencies for xml binding Updated By Laukik &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>javax.xml.bind</groupId>-->
+<!--			<artifactId>jaxb-api</artifactId>-->
+<!--			<version>2.3.1</version>-->
+<!--		</dependency>-->
+		
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>

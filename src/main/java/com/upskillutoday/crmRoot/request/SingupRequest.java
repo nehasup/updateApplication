@@ -3,12 +3,8 @@ package com.upskillutoday.crmRoot.request;
 import java.util.Set;
 
 public class SingupRequest {
-
 	    private String username;
-	 
-	    
 	    private Set<String> role;
-	    
 	    private String password;
 
 		public String getUsername() {
@@ -34,6 +30,4 @@ public class SingupRequest {
 		public void setPassword(String password) {
 			this.password = password;
 		}
-	  
-	
 }

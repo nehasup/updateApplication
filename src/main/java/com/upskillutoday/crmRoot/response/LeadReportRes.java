@@ -1,9 +1,6 @@
 package com.upskillutoday.crmRoot.response;
 
-import java.util.Date;
-
 public class LeadReportRes {
-
     private String studentName;
     private String contactNo;
     private String city;
@@ -16,9 +13,33 @@ public class LeadReportRes {
     private String leadStatus;
     private String updatedOn;
     private String employeeName;
-    
-    
-    
+
+    public LeadReportRes() {}
+
+    public LeadReportRes(
+            String studentName,
+            String contactNo,
+            String city,
+            String area,
+            String address,
+            String emailId,
+            String courseName,
+            String comments,
+            String instituteName,
+            String leadStatus,
+            String employeeName) {
+        this.studentName = studentName;
+        this.contactNo = contactNo;
+        this.city = city;
+        this.area = area;
+        this.address = address;
+        this.emailId = emailId;
+        this.courseName = courseName;
+        this.comments = comments;
+        this.instituteName = instituteName;
+        this.leadStatus = leadStatus;
+        this.employeeName=employeeName;
+    }
 
     public String getUpdatedOn() {
 		return updatedOn;
@@ -58,23 +79,6 @@ public class LeadReportRes {
 
     public void setLeadStatus(String leadStatus) {
         this.leadStatus = leadStatus;
-    }
-
-    public LeadReportRes() {
-    }
-
-    public LeadReportRes(String studentName, String contactNo, String city, String area, String address, String emailId, String courseName, String comments, String instituteName, String leadStatus,String employeeName) {
-        this.studentName = studentName;
-        this.contactNo = contactNo;
-        this.city = city;
-        this.area = area;
-        this.address = address;
-        this.emailId = emailId;
-        this.courseName = courseName;
-        this.comments = comments;
-        this.instituteName = instituteName;
-        this.leadStatus = leadStatus;
-        this.employeeName=employeeName;
     }
 
     public String getStudentName() {

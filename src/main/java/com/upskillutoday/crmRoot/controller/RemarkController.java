@@ -118,7 +118,7 @@ public class RemarkController {
   
     //get All Remark list
     @GetMapping("/getRemarks")
-    public List<RemarkMaster> getAllRemark() {
+    public List getAllRemark() {
         return remarkJpaRepository.findAll();
     }
 

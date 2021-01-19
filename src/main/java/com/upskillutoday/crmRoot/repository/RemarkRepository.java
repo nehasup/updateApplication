@@ -12,4 +12,5 @@ public interface RemarkRepository {
 	boolean getRecordByRemarkIdDao(RemarkMaster remark);
 	List getRemarkWithCount();
 	List getRemarkWithCountForEmployee(Long empId);
+	RemarkMaster getRemarkById(Long id);
 }

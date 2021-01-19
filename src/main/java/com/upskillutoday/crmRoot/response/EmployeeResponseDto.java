@@ -3,37 +3,31 @@ package com.upskillutoday.crmRoot.response;
 import java.util.Date;
 
 public class EmployeeResponseDto {
-	
 	private Long employeeId;
-	
 	private String employeeName;
-	
 	private String contactNo;
-	
 	private String guardianNo;
-	
 	private String emailId;
-	
 	private String address;
-	
 	private Date birthDate;
-	
 	private String gender;
-	
 	private int updatedBy;
-
 	private Date updatedOn;
-
 	private boolean deletedFlag;
-	
 	private String categoryName;
-    
 	private Long categoryId;
-	
-	
 
-	public EmployeeResponseDto(Long employeeId, String employeeName, String contactNo, String guardianNo,
-			String emailId, String address, Date birthDate, String gender, String categoryName, Long categoryId) {
+	public EmployeeResponseDto(
+			Long employeeId,
+			String employeeName,
+			String contactNo,
+			String guardianNo,
+			String emailId,
+			String address,
+			Date birthDate,
+			String gender,
+			String categoryName,
+			Long categoryId) {
 		this.employeeId = employeeId;
 		this.employeeName = employeeName;
 		this.contactNo = contactNo;
@@ -45,12 +39,16 @@ public class EmployeeResponseDto {
 		this.categoryName = categoryName;
 		this.categoryId = categoryId;
 	}
-	
-	
 
-	public EmployeeResponseDto(Long employeeId, String employeeName, String contactNo, String guardianNo,
-			String emailId, String address, Date birthDate, String gender) {
-		super();
+	public EmployeeResponseDto(
+			Long employeeId,
+			String employeeName,
+			String contactNo,
+			String guardianNo,
+			String emailId,
+			String address,
+			Date birthDate,
+			String gender) {
 		this.employeeId = employeeId;
 		this.employeeName = employeeName;
 		this.contactNo = contactNo;
@@ -60,8 +58,6 @@ public class EmployeeResponseDto {
 		this.birthDate = birthDate;
 		this.gender = gender;
 	}
-
-
 
 	public Long getEmployeeId() {
 		return employeeId;
@@ -166,7 +162,4 @@ public class EmployeeResponseDto {
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
-	
-	
-
 }
