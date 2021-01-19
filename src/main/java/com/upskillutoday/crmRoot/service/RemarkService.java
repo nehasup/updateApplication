@@ -13,4 +13,6 @@ public interface RemarkService {
 	String getRemarkStatus(Long id);
 	Long getRemarkById(String str);
 	RemarkMaster getRemarkById(Long id);
+	List getAllRemarkWithCount();
+	List getRemarkWithCountForEmployee(Long empId);
 }

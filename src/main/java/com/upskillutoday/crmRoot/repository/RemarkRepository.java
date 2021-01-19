@@ -8,10 +8,8 @@ import com.upskillutoday.crmRoot.model.RemarkMaster;
 public interface RemarkRepository {
 	
 	boolean insertRemarkDao(RemarkMaster remark);
-
 	List getRemarkListDao();
-
 	boolean getRecordByRemarkIdDao(RemarkMaster remark);
-
-
+	List getRemarkWithCount();
+	List getRemarkWithCountForEmployee(Long empId);
 }

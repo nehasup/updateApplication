@@ -12,6 +12,9 @@ import com.upskillutoday.crmRoot.response.*;
 import com.upskillutoday.crmRoot.service.*;
 import com.upskillutoday.crmRoot.service.impl.EmpCategyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -147,12 +150,13 @@ public class LeadUploadFileController {
 	 ) {
 		ResponseVO<List> response = new ResponseVO<>();
 		//user obj
-		List list = leadMasterService.getAllLeadRecordService();
 		try {
 			EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
 			RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
+
 			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 				//Admin // All leads
+				List list = leadMasterService.getAllLeadRecordService();
 				if(list!=null) {
 					response.setResult(list);
 				}
@@ -164,7 +168,7 @@ public class LeadUploadFileController {
 				}
 			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
 				// Cousler     //Category based leads
-				List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
+				List<LeadMasterDto>  leadMasterDtoList = leadMasterRepository.getAllLeadListByquery(userId);
 				if(leadMasterDtoList!=null) {
 					response.setResult(leadMasterDtoList);
 				}
@@ -175,6 +179,7 @@ public class LeadUploadFileController {
 					response.setResult(leadMasterDtoList);
 				}
 			}
+
 		} catch (NullPointerException nullPointerException) {}
 		return response;
 	}

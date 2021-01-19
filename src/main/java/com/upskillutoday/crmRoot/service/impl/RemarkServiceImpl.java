@@ -73,4 +73,14 @@ public class RemarkServiceImpl implements RemarkService {
 		}
 		return null;
 	}
+
+	@Override
+	public List getAllRemarkWithCount() {
+		return remarkRepository.getRemarkWithCount();
+	}
+
+	@Override
+	public List getRemarkWithCountForEmployee(Long empId) {
+		return remarkRepository.getRemarkWithCountForEmployee(empId);
+	}
 }

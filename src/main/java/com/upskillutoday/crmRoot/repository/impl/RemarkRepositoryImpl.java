@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import com.upskillutoday.crmRoot.dto.CountRemarkDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,6 @@ import com.upskillutoday.crmRoot.repository.RemarkRepository;
 @Repository
 @Transactional
 public class RemarkRepositoryImpl implements RemarkRepository {
-	
 
 	@Autowired
 	@PersistenceContext   
@@ -69,7 +69,27 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 			        return false;
 			    }
 	}
-	
-	
+
+	@Override
+	public List getRemarkWithCount() {
+		return entityManager.createQuery("SELECT new CountRemarkDto(remark.remarkId, remark.remarkName , COUNT(leadMaster.studentId)) \n" +
+				"FROM RemarkMaster as remark\n" +
+				"inner join LeadMaster as leadMaster \n" +
+				"on remark.remarkId = leadMaster.remarkMaster.remarkId").getResultList();
+	}
+
+	@Override
+	public List getRemarkWithCountForEmployee(Long empId) {
+		return entityManager.createQuery("SELECT new CountRemarkDto( remark.remarkId, remark.remarkName , COUNT(leadMaster.studentId)) \n" +
+				"    FROM RemarkMaster as remark\n" +
+				"        inner join LeadMaster as leadMaster\n" +
+				"                   on remark.remarkId = leadMaster.remarkMaster.remarkId\n" +
+				"            inner join EmpLead as el\n" +
+				"                on el.leadMaster.studentId = leadMaster.studentId\n" +
+				"                inner join EmployeeMaster as e\n" +
+				"                    on e.employeeId = el.employeeMaster.employeeId\n" +
+				"                where e.employeeId = " + empId).getResultList();
+	}
+
 
 }

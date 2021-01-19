@@ -1,67 +1,63 @@
 package com.upskillutoday.crmRoot.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
 
-
+@Entity
 public class LeadResponseDto {
 
-	 private Long studentId;
-		
-	  private String studentName;
-	
-	  private String contactNo;
-	
-	  private String emailId;
-	
-	  private String courseName;
-	  
-	  private String city;
-	  
-	  private String area;
-	  
-	  private String modeOfCourse;
-	  
-	  private String address;
-	  
-	  private String budget;
-	  
-	  private String modificationStage;
-	  
-	  private String remark;
-	  
-	  private String comments;
+	@Id
+	@JsonIgnore
+	private Long Id;
 
-	  private int updatedBy;
-	  
-	  private Date updatedOn;
-	  
-	  private boolean deletedFlag;
+	private Long studentId;
+	private String studentName;
+	private String courseName;
+	private String contactNo;
+	private String area;
+	private String city;
+	private String emailId;
+	private String modeOfCourse;
+	private String modificationStage;
+	private String address;
+	private String budget;
+	private Long remarkId;
+	private String remarkName;
+	private String comments;
+	private String instituteName;
+	private Date updatedOn;
+	private String categoryName;
+	private Long categoryId;
+	private String employeeName;
+	private String roleName;
+	private String remark;
+	private Long updatedBy;
 
-	  private String fileType;
-	  
-	  private String instituteName;
-	  
-	  private Long categoryId;
-	  
-	  private Long subCategoryId;
-	  
-	  private Long remarkId;
-	  	  
-	  private String categoryName;
-		
-	  private String subCategoryName;
-		
-	  private String remarkName;
-	  
-	  private String employeeName;
-	  
-	  private boolean assignLeadFlag;
-	  
-
-	public LeadResponseDto(Long studentId, String studentName, String contactNo, String emailId, String courseName,
-			String city, String area, String modeOfCourse, String address, String budget, String modificationStage,
-			String remark, String comments,String instituteName, Long categoryId,String categoryName,Long remarkId,String remarkName) {
+	public LeadResponseDto(
+			Long studentId,
+			String studentName,
+			String contactNo,
+			String emailId,
+			String courseName,
+			String city,
+			String area,
+			String modeOfCourse,
+			String address,
+			String budget,
+			String modificationStage,
+			String remark,
+			String comments,
+			String instituteName,
+			Long categoryId,
+			String categoryName,
+			Long remarkId,
+			String remarkName,
+			Long updatedBy,
+			Date updatedOn) {
 		this.studentId = studentId;
 		this.studentName = studentName;
 		this.contactNo = contactNo;
@@ -80,48 +76,41 @@ public class LeadResponseDto {
 		this.categoryName = categoryName;
 		this.remarkId= remarkId;
 		this.remarkName = remarkName;
-		
-	}
-	
-	
-	
-	
-
-
-
-
-
-	public boolean isAssignLeadFlag() {
-		return assignLeadFlag;
+		this.updatedBy = updatedBy;
+		this.updatedOn = updatedOn;
 	}
 
-
-
-
-
-	public void setAssignLeadFlag(boolean assignLeadFlag) {
-		this.assignLeadFlag = assignLeadFlag;
-	}
-
-
-
-
-
-	public String getEmployeeName() {
-		return employeeName;
-	}
-
-
-
-
-
-	public void setEmployeeName(String employeeName) {
+	public LeadResponseDto(Long studentId, String studentName, String courseName, String contactNo, String area, String city, String emailId, String modeOfCourse, String modificationStage, String address, String budget, Long remarkId, String remarkName, String comments, String instituteName, Date updatedOn, String employeeName, String roleName) {
+		this.studentId = studentId;
+		this.studentName = studentName;
+		this.courseName = courseName;
+		this.contactNo = contactNo;
+		this.area = area;
+		this.city = city;
+		this.emailId = emailId;
+		this.modeOfCourse = modeOfCourse;
+		this.modificationStage = modificationStage;
+		this.address = address;
+		this.budget = budget;
+		this.remarkId = remarkId;
+		this.remarkName = remarkName;
+		this.comments = comments;
+		this.instituteName = instituteName;
+		this.updatedOn = updatedOn;
 		this.employeeName = employeeName;
+		this.roleName = roleName;
 	}
 
+	public LeadResponseDto() {
+	}
 
+	public Long getId() {
+		return Id;
+	}
 
-
+	public void setId(Long id) {
+		Id = id;
+	}
 
 	public Long getStudentId() {
 		return studentId;
@@ -139,22 +128,6 @@ public class LeadResponseDto {
 		this.studentName = studentName;
 	}
 
-	public String getContactNo() {
-		return contactNo;
-	}
-
-	public void setContactNo(String contactNo) {
-		this.contactNo = contactNo;
-	}
-
-	public String getEmailId() {
-		return emailId;
-	}
-
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
-	}
-
 	public String getCourseName() {
 		return courseName;
 	}
@@ -163,12 +136,12 @@ public class LeadResponseDto {
 		this.courseName = courseName;
 	}
 
-	public String getCity() {
-		return city;
+	public String getContactNo() {
+		return contactNo;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
 	}
 
 	public String getArea() {
@@ -179,12 +152,36 @@ public class LeadResponseDto {
 		this.area = area;
 	}
 
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
 	public String getModeOfCourse() {
 		return modeOfCourse;
 	}
 
 	public void setModeOfCourse(String modeOfCourse) {
 		this.modeOfCourse = modeOfCourse;
+	}
+
+	public String getModificationStage() {
+		return modificationStage;
+	}
+
+	public void setModificationStage(String modificationStage) {
+		this.modificationStage = modificationStage;
 	}
 
 	public String getAddress() {
@@ -203,20 +200,20 @@ public class LeadResponseDto {
 		this.budget = budget;
 	}
 
-	public String getModificationStage() {
-		return modificationStage;
+	public Long getRemarkId() {
+		return remarkId;
 	}
 
-	public void setModificationStage(String modificationStage) {
-		this.modificationStage = modificationStage;
+	public void setRemarkId(Long remarkId) {
+		this.remarkId = remarkId;
 	}
 
-	public String getRemark() {
-		return remark;
+	public String getRemarkName() {
+		return remarkName;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setRemarkName(String remarkName) {
+		this.remarkName = remarkName;
 	}
 
 	public String getComments() {
@@ -227,12 +224,12 @@ public class LeadResponseDto {
 		this.comments = comments;
 	}
 
-	public int getUpdatedBy() {
-		return updatedBy;
+	public String getInstituteName() {
+		return instituteName;
 	}
 
-	public void setUpdatedBy(int updatedBy) {
-		this.updatedBy = updatedBy;
+	public void setInstituteName(String instituteName) {
+		this.instituteName = instituteName;
 	}
 
 	public Date getUpdatedOn() {
@@ -243,28 +240,12 @@ public class LeadResponseDto {
 		this.updatedOn = updatedOn;
 	}
 
-	public boolean isDeletedFlag() {
-		return deletedFlag;
+	public String getCategoryName() {
+		return categoryName;
 	}
 
-	public void setDeletedFlag(boolean deletedFlag) {
-		this.deletedFlag = deletedFlag;
-	}
-
-	public String getFileType() {
-		return fileType;
-	}
-
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
-	}
-
-	public String getInstituteName() {
-		return instituteName;
-	}
-
-	public void setInstituteName(String instituteName) {
-		this.instituteName = instituteName;
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 	public Long getCategoryId() {
@@ -275,46 +256,19 @@ public class LeadResponseDto {
 		this.categoryId = categoryId;
 	}
 
-	public Long getSubCategoryId() {
-		return subCategoryId;
+	public String getEmployeeName() {
+		return employeeName;
 	}
 
-	public void setSubCategoryId(Long subCategoryId) {
-		this.subCategoryId = subCategoryId;
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
 	}
 
-	public Long getRemarkId() {
-		return remarkId;
+	public String getRoleName() {
+		return roleName;
 	}
 
-	public void setRemarkId(Long remarkId) {
-		this.remarkId = remarkId;
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
-
-	public String getCategoryName() {
-		return categoryName;
-	}
-
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
-
-	public String getSubCategoryName() {
-		return subCategoryName;
-	}
-
-	public void setSubCategoryName(String subCategoryName) {
-		this.subCategoryName = subCategoryName;
-	}
-
-	public String getRemarkName() {
-		return remarkName;
-	}
-
-	public void setRemarkName(String remarkName) {
-		this.remarkName = remarkName;
-	}
-		
-		
-	
 }

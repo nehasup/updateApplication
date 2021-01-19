@@ -108,17 +108,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 			empCategy.setCategoryMaster(categoryService.getCatgoryById(catId));
 			empCategyRepository.save(empCategy);
 		}
-    
+
         return flag;
 	}
 
 	@Override
 	public List getAllEmpRecordService() {
-		
         List  list=employeeRepository.getAllEmpListDao();
-        
-        
-        
         return list;
     }
 	
@@ -185,19 +181,28 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setGuardianNo(employeeDto.getGuardianNo());
 		employee.setGender(employeeDto.getGender());
 //		employee.setCategory(employeeDto.getCategory());
+
+		category.setCategoryId(employeeDto.getCategoryId());
+
 		employee.setUserMaster(employeeDto.getUsers());
 		employee.setUpdatedOn(new Date());
 		employee.setDeletedFlag(true);
-	
-		category.setCategoryId(employeeDto.getCategoryId());
-		
 //		employee.setCategory(category);
 		employee.setCategoryId(employeeDto.getCategoryId());
-		
-	
+
 	 try {
 		 employeeRepository.updateEmployeeRepository(employee);
-            return true;
+
+		 // Added By Laukik
+		 for (Long catId: employeeDto.getCategories()) {
+			 EmpCategy empCategy = new EmpCategy();
+			 empCategy.setEmployeeMaster(employee);
+			 empCategy.setCategoryMaster(categoryService.getCatgoryById(catId));
+			 empCategyRepository.save(empCategy);
+		 }
+
+
+		 return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -262,9 +267,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                     empLoginResDto.setContactNo(employeeMaster.getContactNo());  
 //                    empLoginResDto.setCategory(employeeMaster.getCategory());
                    empLoginResDto.setRoleMaster(userRole.getRoles());
-                    
 
-                } else
+			   } else
                {
                     empLoginResDto.setResponseCode(HttpStatus.FORBIDDEN.value());
                     empLoginResDto.setMessage("Account Has Been Blocked");

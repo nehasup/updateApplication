@@ -21,8 +21,6 @@ public interface LeadMasterService {
 
 	boolean updateLeadService(Long userId, LeadMasterDto leadMasterDto);
 
-	List<LeadMasterDto> getAllLeadListCategoryWiseService(EmployeeMaster employeeMaster);
-
 	List<LeadMasterDto> getCategoryWiseandverifyLeadService(EmployeeMaster employeeMaster);
 
 	List<LeadMasterDto> getAllAssignLeadListService(EmployeeMaster employeeMaster);
