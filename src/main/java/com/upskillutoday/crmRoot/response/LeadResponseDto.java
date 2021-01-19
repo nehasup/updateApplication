@@ -80,7 +80,7 @@ public class LeadResponseDto {
 		this.updatedOn = updatedOn;
 	}
 
-	public LeadResponseDto(Long studentId, String studentName, String courseName, String contactNo, String area, String city, String emailId, String modeOfCourse, String modificationStage, String address, String budget, Long remarkId, String remarkName, String comments, String instituteName, Date updatedOn, String employeeName, String roleName) {
+	public LeadResponseDto(Long studentId, String studentName, String courseName, String contactNo, String area, String city, String emailId, String modeOfCourse, String modificationStage, String address, String budget, Long remarkId, String remarkName, String comments, String instituteName, Long categoryId, String categoryName, Date updatedOn, String employeeName, String roleName) {
 		this.studentId = studentId;
 		this.studentName = studentName;
 		this.courseName = courseName;
@@ -96,6 +96,8 @@ public class LeadResponseDto {
 		this.remarkName = remarkName;
 		this.comments = comments;
 		this.instituteName = instituteName;
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
 		this.updatedOn = updatedOn;
 		this.employeeName = employeeName;
 		this.roleName = roleName;

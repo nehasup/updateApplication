@@ -150,17 +150,9 @@ public class LeadUploadFileController {
 	 ) {
 		ResponseVO<List> response = new ResponseVO<>();
 		//user obj
-<<<<<<< HEAD
-=======
-		
->>>>>>> db2b53be9082771d10f1998817eafb3cf7e5f7ac
 		try {
-			//EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
 			RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
-
 			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
-				List list = leadMasterService.getAllLeadRecordService();
-				
 				//Admin // All leads
 				List list = leadMasterService.getAllLeadRecordService();
 				if(list!=null) {
@@ -174,7 +166,7 @@ public class LeadUploadFileController {
 				}
 			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
 				// Cousler     //Category based leads
-				List<LeadMasterDto>  leadMasterDtoList=leadMasterRepository.getAllLeadListByquery(userId);
+				List<LeadMasterDto>  leadMasterDtoList = leadMasterRepository.getAllLeadListByquery(userId);
 				//List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
 				if(leadMasterDtoList!=null) {
 					response.setResult(leadMasterDtoList);
