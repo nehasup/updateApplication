@@ -133,16 +133,28 @@ try{
 	public List<LeadMasterDto> getAllLeadForMe() {
 		List<LeadMasterDto> leadMasterDtos = null;
 		try {
-			Query query = entityManager.createQuery("SELECT lead FROM LeadMaster as lead where lead.deletedFlag=1", LeadMaster.class);
-			leadMasterDtos = new ArrayList<>();
-			for(LeadMaster leadMaster : ((List<LeadMaster>) query.getResultList())) {
-				LeadMasterDto leadMasterDto = new LeadMasterDto(leadMaster);
-				EmpLead empLead = empLeadJpaRepository.findByLeadMaster(leadMaster);
-				leadMasterDto.setEmployeeName( empLead != null ? empLead.getEmployeeMaster().getEmployeeName() : "Not Assign");
-				leadMasterDto.setEmployeeId(empLead != null ? empLead.getEmployeeMaster().getEmployeeId() : null);
-				leadMasterDto.setUpdatedOn(new Date());
-				leadMasterDtos.add(leadMasterDto);
-			}
+			Query query = entityManager.createQuery("Select NEW com.upskillutoday.crmRoot.response.LeadResponseDto("
+					+ "lead.studentId as studentId,\r\n"
+	        		+ "lead.studentName as studentName,\r\n"
+	        		+ "lead.contactNo as contactNo,\r\n"
+	        		+ "lead.emailId as emailId,\r\n"
+	        		+ "lead.courseName as courseName,\r\n"
+	        		+ "lead.city as city,\r\n"
+	        		+ "lead.area as area,\r\n"
+	        		+ "lead.modeOfCourse as modeOfCourse,\r\n"
+	        		+ "lead.address as address,\r\n"
+	        		+ "lead.budget as budget,\r\n"
+	        		+ "lead.modificationStage as modificationStage,\r\n"
+	        		+ "lead.remark as remark,\r\n"
+	        		+ "lead.comments as comments,\r\n"
+	        		+ "lead.instituteName as instituteName,\r\n"
+	        		+ "cm.categoryId as categoryId,\r\n"
+	        		+ "cm.categoryName as categoryName,\r\n"
+	        		+ "rmk.remarkId as remarkId,\r\n"
+	        		+ "rmk.remarkName as remarkName,\r\n"
+	        		+ "lead.updatedBy as updatedBy,\r\n"
+	        		+ "lead.updatedOn as updatedOn)"
+					+ " FROM EmpLead as el left join el.leadMaster as lead left join lead.categoryMaster as cm left join lead.remarkMaster as rmk left join el.employeeMaster as emp left join emp.userMaster as ur left join userRole as usrole left join usrole.roles as r"); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,5 +165,39 @@ try{
 	public List getLeadsByRemark(Long remarkId) {
 		Query query = entityManager.createQuery("select lead from LeadMaster as lead where lead.remarkMaster.remarkId = " + remarkId, LeadMaster.class);
 		return query.getResultList();
+	}
+
+	@Override
+	public List<LeadMasterDto> getAllLeadListByquery(Long userId) {
+		  List<LeadMasterDto> list = null;
+		Query query = entityManager.createQuery("Select NEW com.upskillutoday.crmRoot.response.LeadResponseDto("
+				+ "lead.studentId as studentId,\r\n"
+        		+ "lead.studentName as studentName,\r\n"
+        		+ "lead.contactNo as contactNo,\r\n"
+        		+ "lead.emailId as emailId,\r\n"
+        		+ "lead.courseName as courseName,\r\n"
+        		+ "lead.city as city,\r\n"
+        		+ "lead.area as area,\r\n"
+        		+ "lead.modeOfCourse as modeOfCourse,\r\n"
+        		+ "lead.address as address,\r\n"
+        		+ "lead.budget as budget,\r\n"
+        		+ "lead.modificationStage as modificationStage,\r\n"
+        		+ "lead.remark as remark,\r\n"
+        		+ "lead.comments as comments,\r\n"
+        		+ "lead.instituteName as instituteName,\r\n"
+        		+ "cm.categoryId as categoryId,\r\n"
+        		+ "cm.categoryName as categoryName,\r\n"
+        		+ "rmk.remarkId as remarkId,\r\n"
+        		+ "rmk.remarkName as remarkName,\r\n"
+        		+ "lead.updatedBy as updatedBy,\r\n"
+        		+ "lead.updatedOn as updatedOn)"
+				+ " FROM LeadMaster as lead inner join lead.categoryMaster as cm inner join lead.remarkMaster as rmk"
+				+ " where cm.categoryId IN (\r\n"
+				+ "	SELECT c.categoryId FROM EmpCategy ec inner join ec.employeeMaster emp inner join ec.categoryMaster c where emp.employeeId = :id)");
+			    query.setParameter("id",userId);
+			     
+			       list = query.getResultList();
+				return list;
+		        
 	}
 }

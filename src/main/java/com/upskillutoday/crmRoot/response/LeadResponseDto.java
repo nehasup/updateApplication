@@ -2,6 +2,7 @@ package com.upskillutoday.crmRoot.response;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
 
 
 public class LeadResponseDto {
@@ -32,7 +33,7 @@ public class LeadResponseDto {
 	  
 	  private String comments;
 
-	  private int updatedBy;
+	  private Long updatedBy;
 	  
 	  private Date updatedOn;
 	  
@@ -59,9 +60,27 @@ public class LeadResponseDto {
 	  private boolean assignLeadFlag;
 	  
 
-	public LeadResponseDto(Long studentId, String studentName, String contactNo, String emailId, String courseName,
-			String city, String area, String modeOfCourse, String address, String budget, String modificationStage,
-			String remark, String comments,String instituteName, Long categoryId,String categoryName,Long remarkId,String remarkName) {
+	public LeadResponseDto(
+			Long studentId, 
+			String studentName, 
+			String contactNo, 
+			String emailId, 
+			String courseName,
+			String city, 
+			String area, 
+			String modeOfCourse, 
+			String address, 
+			String budget, 
+			String modificationStage,
+			String remark, 
+			String comments,
+			String instituteName, 
+			Long categoryId,
+			String categoryName,
+			Long remarkId,
+			String remarkName,
+			Long updatedBy, 
+			Date updatedOn) {
 		this.studentId = studentId;
 		this.studentName = studentName;
 		this.contactNo = contactNo;
@@ -80,12 +99,15 @@ public class LeadResponseDto {
 		this.categoryName = categoryName;
 		this.remarkId= remarkId;
 		this.remarkName = remarkName;
-		
+		this.updatedBy = updatedBy;
+		this.updatedOn = updatedOn;
 	}
-	
-	
-	
-	
+
+
+
+
+
+
 
 
 
@@ -227,11 +249,11 @@ public class LeadResponseDto {
 		this.comments = comments;
 	}
 
-	public int getUpdatedBy() {
+	public Long getUpdatedBy() {
 		return updatedBy;
 	}
 
-	public void setUpdatedBy(int updatedBy) {
+	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 

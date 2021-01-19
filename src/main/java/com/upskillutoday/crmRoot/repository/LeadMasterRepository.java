@@ -15,4 +15,5 @@ public interface LeadMasterRepository {
 	List<LeadMaster> getAllLeadByassignFlag();
 	List<LeadMasterDto> getAllLeadForMe();
 	List getLeadsByRemark(Long remarkId);
+	List<LeadMasterDto> getAllLeadListByquery(Long userId);
 }

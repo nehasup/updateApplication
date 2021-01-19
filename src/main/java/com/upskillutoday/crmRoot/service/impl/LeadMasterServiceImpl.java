@@ -200,9 +200,9 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	public List<LeadMasterDto> getAllLeadListCategoryWiseService(EmployeeMaster employeeMaster) {
 		// TODO Auto-generated method stub
 		List<LeadMaster> leadMasterList =  new ArrayList<LeadMaster>();
-		System.out.println("asdfa"+employeeMaster.getEmployeeName());
+	
 		//if(pageName.equals("Lead")) {
-			System.out.println("leadd");
+	
 
 			ArrayList<EmpCategy> list = (ArrayList<EmpCategy>) empCategyRepository.findAll();
 			for(EmpCategy empCategy : list) {
