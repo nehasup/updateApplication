@@ -2,8 +2,6 @@ package com.upskillutoday.crmRoot.service;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.request.EmpLoginReqDto;
@@ -15,7 +13,7 @@ public interface EmployeeService {
 	List getAllEmpRecordService();
 	EmployeeDto getRecordByEmpIdService(EmployeeDto employeeDto);
 	boolean updateEmployeeService(EmployeeDto employeeDto);
-	EmpLoginResDto login(EmpLoginReqDto empLoginReqDto, HttpServletRequest request);
+	EmpLoginResDto login(EmpLoginReqDto empLoginReqDto);
 	Long getEmpIdFromUserId(Long userId);
 	EmployeeMaster getEmployeeByUserId(Long userId);
 }

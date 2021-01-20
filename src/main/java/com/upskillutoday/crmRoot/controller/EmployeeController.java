@@ -3,10 +3,8 @@ package com.upskillutoday.crmRoot.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 
 import com.upskillutoday.crmRoot.request.AuthenticationRequest;
@@ -31,9 +29,7 @@ import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
 import com.upskillutoday.crmRoot.request.EmpLoginReqDto;
-import com.upskillutoday.crmRoot.request.LoginRequest;
 import com.upskillutoday.crmRoot.response.EmpLoginResDto;
-import com.upskillutoday.crmRoot.response.JwtResponse;
 import com.upskillutoday.crmRoot.response.ResponseVO;
 import com.upskillutoday.crmRoot.service.EmployeeService;
 
@@ -142,12 +138,10 @@ public class EmployeeController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity login(
-            @RequestBody EmpLoginReqDto empLoginReqDto,
-            HttpServletRequest request,
-            HttpServletResponse response
+    public ResponseEntity<?> login(
+            @RequestBody EmpLoginReqDto empLoginReqDto
     ) throws Exception {
-        EmpLoginResDto empLoginResDto = employeeService.login(empLoginReqDto, request);
+//        EmpLoginResDto empLoginResDto = employeeService.login(empLoginReqDto);
         return userLoginService.createAuthenticationToken(new AuthenticationRequest(empLoginReqDto.getUserName(), empLoginReqDto.getPass()));
     }
 }

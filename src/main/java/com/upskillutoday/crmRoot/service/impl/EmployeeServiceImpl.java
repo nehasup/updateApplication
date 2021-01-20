@@ -209,7 +209,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmpLoginResDto login(EmpLoginReqDto empLoginReqDto ,HttpServletRequest request) {
+	public EmpLoginResDto login(EmpLoginReqDto empLoginReqDto) {
 		UserMaster userMaster = userMasterRepository.findAllByUserName(empLoginReqDto.getUserName());
 		System.out.println("username" + userMaster.getUserId());
        EmpLoginResDto empLoginResDto = new EmpLoginResDto();
