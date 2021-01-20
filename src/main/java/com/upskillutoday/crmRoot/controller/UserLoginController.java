@@ -1,61 +1,36 @@
 package com.upskillutoday.crmRoot.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.upskillutoday.crmRoot.repository.UserMasterRepository;
+import com.upskillutoday.crmRoot.request.AuthenticationRequest;
+import com.upskillutoday.crmRoot.response.AuthenticationResponse;
+import com.upskillutoday.crmRoot.service.MyUserDetailsService;
+import com.upskillutoday.crmRoot.util.JwtUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.*;
 import com.upskillutoday.crmRoot.dto.UserLoginDto;
-import com.upskillutoday.crmRoot.model.UserMaster;
-import com.upskillutoday.crmRoot.request.EmpLoginReqDto;
-
 import com.upskillutoday.crmRoot.response.ResponseVO;
 import com.upskillutoday.crmRoot.response.UserLoginResponseDto;
-import com.upskillutoday.crmRoot.service.EmployeeService;
 import com.upskillutoday.crmRoot.service.UserLoginService;
-
-
-import java.security.Principal;
-import java.util.Base64;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin(value = "*")
-
 public class UserLoginController {
-	
+
 	@Autowired
-	private UserLoginService userloginService;
-	
-	@Autowired
-	private EmployeeService employeeServiceimpl;
-	
-	 @PostMapping("/loginuser")
-	 @ResponseBody
-	 public ResponseVO<UserLoginResponseDto> userLoginController(
-	 		@RequestBody  UserLoginDto userLoginDto
-	 ) {
-		ResponseVO<UserLoginResponseDto> response = new ResponseVO<UserLoginResponseDto>();
-		UserLoginResponseDto dto = userloginService.loginuserService(userLoginDto);
-		if(userLoginDto.isFlag()) {
-			response.setStatusCode(String.valueOf(HttpStatus.OK));
-			System.out.println(response.getStatusCode());
-			response.setMessage(userLoginDto.getLoginMsg());
-			response.setResult(dto);
-		} else {
-			response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-			System.out.println(response.getStatusCode());
-			response.setMessage(userLoginDto.getLoginMsg());
-			response.setResult(dto);
-		}
-		return response;
+	private UserLoginService userLoginService;
+
+	@RequestMapping(value = "/auth", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationTokne(
+			@RequestBody AuthenticationRequest authenticationRequest
+	) throws Exception {
+	 	return userLoginService.createAuthenticationToken(authenticationRequest);
 	}
 }

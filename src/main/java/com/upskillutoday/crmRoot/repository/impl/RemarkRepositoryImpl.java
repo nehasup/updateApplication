@@ -81,6 +81,15 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 	}
 
 	@Override
+	public CountRemarkDto getAllCount() {
+		return (CountRemarkDto) entityManager
+				.createQuery(
+						"SELECT new CountRemarkDto(COUNT(l.studentId)) FROM RemarkMaster as rmkm\n"
+								+ "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId \n")
+				.getSingleResult();
+	}
+
+	@Override
 	public List getRemarkWithCountForEmployee(Long empId) {
     return entityManager
         .createQuery(
@@ -94,7 +103,22 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 	}
 
 	@Override
+	public CountRemarkDto getAllCountForEmp(Long empId) {
+		return (CountRemarkDto) entityManager
+				.createQuery(
+						"SELECT new CountRemarkDto ( COUNT(l.studentId) ) FROM RemarkMaster as rmkm\n"
+								+ "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId \n"
+								+ "    inner join EmpLead as el on l.studentId = el.leadMaster.studentId \n"
+								+ "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId \n"
+								+ "    where e.employeeId = " + empId + " \n")
+				.getSingleResult();
+	}
+
+	@Override
 	public RemarkMaster getRemarkById(Long id) {
 		return entityManager.createQuery("SELECT rm FROM RemarkMaster as rm WHERE rm.remarkId = " + id, RemarkMaster.class).getSingleResult();
 	}
+
+
+
 }

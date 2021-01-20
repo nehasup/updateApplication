@@ -243,10 +243,6 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	
 	@Override
 	public List<LeadMasterDto> getAllAssignLeadListService(EmployeeMaster employeeMaster) {
-		// TODO Auto-generated method stub
-		
-		///List<LeadMaster> leadMasterList = leadJpaMasterRepository.findByCategoryMasterAndDeletedFlagAndAssignLeadFlag(employeeMaster.getCategory(), true,false);
-	
 		//third table
 		List<EmpLead> emList=empleadJparepository.findByEmployeeMasterAndDeletedFlag(employeeMaster, true);
 		

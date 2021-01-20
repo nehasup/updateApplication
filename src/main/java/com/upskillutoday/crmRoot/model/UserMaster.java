@@ -50,12 +50,6 @@ public class UserMaster implements Serializable  {
 	
 	@Column(name="deleted_flag")
 	private boolean deletedFlag;
-
-//	@ManyToMany(fetch = FetchType.LAZY)
-//	@JoinTable(	name = "user_role", 
-//				joinColumns = @JoinColumn(name = "user_id"), 
-//				inverseJoinColumns = @JoinColumn(name = "role_id"))
-//	private Set<RoleMaster> role = new HashSet<>();
 	  
 	public UserMaster() {
 	}

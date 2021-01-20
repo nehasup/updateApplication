@@ -6,13 +6,6 @@ import com.upskillutoday.crmRoot.model.CategoryMaster;
 import com.upskillutoday.crmRoot.model.RoleMaster;
 import com.upskillutoday.crmRoot.model.UserMaster;
 
-/**
- * Created by IntelliJ IDEA.
- * User: tonyd
- * Date: 7/21/12
- * Time: 3:40 PM
- * To change this template use File | Settings | File Templates.
- */
 public class LoginData {
     
 	private Long employeeId;

@@ -72,11 +72,15 @@ public class RemarkServiceImpl implements RemarkService {
 
 	@Override
 	public List getAllRemarkWithCount() {
-		return remarkRepository.getRemarkWithCount();
+		List list = remarkRepository.getRemarkWithCount();
+		list.add(remarkRepository.getAllCount());
+		return list;
 	}
 
 	@Override
 	public List getRemarkWithCountForEmployee(Long empId) {
-		return remarkRepository.getRemarkWithCountForEmployee(empId);
+		List list = remarkRepository.getRemarkWithCountForEmployee(empId);
+		list.add(remarkRepository.getAllCountForEmp(empId));
+		return list;
 	}
 }

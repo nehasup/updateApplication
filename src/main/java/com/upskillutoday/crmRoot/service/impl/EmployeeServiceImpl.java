@@ -14,13 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.upskillutoday.crmRoot.common.LoginData;
-import com.upskillutoday.crmRoot.common.WebSession;
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
 import com.upskillutoday.crmRoot.request.EmpLoginReqDto;
 import com.upskillutoday.crmRoot.response.EmpLoginResDto;
 
 import com.upskillutoday.crmRoot.service.EmployeeService;
-import com.upskillutoday.crmRoot.util.SessionUtils;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -212,75 +210,41 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public EmpLoginResDto login(EmpLoginReqDto empLoginReqDto ,HttpServletRequest request) {
-				
-		UserMaster userMaster=userMasterRepository.findAllByUserName(empLoginReqDto.getUserName());
-	
-		System.out.println("username"+userMaster.getUserId());
-		
-
-
-       EmpLoginResDto empLoginResDto=new EmpLoginResDto();
+		UserMaster userMaster = userMasterRepository.findAllByUserName(empLoginReqDto.getUserName());
+		System.out.println("username" + userMaster.getUserId());
+       EmpLoginResDto empLoginResDto = new EmpLoginResDto();
        if(!userMaster.getUserName().equals(empLoginReqDto.getUserName())){
             empLoginResDto.setResponseCode(HttpStatus.NOT_FOUND.value());
             empLoginResDto.setMessage("User Name is Not Found");
-        }
-       else
-       {
-          if (userMaster.getPass().equals(empLoginReqDto.getPass()))
-          {
-              if (userMaster.isDeletedFlag(true))
-               {
-            	   WebSession webSession = new WebSession();
+        } else {
+          if (userMaster.getPass().equals(empLoginReqDto.getPass())) {
+              if (userMaster.isDeletedFlag(true)) {
                    LoginData loginData = new LoginData();
-              
                    empLoginResDto.setResponseCode(HttpStatus.OK.value());
                    empLoginResDto.setMessage("Login Successfully");
-
                    loginData.setUserName(userMaster.getUserName());
                    loginData.setUserId(userMaster.getUserId());
-                   
                    System.out.println("sdf"+userMaster.getUserId());
-                  
-                   	webSession.setLoginData(loginData);
-                   	SessionUtils.setWebSession(request, webSession);
-                   	
-                   	
-                   	request.getSession().setAttribute("userId", userMaster.getUserId());
-                   	request.getSession().setAttribute("userName", userMaster.getUserName());
-
-                   	
-                   
-                   	
                     empLoginResDto.setUserId(userMaster.getUserId());
                     empLoginResDto.setUserName(userMaster.getUserName());
                     empLoginResDto.setUserMaster(userMaster);
-                    
                     UserRole userRole = userRoleRepository.findByuserRole(userMaster.getUserId());
-                    
-                    //EmployeeMaster employeeMaster=emplJpaRepository.findByUserMaster(userMaster.getUserId());
                     EmployeeMaster employeeMaster=emplJpaRepository.findByUserMaster(userMaster);
-                    
-                    
-             
                     empLoginResDto.setEmployeeId(employeeMaster.getEmployeeId());
                     empLoginResDto.setEmployeeName(employeeMaster.getEmployeeName());
                     empLoginResDto.setEmailId(employeeMaster.getEmailId());
-                    empLoginResDto.setContactNo(employeeMaster.getContactNo());  
-//                    empLoginResDto.setCategory(employeeMaster.getCategory());
+                    empLoginResDto.setContactNo(employeeMaster.getContactNo());
                    empLoginResDto.setRoleMaster(userRole.getRoles());
-
-			   } else
-               {
+			   } else {
                     empLoginResDto.setResponseCode(HttpStatus.FORBIDDEN.value());
                     empLoginResDto.setMessage("Account Has Been Blocked");
                 }
-            }
-            else {
+            } else {
                 empLoginResDto.setResponseCode(HttpStatus.BAD_REQUEST.value());
                 empLoginResDto.setMessage("Invalid Password");
             }
-        }        return empLoginResDto;
-
+        }
+       return empLoginResDto;
 	}
 
 	@Override
@@ -292,6 +256,4 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public EmployeeMaster getEmployeeByUserId(Long userId) {
 		return employeeRepository.getEmployeeByUserId(userId);
 	}
-
-
 }

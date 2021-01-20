@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 
+import com.upskillutoday.crmRoot.request.AuthenticationRequest;
+import com.upskillutoday.crmRoot.service.UserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.upskillutoday.crmRoot.common.WebSession;
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
@@ -35,7 +36,6 @@ import com.upskillutoday.crmRoot.response.EmpLoginResDto;
 import com.upskillutoday.crmRoot.response.JwtResponse;
 import com.upskillutoday.crmRoot.response.ResponseVO;
 import com.upskillutoday.crmRoot.service.EmployeeService;
-import com.upskillutoday.crmRoot.util.SessionUtils;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -47,6 +47,9 @@ public class EmployeeController {
 	
 	@Autowired
 	private EmployeeJpaRepository employeeJpaRepository;
+
+	@Autowired
+    private UserLoginService userLoginService;
 	
 	@PostMapping("/saveEmployee")
 	@ResponseBody 
@@ -143,8 +146,8 @@ public class EmployeeController {
             @RequestBody EmpLoginReqDto empLoginReqDto,
             HttpServletRequest request,
             HttpServletResponse response
-    ) {
+    ) throws Exception {
         EmpLoginResDto empLoginResDto = employeeService.login(empLoginReqDto, request);
-        return new ResponseEntity(empLoginResDto,HttpStatus.OK);
+        return userLoginService.createAuthenticationToken(new AuthenticationRequest(empLoginReqDto.getUserName(), empLoginReqDto.getPass()));
     }
 }

@@ -178,7 +178,6 @@ public class LeadUploadFileController {
 					response.setResult(leadMasterDtoList);
 				}
 			}
-
 		} catch (NullPointerException ignored) {}
 		return response;
 	}
@@ -200,7 +199,7 @@ public class LeadUploadFileController {
 			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
 			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 //				 Admin // All leads
-					List list=leadMasterService.getAllLeadRecordService();
+					List list = leadMasterService.getAllLeadRecordService();
 					if(list!=null) {
 						 response.setResult(list);
 					}
@@ -339,7 +338,7 @@ public class LeadUploadFileController {
 			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 				//Admin // All leads
 				//List list=leadMasterService.getAllLeadRecordService();
-				List<LeadMasterDto> list =empLeadService.getAllAssignEmpLeadRecordService();
+				List list = leadMasterRepository.getAllLeadForMe();
 				if(list!=null) {
 					 response.setResult(list);
 				}

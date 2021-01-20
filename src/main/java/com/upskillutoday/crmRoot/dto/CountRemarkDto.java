@@ -21,6 +21,12 @@ public class CountRemarkDto {
         this.count = count;
     }
 
+    public CountRemarkDto(Long count) {
+        this.count = count;
+        this.remarkId = 99L;
+        this.remarkName = "All Count";
+    }
+
     public CountRemarkDto() {
     }
 
