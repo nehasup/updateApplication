@@ -10,6 +10,11 @@ public class EmpLoginReqDto {
 		return userName;
 	}
 
+	public EmpLoginReqDto(String userName, String pass) {
+		this.userName = userName;
+		this.pass = pass;
+	}
+
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}

@@ -139,9 +139,9 @@ public class EmployeeController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(
-            @RequestBody EmpLoginReqDto empLoginReqDto
+            @RequestBody AuthenticationRequest authenticationRequest
     ) throws Exception {
-//        EmpLoginResDto empLoginResDto = employeeService.login(empLoginReqDto);
-        return userLoginService.createAuthenticationToken(new AuthenticationRequest(empLoginReqDto.getUserName(), empLoginReqDto.getPass()));
+        EmpLoginResDto empLoginResDto = employeeService.login(new EmpLoginReqDto(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+        return userLoginService.createAuthenticationToken(authenticationRequest);
     }
 }
