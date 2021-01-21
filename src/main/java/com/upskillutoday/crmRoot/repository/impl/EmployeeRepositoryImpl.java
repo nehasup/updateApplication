@@ -91,4 +91,16 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 	public EmployeeMaster getEmployeeByUserId(Long userId) {
 		return entityManager.createQuery("SELECT emp FROM EmployeeMaster as emp inner join emp.userMaster as um where um.userId = " + userId, EmployeeMaster.class).getSingleResult();
 	}
+
+	@Override
+	public List getAllVerificationCounsellor() {
+    return entityManager
+        .createQuery(
+            "SELECT em From EmployeeMaster as em\n"
+                + "    inner join UserMaster as um on em.userMaster.userId = um.userId\n"
+                + "    inner join UserRole as ur on um.userId = ur.users.userId\n"
+                + "    where ur.roles.roleId in (\n"
+                + "        SELECT rm.roleId FROM RoleMaster as rm where rm.roleName = 'Verification counsellor')")
+        .getResultList();
+	}
 }

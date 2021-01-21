@@ -9,6 +9,7 @@ import java.util.List;
 import com.upskillutoday.crmRoot.exception.GlobalExceptionHandler;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.service.LeadMasterService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -51,6 +52,9 @@ public class FileStorageServiceImpl implements FileStorageService {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private LeadMasterService leadMasterService;
 	
 	@Override
 	public Long save(MultipartFile file) throws ResourceNotFoundException {
@@ -64,7 +68,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 		else if(extension.equalsIgnoreCase("xls") || extension.equalsIgnoreCase("xlsx")) {
 			 result = readDataFromExcel(file);
 		}
-
+		leadMasterService.assignUnverifiedLeadToVerifiers();
 		return result;
 	}
 
@@ -217,6 +221,4 @@ public class FileStorageServiceImpl implements FileStorageService {
 	public List<LeadMaster> findAll() {
 		return fileuploadrepository.findAll();
 	}
-
-	
 }

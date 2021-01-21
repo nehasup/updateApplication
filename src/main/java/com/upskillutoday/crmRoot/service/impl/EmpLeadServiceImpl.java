@@ -121,11 +121,18 @@ public class EmpLeadServiceImpl implements EmpLeadService {
 			
 		return leadMasterDtos;
 	}
-	
-//	@Override
-//	public List<EmpLeadResponseDto> getAllAssignEmpLeadRecordService() {
-//        List<EmpLeadResponseDto>  list=empleadJparepository.getAllAssignEmpLead();
-//        return list;
-//    }
 
+	@Override
+	public void setAllLeadToThisEmployee(List<LeadMaster> leadMasters, EmployeeMaster employeeMaster) {
+		for(LeadMaster leadMaster : leadMasters) {
+			EmpLead empLead = new EmpLead();
+
+			empLead.setEmployeeMaster(employeeMaster);
+			empLead.setLeadMaster(leadMaster);
+			empLead.setUpdatedOn(new Date());
+			empLead.setDeletedFlag(true);
+
+			empLeadRepository.addEmpLead(empLead);
+		}
+	}
 }

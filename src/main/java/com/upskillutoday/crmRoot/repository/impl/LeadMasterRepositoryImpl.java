@@ -54,40 +54,6 @@ public class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	            entityManager.close();
 	        }
 	}
-	
-//	@Override
-//    public List<LeadMaster> getAllLeadListDao() {
-//        List<LeadMaster> list = null;
-//        try {
-//			Query query = entityManager.createQuery("Select NEW LeadResponseDto ("
-//					+ "leadMaster.studentId,"
-//					+ "leadMaster.studentName,"
-//					+ "leadMaster.contactNo,"
-//					+ "leadMaster.emailId,"
-//					+ "leadMaster.courseName,"
-//					+ "leadMaster.city,"
-//					+ "leadMaster.area,"
-//					+ "leadMaster.modeOfCourse,"
-//					+ "leadMaster.address,"
-//					+ "leadMaster.budget,"
-//					+ "leadMaster.modificationStage,"
-//					+ "leadMaster.remark,"
-//					+ "leadMaster.comments,"
-//					+ "leadMaster.instituteName,"
-//					+ "cm.categoryId ,"
-//					+ "cm.categoryName,"
-//					+ "rmk.remarkId ,"
-//					+ "rmk.remarkName,"
-//					+ "leadMaster.updatedBy,"
-//					+ "leadMaster.updatedOn)"
-//					+ );
-//
-//		list = query.getResultList();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return list;
-//    }
 
 	@Override
     public LeadMaster getRecordByStudentIdDao(LeadMaster leadMaster) {
@@ -116,8 +82,6 @@ try{
            e.printStackTrace();
      }
 }
-
-
 
 	@Override
 	public List<LeadMaster> getAllLeadByassignFlag() {
@@ -204,5 +168,12 @@ try{
 			     
 			       list = query.getResultList();
 				return list;
+	}
+
+	@Override
+	public List getAllUnassignedNewLeads() {
+		return entityManager.createQuery(
+				"SELECT lm FROM LeadMaster as lm where lm.remarkMaster.remarkId = 3"
+		).getResultList();
 	}
 }

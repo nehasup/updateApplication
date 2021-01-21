@@ -2,22 +2,15 @@ package com.upskillutoday.crmRoot.service.impl;
 
 import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-
-
 import org.springframework.stereotype.Service;
-
 import com.upskillutoday.crmRoot.common.LoginData;
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
 import com.upskillutoday.crmRoot.request.EmpLoginReqDto;
 import com.upskillutoday.crmRoot.response.EmpLoginResDto;
-
 import com.upskillutoday.crmRoot.service.EmployeeService;
 
 @Service
@@ -25,9 +18,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
-	@Autowired
-	private SubCategoryRepository subCategoryRepository;
 	
 	@Autowired
 	CategoryJpaRepository categoryJpaRepository;
@@ -255,5 +245,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public EmployeeMaster getEmployeeByUserId(Long userId) {
 		return employeeRepository.getEmployeeByUserId(userId);
+	}
+
+	@Override
+	public List getAllVerificationCounsellor() {
+		return employeeRepository.getAllVerificationCounsellor();
 	}
 }

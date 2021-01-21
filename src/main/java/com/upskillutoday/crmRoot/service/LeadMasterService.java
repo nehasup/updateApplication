@@ -14,16 +14,11 @@ import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
 public interface LeadMasterService {
 
 	boolean insertLeadService(LeadMasterDto leadMasterDto);
-
 	List getAllLeadRecordService();
-
 	LeadMasterDto getRecordByStudentIdService(LeadMasterDto leadMasterDto);
-
 	boolean updateLeadService(Long userId, LeadMasterDto leadMasterDto);
-
 	List<LeadMasterDto> getCategoryWiseandverifyLeadService(EmployeeMaster employeeMaster);
-
 	List<LeadMasterDto> getAllAssignLeadListService(EmployeeMaster employeeMaster);
-
 	List<LeadMaster> getAllLeadByAssignFlag();
+	String assignUnverifiedLeadToVerifiers();
 }

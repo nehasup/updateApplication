@@ -3,11 +3,14 @@ package com.upskillutoday.crmRoot.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.transaction.Transactional;
 
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.repository.impl.EmpLeadRepository;
+import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +62,9 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 
 	@Autowired
 	EmployeeService employeeService;
+
+	@Autowired
+	private EmpLeadService empLeadService;
 
 	@Override
 	public boolean insertLeadService(LeadMasterDto leadMasterDto) {
@@ -303,8 +309,29 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		return leadMasterDtos;
 	}
 
+	@Override
+	public String assignUnverifiedLeadToVerifiers() {
+		List leadMasters = leadRepostiory.getAllUnassignedNewLeads();
+		List verificationCounsellor = employeeService.getAllVerificationCounsellor();
 
-	
-	
-	
+		StringBuilder stringBuilder = new StringBuilder();
+
+		if (leadMasters != null && verificationCounsellor != null) {
+			int numberOfStudent = leadMasters.size() / verificationCounsellor.size();
+
+			int start = 0;
+			int end = numberOfStudent;
+
+			for(int i=0; i < verificationCounsellor.size(); i++) {
+				stringBuilder.append("Start: " + start + "\n");
+				stringBuilder.append("End: " + end + "\n");
+				stringBuilder.append("EmpId: " + verificationCounsellor.get(i) + "\n");
+
+				empLeadService.setAllLeadToThisEmployee(((List<LeadMaster>)leadMasters).subList(start, end), ((List<EmployeeMaster>) verificationCounsellor).get(i));
+				start = end + 1;
+				end = Math.min((end + numberOfStudent), leadMasters.size());
+			}
+		}
+		return stringBuilder.toString();
+	}
 }
