@@ -248,7 +248,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
+	public EmployeeMaster getEmployeeByEmpId(Long empId) {
+		return employeeRepository.getEmployeeByEmpId(empId);
+	}
+
+	@Override
 	public List getAllVerificationCounsellor() {
 		return employeeRepository.getAllVerificationCounsellor();
+	}
+
+	@Override
+	public Long getEmployeeAutomatically(Long studentId) {
+		return employeeRepository.getEmployeeFromCategory(studentId);
 	}
 }

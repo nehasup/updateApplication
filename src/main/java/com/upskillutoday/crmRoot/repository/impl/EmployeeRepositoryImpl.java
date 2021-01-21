@@ -93,6 +93,14 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 	}
 
 	@Override
+	public EmployeeMaster getEmployeeByEmpId(Long empId) {
+		return entityManager.createQuery(
+				"SELECT emp FROM EmployeeMaster as emp where emp.employeeId = " + empId,
+				EmployeeMaster.class)
+				.getSingleResult();
+	}
+
+	@Override
 	public List getAllVerificationCounsellor() {
     return entityManager
         .createQuery(
@@ -102,5 +110,16 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                 + "    where ur.roles.roleId in (\n"
                 + "        SELECT rm.roleId FROM RoleMaster as rm where rm.roleName = 'Verification counsellor')")
         .getResultList();
+	}
+
+	@Override
+	public Long getEmployeeFromCategory(Long studentId) {
+    return entityManager
+        .createQuery(
+            "SELECT em.employeeId FROM EmployeeMaster as em \n"
+                + "    inner join EmpCategy as ec on em.employeeId = ec.employeeMaster.employeeId\n"
+                + "    where ec.categoryMaster.categoryId = (SELECT lm.categoryMaster.categoryId FROM LeadMaster lm where lm.studentId = 111)",
+            Long.class)
+        .getSingleResult();
 	}
 }

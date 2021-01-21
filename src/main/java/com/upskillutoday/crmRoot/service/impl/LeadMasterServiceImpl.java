@@ -52,9 +52,6 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	private LeadJpaMasterRepository leadJpaMasterRepository;
 	
 	@Autowired
-	private EmployeeJpaRepository employeeJpaRepository;
-	
-	@Autowired
 	EmpLeadJpaRepository empleadJparepository;
 
 	@Autowired
@@ -333,5 +330,10 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 			}
 		}
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public LeadMaster getLeadByStudentId(Long stduentId) {
+		return leadRepostiory.getLeadByStudentId(stduentId);
 	}
 }

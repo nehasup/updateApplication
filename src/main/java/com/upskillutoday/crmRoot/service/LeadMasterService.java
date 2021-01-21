@@ -21,4 +21,5 @@ public interface LeadMasterService {
 	List<LeadMasterDto> getAllAssignLeadListService(EmployeeMaster employeeMaster);
 	List<LeadMaster> getAllLeadByAssignFlag();
 	String assignUnverifiedLeadToVerifiers();
+	LeadMaster getLeadByStudentId(Long stduentId);
 }

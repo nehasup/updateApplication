@@ -31,6 +31,8 @@ public class History {
     @JoinColumn(name = "remark_id", referencedColumnName = "remark_status_id")
     private RemarkMaster remarkMaster;
 
+    public History() {}
+
     public Long getId() {
         return id;
     }

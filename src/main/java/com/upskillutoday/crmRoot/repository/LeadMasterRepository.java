@@ -16,4 +16,6 @@ public interface LeadMasterRepository {
 	List getLeadsByRemark(Long remarkId);
 	List<LeadMasterDto> getAllLeadListByquery(Long userId);
 	List getAllUnassignedNewLeads();
+	LeadMaster getLeadByStudentId(Long stduentId);
+	List getAllLeadFromStatusByEmp(Long remarkId, Long userId);
 }

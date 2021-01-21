@@ -4,20 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.upskillutoday.crmRoot.model.*;
+import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.service.EmployeeService;
+import com.upskillutoday.crmRoot.service.RemarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
-import com.upskillutoday.crmRoot.model.CategoryMaster;
-import com.upskillutoday.crmRoot.model.EmpLead;
-import com.upskillutoday.crmRoot.model.EmployeeMaster;
-import com.upskillutoday.crmRoot.model.LeadMaster;
-import com.upskillutoday.crmRoot.model.RemarkMaster;
-import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
-import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
-import com.upskillutoday.crmRoot.repository.RemarkJpaRepository;
 import com.upskillutoday.crmRoot.repository.impl.EmpLeadRepository;
 import com.upskillutoday.crmRoot.response.EmpLeadResponseDto;
 import com.upskillutoday.crmRoot.response.LeadResponseDto;
@@ -47,6 +41,15 @@ public class EmpLeadServiceImpl implements EmpLeadService {
 	
 	@Autowired
 	RemarkJpaRepository remarkJpaRepository;
+
+	@Autowired
+	private HistoryRepository historyRepository;
+
+	@Autowired
+	private RemarkService remarkService;
+
+	@Autowired
+	private EmployeeService employeeService;
 
 	@Override
 	public List<LeadMasterDto>  getAllAssignEmpLeadRecordService() {
@@ -126,13 +129,17 @@ public class EmpLeadServiceImpl implements EmpLeadService {
 	public void setAllLeadToThisEmployee(List<LeadMaster> leadMasters, EmployeeMaster employeeMaster) {
 		for(LeadMaster leadMaster : leadMasters) {
 			EmpLead empLead = new EmpLead();
-
 			empLead.setEmployeeMaster(employeeMaster);
 			empLead.setLeadMaster(leadMaster);
 			empLead.setUpdatedOn(new Date());
 			empLead.setDeletedFlag(true);
-
+			historyRepository.insertHistory(new History(leadMaster.getComments() == null ? leadMaster.getComments():"null" ,new Date(), employeeMaster, leadMaster, remarkService.getRemarkById(leadMaster.getRemarkId())));
 			empLeadRepository.addEmpLead(empLead);
 		}
+	}
+
+	@Override
+	public Long assignLeadAutomatically(Long studentId) {
+		return employeeService.getEmployeeAutomatically(studentId);
 	}
 }

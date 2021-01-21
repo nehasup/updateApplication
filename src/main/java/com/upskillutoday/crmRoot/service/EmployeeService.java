@@ -16,5 +16,7 @@ public interface EmployeeService {
 	EmpLoginResDto login(EmpLoginReqDto empLoginReqDto);
 	Long getEmpIdFromUserId(Long userId);
 	EmployeeMaster getEmployeeByUserId(Long userId);
+	EmployeeMaster getEmployeeByEmpId(Long empId);
 	List getAllVerificationCounsellor();
+	Long getEmployeeAutomatically(Long studentId);
 }

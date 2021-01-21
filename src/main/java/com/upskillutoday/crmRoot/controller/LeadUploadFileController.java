@@ -8,10 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.request.VerifyLeadRes;
 import com.upskillutoday.crmRoot.response.*;
 import com.upskillutoday.crmRoot.service.*;
 import com.upskillutoday.crmRoot.service.impl.EmpCategyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -98,9 +100,9 @@ public class LeadUploadFileController {
 		String message = "";
 		try {
 			Long result = storageService.save(file);
-			if(result==0L) {
+			if(result > 0L) {
 				message = "File import successfully: " + file.getOriginalFilename();
-			} else if(result==1L) {
+			} else {
 				message = "Data already exist " + file.getOriginalFilename();
 			}
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
@@ -135,6 +137,7 @@ public class LeadUploadFileController {
 			responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
 			responseVO.setMessage("Insert Successfully");
 			responseVO.setResult(leadMasterDto);
+//			historyRepository.insertHistory(new History(leadMasterDto.getComments() == null ? leadMasterDto.getComments():"null" ,new Date(), employeeService.getEmployeeByEmpId(leadMasterDto.getEmployeeId()), leadJpaMasterRepository.findByStudentId(leadMasterDto.getStudentId()), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
 		} else {
 			responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 			responseVO.setMessage("Insert Failed!!");
@@ -186,6 +189,12 @@ public class LeadUploadFileController {
 	public List getAllLeadFromStatus(
 			@RequestParam("lead_status") Long leadStatus
 	) { return leadMasterRepository.getLeadsByRemark(leadStatus); }
+
+	@GetMapping(value = "getAllLeadFromStatusByEmp", params = {"lead_status", "userId"})
+	public List getAllLeadFromStatusByEmp(
+			@RequestParam("lead_status") Long remarkId,
+			@RequestParam("userId") Long userId
+	) { return leadMasterRepository.getAllLeadFromStatusByEmp(remarkId, userId); }
 
 	 @GetMapping("/getAllVerifiedLeadList")	  
 	 public @ResponseBody ResponseVO<List> getAllVerifiedLeadList(
@@ -261,7 +270,7 @@ public class LeadUploadFileController {
 		 boolean flag = leadMasterService.updateLeadService(userId, leadMasterDto);
 		  if(flag){
 			  responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
-			  historyRepository.insertHistory(new History(leadMasterDto.getComments() == null ? leadMasterDto.getComments():"null" ,new Date(), employeeService.getEmployeeByUserId(userId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
+//			  historyRepository.insertHistory(new History(leadMasterDto.getComments() == null ? leadMasterDto.getComments():"null" ,new Date(), employeeService.getEmployeeByUserId(userId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
 			  responseVO.setMessage("Update Successfully!!");
 		  }
 		  else {
@@ -283,7 +292,7 @@ public class LeadUploadFileController {
 		leadJpaMasterRepository.save(leadMaster);
 	    Map<String, Boolean> response = new HashMap<>();
 	    response.put("deletedFlag", Boolean.TRUE);
-		historyRepository.insertHistory(new History("Deleted Lead by Employee", new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(remarkService.getRemarkById("Deleted"))));
+//		historyRepository.insertHistory(new History("Deleted Lead by Employee", new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(remarkService.getRemarkById("Deleted"))));
 		return response;
 	} 
 
@@ -293,33 +302,24 @@ public class LeadUploadFileController {
 	public ResponseVO assignLeadtoEmployee(
 			@RequestBody EmployeeLeadDto employeeLeadDto
 	) {
-		
 		ResponseVO response = new ResponseVO();
 		LeadMaster leadMasterObj = null;
 		for(String leadMaster : employeeLeadDto.getStudentId()) {
-
 			long leadId=Long.parseLong(leadMaster);  //convert string to long.
-
 			//bring leadMasterObj from leadid
-			
-			leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId, true);	
-			
+			leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId, true);
 			EmployeeMaster employeeMaster = employeeJpaRepository.findByEmployeeIdAndDeletedFlag(employeeLeadDto.getEmployeeId(),true);
-	
 			//insert
 			EmpLead empLead = new EmpLead();
 			empLead.setEmployeeMaster(employeeMaster);
 			empLead.setLeadMaster(leadMasterObj);
 			empLead.setUpdatedOn(new Date());
 			empLead.setDeletedFlag(true);
-
-		   empleadJparepository.save(empLead);
-
-		 //change flag assignleadflag
+		   	empleadJparepository.save(empLead);
+		 	//change flag assignleadflag
 			leadMasterObj.setAssignLeadFlag(true);
 			leadJpaMasterRepository.save(leadMasterObj);
-
-			}
+		}
 
 		return response;
     }
@@ -364,4 +364,25 @@ public class LeadUploadFileController {
 		 } catch (NullPointerException nullPointerException) {}
 	        return response;
 	    }
+
+	@PostMapping(value = "/verifyTheLeadAssignAutomatically")
+	@ResponseBody
+	public String verifyTheLead(@RequestBody VerifyLeadRes verifyLeadRes) {
+		for(Long leadId : verifyLeadRes.getStduentId()) {
+			Long empId = empLeadService.assignLeadAutomatically(100L);
+			EmployeeMaster employeeMaster = employeeService.getEmployeeByEmpId(empId);
+			LeadMaster leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId, true);
+			EmpLead empLead = new EmpLead();
+			empLead.setLeadMaster(leadMasterObj);
+			empLead.setEmployeeMaster(employeeMaster);
+			empLead.setUpdatedOn(new Date());
+			empLead.setDeletedFlag(true);
+			empleadJparepository.save(empLead);
+			leadMasterObj.setAssignLeadFlag(true);
+			leadJpaMasterRepository.save(leadMasterObj);
+			LeadMaster leadMaster = leadMasterService.getLeadByStudentId(leadId);
+//			historyRepository.insertHistory(new History("Verified" ,new Date(), employeeMaster,  leadMaster, leadMaster.getRemarkMaster()));
+		}
+		return "Done";
+	}
 }

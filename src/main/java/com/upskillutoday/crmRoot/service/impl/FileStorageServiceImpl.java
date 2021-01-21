@@ -8,8 +8,10 @@ import java.util.List;
 
 import com.upskillutoday.crmRoot.exception.GlobalExceptionHandler;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
+import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
+import com.upskillutoday.crmRoot.service.RemarkService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,11 +27,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.upskillutoday.crmRoot.model.CategoryMaster;
-import com.upskillutoday.crmRoot.model.LeadMaster;
-import com.upskillutoday.crmRoot.model.RemarkMaster;
-import com.upskillutoday.crmRoot.model.SubCategoryMaster;
-import com.upskillutoday.crmRoot.model.UserMaster;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 
 @Service
@@ -55,6 +52,12 @@ public class FileStorageServiceImpl implements FileStorageService {
 
 	@Autowired
 	private LeadMasterService leadMasterService;
+
+	@Autowired
+	private HistoryRepository historyRepository;
+
+	@Autowired
+	private RemarkService remarkService;
 	
 	@Override
 	public Long save(MultipartFile file) throws ResourceNotFoundException {
@@ -149,7 +152,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 					leadMaster.setAssignLeadFlag(false);
 					leadMaster.setFileType(FilenameUtils.getExtension(file.getOriginalFilename()));
 					fileuploadrepository.save(leadMaster);
-
+//					historyRepository.insertHistory(new History(leadMaster.getComments() == null ? leadMaster.getComments():"null" ,new Date(), null, leadMaster, remarkService.getRemarkById(leadMaster.getRemarkId())));
 					count ++;
 				}
 			}

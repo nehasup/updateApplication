@@ -176,4 +176,24 @@ try{
 				"SELECT lm FROM LeadMaster as lm where lm.remarkMaster.remarkId = 3"
 		).getResultList();
 	}
+
+	@Override
+	public LeadMaster getLeadByStudentId(Long stduentId) {
+		return entityManager.createQuery(
+				"SELECT lm FROM  LeadMaster as lm WHERE lm.studentId = " + stduentId, LeadMaster.class).getSingleResult();
+	}
+
+	@Override
+	public List getAllLeadFromStatusByEmp(Long remarkId, Long userId) {
+    return entityManager
+        .createQuery(
+            "SELECT lm FROM LeadMaster as lm\n"
+                + "    inner join EmpLead as el on lm.studentId = el.leadMaster.studentId \n"
+                + "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId \n"
+                + "    inner join UserMaster as um on e.userMaster.userId = um.userId"
+                + "    where um.userId = " + userId
+                + " and lm.remarkMaster.remarkId = "
+                + remarkId)
+        .getResultList();
+	}
 }

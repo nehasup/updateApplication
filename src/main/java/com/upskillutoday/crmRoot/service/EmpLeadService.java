@@ -10,4 +10,5 @@ import com.upskillutoday.crmRoot.response.EmpLeadResponseDto;
 public interface EmpLeadService {
 	List<LeadMasterDto> getAllAssignEmpLeadRecordService();
 	void setAllLeadToThisEmployee(List<LeadMaster> leadMasters, EmployeeMaster employeeMaster);
+	Long assignLeadAutomatically(Long studentId);
 }
