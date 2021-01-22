@@ -14,4 +14,5 @@ public interface EmployeeRepository {
 	EmployeeMaster getEmployeeByEmpId(Long empId);
 	List getAllVerificationCounsellor();
 	Long getEmployeeFromCategory(Long studentId);
+	List getVerifiactionAndAdmissionConusellor();
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.upskillutoday.crmRoot.model.*;
@@ -13,13 +14,11 @@ import com.upskillutoday.crmRoot.response.*;
 import com.upskillutoday.crmRoot.service.*;
 import com.upskillutoday.crmRoot.service.impl.EmpCategyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -92,6 +91,9 @@ public class LeadUploadFileController {
 	@Autowired
 	EmployeeService employeeService;
 
+	@Autowired
+	private JavaMailSender sender;
+
 	//import excel sheet
 	@PostMapping("/upload")
 	public ResponseEntity<ResponseMessage> uploadFile(
@@ -101,7 +103,7 @@ public class LeadUploadFileController {
 		try {
 			Long result = storageService.save(file);
 			if(result > 0L) {
-				message = "File import successfully: " + file.getOriginalFilename();
+				message = "File import successfully: " + file.getOriginalFilename() + " Count : " + result;
 			} else {
 				message = "Data already exist " + file.getOriginalFilename();
 			}
@@ -127,9 +129,7 @@ public class LeadUploadFileController {
 	@PostMapping("/insertLeadMaster")
 	@ResponseBody
 	public ResponseVO insertLead(
-			@RequestBody LeadMasterDto leadMasterDto ,
-			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse
+			@RequestBody LeadMasterDto leadMasterDto
 	) {
 		ResponseVO<LeadMasterDto> responseVO = new ResponseVO<LeadMasterDto>();
 		boolean flag = leadMasterService.insertLeadService(leadMasterDto);
@@ -137,7 +137,7 @@ public class LeadUploadFileController {
 			responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
 			responseVO.setMessage("Insert Successfully");
 			responseVO.setResult(leadMasterDto);
-//			historyRepository.insertHistory(new History(leadMasterDto.getComments() == null ? leadMasterDto.getComments():"null" ,new Date(), employeeService.getEmployeeByEmpId(leadMasterDto.getEmployeeId()), leadJpaMasterRepository.findByStudentId(leadMasterDto.getStudentId()), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
+			historyRepository.insertHistory(new History(leadMasterDto.getComments() == null ? leadMasterDto.getComments():"Inserted" ,new Date(), employeeService.getEmployeeByEmpId(leadMasterDto.getEmployeeId()), leadJpaMasterRepository.findByStudentId(leadMasterDto.getStudentId()), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
 		} else {
 			responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 			responseVO.setMessage("Insert Failed!!");
@@ -270,7 +270,7 @@ public class LeadUploadFileController {
 		 boolean flag = leadMasterService.updateLeadService(userId, leadMasterDto);
 		  if(flag){
 			  responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
-//			  historyRepository.insertHistory(new History(leadMasterDto.getComments() == null ? leadMasterDto.getComments():"null" ,new Date(), employeeService.getEmployeeByUserId(userId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
+			  historyRepository.insertHistory(new History(leadMasterDto.getComments() == null ? leadMasterDto.getComments():"Updated" ,new Date(), employeeService.getEmployeeByUserId(userId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
 			  responseVO.setMessage("Update Successfully!!");
 		  }
 		  else {
@@ -292,7 +292,7 @@ public class LeadUploadFileController {
 		leadJpaMasterRepository.save(leadMaster);
 	    Map<String, Boolean> response = new HashMap<>();
 	    response.put("deletedFlag", Boolean.TRUE);
-//		historyRepository.insertHistory(new History("Deleted Lead by Employee", new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(remarkService.getRemarkById("Deleted"))));
+		historyRepository.insertHistory(new History("Deleted Lead by Employee", new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(remarkService.getRemarkById("Deleted"))));
 		return response;
 	} 
 
@@ -367,9 +367,9 @@ public class LeadUploadFileController {
 
 	@PostMapping(value = "/verifyTheLeadAssignAutomatically")
 	@ResponseBody
-	public String verifyTheLead(@RequestBody VerifyLeadRes verifyLeadRes) {
+	public ResponseVO verifyTheLead(@RequestBody VerifyLeadRes verifyLeadRes) {
 		for(Long leadId : verifyLeadRes.getStduentId()) {
-			Long empId = empLeadService.assignLeadAutomatically(100L);
+			Long empId = empLeadService.assignLeadAutomatically(leadId);
 			EmployeeMaster employeeMaster = employeeService.getEmployeeByEmpId(empId);
 			LeadMaster leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId, true);
 			EmpLead empLead = new EmpLead();
@@ -381,8 +381,30 @@ public class LeadUploadFileController {
 			leadMasterObj.setAssignLeadFlag(true);
 			leadJpaMasterRepository.save(leadMasterObj);
 			LeadMaster leadMaster = leadMasterService.getLeadByStudentId(leadId);
-//			historyRepository.insertHistory(new History("Verified" ,new Date(), employeeMaster,  leadMaster, leadMaster.getRemarkMaster()));
+			historyRepository.insertHistory(new History("Verified" ,new Date(), employeeMaster,  leadMaster, leadMaster.getRemarkMaster()));
 		}
+		ResponseVO responseVO = new ResponseVO();
+		responseVO.setStatusCode("200");
+		responseVO.setMessage("All Done");
+		responseVO.setResult("All Leads are assigned");
+		return responseVO;
+	}
+
+	@GetMapping(value = "/sendEmail")
+	public String setEmail() throws Exception {
+		sendEmail();
 		return "Done";
 	}
+
+	private void sendEmail() throws Exception{
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setTo("amrutaupskillutoday@gmail.com");
+		helper.setText("this email is send by java spring boot server");
+		helper.setSubject("Spring boot connection to email is done");
+
+		sender.send(message);
+	}
+
 }

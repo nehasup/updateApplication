@@ -4,8 +4,8 @@ public class ResponseVO<T> {
 	private String statusCode;
 	private String message;
 	private T result;
-	
-	public String getStatusCode() {
+
+    public String getStatusCode() {
 		return statusCode;
 	}
 

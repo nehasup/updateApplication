@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.upskillutoday.crmRoot.model.InstituteMaster;
 import com.upskillutoday.crmRoot.repository.InstituteRepository;
 
+import java.util.List;
+
 @Repository
 @Transactional
 public class InstituteRepositoryImpl implements InstituteRepository {
@@ -33,6 +35,16 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 		}
 		
 	}
-	
+
+	@Override
+	public List getInstituteByCategoryFromStudentId(Long stduentId) {
+    return entityManager
+        .createQuery(
+            "SELECT new InstituteNameResponse (im.instituteName) FROM InstituteMaster as im\n"
+                + "    inner join CategoryMaster as c on im.categoryMaster.categoryId = c.categoryId\n"
+                + "    where im.categoryMaster.categoryId = " + stduentId)
+        .getResultList();
+	}
+
 
 }

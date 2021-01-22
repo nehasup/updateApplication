@@ -39,7 +39,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 	    public List getAllEmpListDao() {
 	        List<String> list = null;
 	        try {
-	            Query query = entityManager.createQuery("Select NEW com.upskillutoday.crmRoot.response.EmployeeResponseDto(emp.employeeId as employeeId,emp.employeeName as employeeName,emp.contactNo as contactNo,emp.guardianNo as guardianNo,emp.emailId as emailId,emp.address as address,emp.birthDate as birthDate,emp.gender,c.categoryName as categoryName,c.categoryId as categoryId)"
+	            Query query = entityManager.createQuery("Select NEW com.upskillutoday.crmRoot.response.EmployeeResponseDto( emp.employeeId as employeeId,emp.employeeName as employeeName,emp.contactNo as contactNo,emp.guardianNo as guardianNo,emp.emailId as emailId,emp.address as address,emp.birthDate as birthDate,emp.gender,c.categoryName as categoryName,c.categoryId as categoryId )"
 	            		+ " from EmployeeMaster as emp inner join emp.category as c where emp.deletedFlag=1");
 	             list = query.getResultList();
 
@@ -118,8 +118,20 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         .createQuery(
             "SELECT em.employeeId FROM EmployeeMaster as em \n"
                 + "    inner join EmpCategy as ec on em.employeeId = ec.employeeMaster.employeeId\n"
-                + "    where ec.categoryMaster.categoryId = (SELECT lm.categoryMaster.categoryId FROM LeadMaster lm where lm.studentId = 111)",
+                + "    where ec.categoryMaster.categoryId = (SELECT lm.categoryMaster.categoryId FROM LeadMaster lm where lm.studentId = " + studentId + ")",
             Long.class)
         .getSingleResult();
+	}
+
+	@Override
+	public List getVerifiactionAndAdmissionConusellor() {
+    return entityManager
+        .createQuery(
+            "SELECT new EmployeeNameWithId (em.employeeId, em.employeeName ) FROM EmployeeMaster as em \n"
+                + "                               inner join UserMaster um on em.userMaster.userId = um.userId \n"
+                + "                               inner join UserRole ur on um.userId = ur.users.userId \n"
+                + "                               inner join RoleMaster rm on ur.roles.roleId = rm.roleId \n"
+                + "where rm.roleName = 'Admissions counsellor' or rm.roleName = 'Verification counsellor'")
+        .getResultList();
 	}
 }

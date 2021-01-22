@@ -12,5 +12,6 @@ import com.upskillutoday.crmRoot.model.LeadMaster;
 public interface FileStorageService {
 	// public void init();
 	  Long save(MultipartFile file) throws ResourceNotFoundException;
+	  Long saveInstituteFile(MultipartFile file) throws ResourceNotFoundException;
 	  List<LeadMaster> findAll();
 }

@@ -58,102 +58,219 @@ public class FileStorageServiceImpl implements FileStorageService {
 
 	@Autowired
 	private RemarkService remarkService;
+
+	@Autowired
+	private InstituteRepository instituteRepository;
 	
 	@Override
 	public Long save(MultipartFile file) throws ResourceNotFoundException {
 		Long result = 0L;
 		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 		if(extension.equalsIgnoreCase("json")) {
-			 readDataFromJson(file);
+			 readDataFromJson(file, 0);
 		}else if(extension.equalsIgnoreCase("csv")) {
-			 readDataFromCsv(file);
+			 readDataFromCsv(file, 0);
 		}
 		else if(extension.equalsIgnoreCase("xls") || extension.equalsIgnoreCase("xlsx")) {
-			 result = readDataFromExcel(file);
+			 result = readDataFromExcel(file, 0);
 		}
 		leadMasterService.assignUnverifiedLeadToVerifiers();
 		return result;
 	}
 
-	private Long readDataFromExcel(MultipartFile file) throws ResourceNotFoundException {
+	@Override
+	public Long saveInstituteFile(MultipartFile file) throws ResourceNotFoundException {
+		Long result = 0L;
+		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+		if(extension.equalsIgnoreCase("json")) {
+			readDataFromJson(file, 1);
+		}else if(extension.equalsIgnoreCase("csv")) {
+			readDataFromCsv(file, 1);
+		}
+		else if(extension.equalsIgnoreCase("xls") || extension.equalsIgnoreCase("xlsx")) {
+			result = readDataFromExcel(file, 1);
+		}
+		leadMasterService.assignUnverifiedLeadToVerifiers();
+		return result;
+	}
+
+	private Long readDataFromExcel(MultipartFile file, int i) throws ResourceNotFoundException {
 		Long count = 0L;
 		Workbook workbook = getWorkBook(file);
 		Sheet sheet = workbook.getSheetAt(0);
 
-		// updated by laukik
-		for(Row row:sheet) {
-			if(!row.getCell(0).toString().trim().equals("Student Name")) {
-				String studentName;
+		// insert leads by file
+		if(i == 0) {
+			// updated by laukik
+			for(Row row:sheet) {
+				if(!row.getCell(0).toString().trim().equals("Student Name")) {
+					String studentName;
+					if(row.getCell(0) != null) {
+						studentName = row.getCell(0).toString();
+					} else {
+						throw new ResourceNotFoundException("Student name Not Found" + ": Uploaded Student Count - " + count);
+					}
+
+					String contactNo;
+					if(row.getCell(1).getCellType()== Cell.CELL_TYPE_NUMERIC) {
+						contactNo = NumberToTextConverter.toText(row.getCell(1).getNumericCellValue());
+					} else {
+						throw new ResourceNotFoundException("'Contact' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+					}
+
+					String emailId;
+					if(row.getCell(2) != null) {
+						emailId = row.getCell(2).toString();
+					} else {
+						throw new ResourceNotFoundException("'Email' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+					}
+
+					LeadMaster presentLead = fileuploadrepository.findByStudentNameAndContactNoAndEmailIdAndDeletedFlag(studentName, contactNo, emailId, false);
+
+					if(presentLead==null) {
+						LeadMaster leadMaster = new LeadMaster();
+						leadMaster.setStudentName(studentName);
+						leadMaster.setContactNo(contactNo);
+						leadMaster.setEmailId(emailId);
+
+						if(row.getCell(3) != null) {
+							leadMaster.setCourseName(row.getCell(3).toString());
+						} else {
+							throw new ResourceNotFoundException("'Course Name' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+						}
+
+						if(row.getCell(4) != null) {
+							leadMaster.setCity(row.getCell(4).toString());
+						} else {
+							throw new ResourceNotFoundException("'City' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+						}
+
+						if(row.getCell(5) != null) {
+							leadMaster.setArea(row.getCell(5).toString());
+						} else {
+							throw new ResourceNotFoundException("'Area' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+						}
+
+						if(row.getCell(6) != null) {
+							leadMaster.setModeOfCourse(row.getCell(6).toString());
+						} else {
+							throw new ResourceNotFoundException("'Mode of Course' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+						}
+
+						CategoryMaster categoryMaster = categoryRepository.getCatIdByName(row.getCell(7).toString());
+						if(categoryMaster!= null) {
+							leadMaster.setCategoryMaster(categoryMaster);
+						} else {
+							throw new ResourceNotFoundException("'Category' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+						}
+
+						long id = 3;
+
+						RemarkMaster remarkMaster = remarkJpaRepository.findById(id).orElse(null);
+						leadMaster.setRemarkMaster(remarkMaster);
+						leadMaster.setUpdatedOn(new Date());
+						leadMaster.setDeletedFlag(true);
+						leadMaster.setAssignLeadFlag(false);
+						leadMaster.setFileType(FilenameUtils.getExtension(file.getOriginalFilename()));
+						fileuploadrepository.save(leadMaster);
+						historyRepository.insertHistory(new History(leadMaster.getComments() == null ? leadMaster.getComments():"Inserted" ,new Date(), null, leadMaster, remarkService.getRemarkById(leadMaster.getRemarkId())));
+						count ++;
+					}
+				}
+			}
+		}
+
+		if(i == 1) {
+			for(Row row:sheet) {
+
+				InstituteMaster instituteMaster = new InstituteMaster();
+
+				if(!row.getCell(0).toString().trim().equals("Client Name")) {
+				String clientName;
 				if(row.getCell(0) != null) {
-					studentName = row.getCell(0).toString();
+				clientName = row.getCell(0).toString();
 				} else {
-					throw new ResourceNotFoundException("Student name Not Found" + ": Uploaded Student Count - " + count);
+				throw new ResourceNotFoundException("Client Name Not Found" + ": Uploaded Client Count - " + count);
 				}
 
-				String contactNo;
-				if(row.getCell(1).getCellType()== Cell.CELL_TYPE_NUMERIC) {
-					 contactNo = NumberToTextConverter.toText(row.getCell(1).getNumericCellValue());
+				String commitedLeads;
+				if(row.getCell(1) != null) {
+				commitedLeads = row.getCell(1).toString();
 				} else {
-					throw new ResourceNotFoundException("'Contact' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+				throw new ResourceNotFoundException("Client commited leads Not Found" + ": Uploaded Client Count - " + count);
+				}
+
+				String conversionPrecentage;
+				if(row.getCell(2) != null) {
+				conversionPrecentage = row.getCell(2).toString();
+				} else {
+				throw new ResourceNotFoundException("Client conversion percentage Not Found" + ": Uploaded Client Count - " + count);
+				}
+
+				String confirmAddmission;
+				if(row.getCell(3) != null) {
+				confirmAddmission = row.getCell(3).toString();
+				} else {
+				throw new ResourceNotFoundException("Client confirm addmission Not Found" + ": Uploaded Client Count - " + count);
+				}
+
+				String mobileNumber;
+				if(row.getCell(4) != null) {
+				mobileNumber = row.getCell(4).toString();
+				} else {
+				throw new ResourceNotFoundException("Client mobile number Not Found" + ": Uploaded Client Count - " + count);
 				}
 
 				String emailId;
-				if(row.getCell(2) != null) {
-					emailId = row.getCell(2).toString();
+				if(row.getCell(5) != null) {
+				emailId = row.getCell(5).toString();
 				} else {
-					throw new ResourceNotFoundException("'Email' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+				throw new ResourceNotFoundException("Client email id Not Found" + ": Uploaded Client Count - " + count);
 				}
 
-				LeadMaster presentLead = fileuploadrepository.findByStudentNameAndContactNoAndEmailIdAndDeletedFlag(studentName, contactNo, emailId, false); 
-				
-				if(presentLead==null) {
-					LeadMaster leadMaster = new LeadMaster();
-					leadMaster.setStudentName(studentName);
-					leadMaster.setContactNo(contactNo);
-					leadMaster.setEmailId(emailId);
+				String decisionMakerName;
+				if(row.getCell(6) != null) {
+				decisionMakerName = row.getCell(6).toString();
+				} else {
+				throw new ResourceNotFoundException("Client decision maker name Not Found" + ": Uploaded Client Count - " + count);
+				}
 
-					if(row.getCell(3) != null) {
-						leadMaster.setCourseName(row.getCell(3).toString());
-					} else {
-						throw new ResourceNotFoundException("'Course Name' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-					}
+				String address;
+				if(row.getCell(7) != null) {
+				address = row.getCell(7).toString();
+				} else {
+				throw new ResourceNotFoundException("Client address Not Found" + ": Uploaded Client Count - " + count);
+				}
 
-					if(row.getCell(4) != null) {
-						leadMaster.setCity(row.getCell(4).toString());
-					} else {
-						throw new ResourceNotFoundException("'City' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-					}
+				String additionalCommitment;
+				if(row.getCell(8) != null) {
+				additionalCommitment = row.getCell(8).toString();
+				} else {
+				throw new ResourceNotFoundException("Client additional commitment Not Found" + ": Uploaded Client Count - " + count);
+				}
 
-					if(row.getCell(5) != null) {
-						leadMaster.setArea(row.getCell(5).toString());
-					} else {
-						throw new ResourceNotFoundException("'Area' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-					}
+				String category;
+				if(row.getCell(9) != null) {
+				category = row.getCell(9).toString();
+				} else {
+				throw new ResourceNotFoundException("Client category Not Found" + ": Uploaded Client Count - " + count);
+				}
 
-					if(row.getCell(6) != null) {
-						leadMaster.setModeOfCourse(row.getCell(6).toString());
-					} else {
-						throw new ResourceNotFoundException("'Mode of Course' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-					}
+				instituteMaster.setInstituteName(clientName);
+				instituteMaster.setEmailId(emailId);
+				instituteMaster.setDesignMaker(decisionMakerName);
+				instituteMaster.setContactNo(mobileNumber);
+				instituteMaster.setAddress(address);
+				instituteMaster.setCommitedLead(commitedLeads);
+				instituteMaster.setAddmissionComitted(confirmAddmission);
+				instituteMaster.setAdditionalCommited(additionalCommitment);
+				instituteMaster.setCategoryMaster(categoryRepository.getCatIdByName(category));
+				instituteMaster.setConversion(conversionPrecentage);
+				instituteMaster.setDeletedFlag(true);
+				instituteMaster.setUpdatedOn(new Date());
 
-					CategoryMaster categoryMaster = categoryRepository.getCatIdByName(row.getCell(7).toString());
-					if(categoryMaster!= null) {
-						leadMaster.setCategoryMaster(categoryMaster);
-					} else {
-						throw new ResourceNotFoundException("'Category' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-					}
-					
-					long id = 3;
-
-					RemarkMaster remarkMaster = remarkJpaRepository.findById(id).orElse(null);
-					leadMaster.setRemarkMaster(remarkMaster);
-					leadMaster.setUpdatedOn(new Date());
-					leadMaster.setDeletedFlag(true);
-					leadMaster.setAssignLeadFlag(false);
-					leadMaster.setFileType(FilenameUtils.getExtension(file.getOriginalFilename()));
-					fileuploadrepository.save(leadMaster);
-//					historyRepository.insertHistory(new History(leadMaster.getComments() == null ? leadMaster.getComments():"null" ,new Date(), null, leadMaster, remarkService.getRemarkById(leadMaster.getRemarkId())));
-					count ++;
+				instituteRepository.insertInsituteDao(instituteMaster);
+				count ++;
 				}
 			}
 		}
@@ -178,7 +295,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 		return workbook;
 	}
 
-	private void readDataFromCsv(MultipartFile file) {
+	private void readDataFromCsv(MultipartFile file, int i) {
 		
 		/*
 		 * try { InputStreamReader reader = new
@@ -197,9 +314,8 @@ public class FileStorageServiceImpl implements FileStorageService {
 		
 	}
 
-	private void readDataFromJson(MultipartFile file) {
+	private void readDataFromJson(MultipartFile file, int i) {
 		try {
-			
 			InputStream inputStream = file.getInputStream();
 			ObjectMapper mapper = new ObjectMapper();
 			List<LeadMaster> leadMasters = Arrays.asList(mapper.readValue(inputStream, LeadMaster[].class));
@@ -212,8 +328,6 @@ public class FileStorageServiceImpl implements FileStorageService {
 			}
 		
 		}
-		
-		
 		catch (Exception e) {
 			// TODO: handle exception
 		}

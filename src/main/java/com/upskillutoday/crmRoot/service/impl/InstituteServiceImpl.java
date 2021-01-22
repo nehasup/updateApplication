@@ -2,6 +2,7 @@ package com.upskillutoday.crmRoot.service.impl;
 
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,25 +29,25 @@ public class InstituteServiceImpl implements InstituteService {
 		InstituteMaster institute = new InstituteMaster();
 		
 		//institute.setInstituteId(instituteDto.getInstituteId());
-		institute.setInstituteName(instituteDto.getInstituteName());
-		institute.setLegalName(instituteDto.getLegalName());
-		institute.setContactNo(instituteDto.getContactNo());
-		institute.setEmailId(instituteDto.getEmailId());
-		institute.setAddress(instituteDto.getAddress());
-		institute.setGstNo(instituteDto.getGstNo());
-		institute.setUpSkillExecutive(instituteDto.getUpSkillExecutive());
-		institute.setCourseName(instituteDto.getCourseName());
-		institute.setDesignMaker(instituteDto.getDesignMaker());
-		institute.setHeadCounselor(instituteDto.getHeadCounselor());
-		institute.setCounselor(instituteDto.getCounselor());
-		institute.setEligibility(instituteDto.getEligibility());
-		institute.setTargetLocality(instituteDto.getTargetLocality());
-		institute.setAgeLimit(instituteDto.getAgeLimit());
-		institute.setPerDayLead(instituteDto.getPerDayLead());
-		institute.setUpdatedBy(instituteDto.getUpdatedBy());
-        Date date = new Date();
-		institute.setUpdatedOn(date);
-		institute.setDeletedFlag(true);
+//		institute.setInstituteName(instituteDto.getInstituteName());
+//		institute.setLegalName(instituteDto.getLegalName());
+//		institute.setContactNo(instituteDto.getContactNo());
+//		institute.setEmailId(instituteDto.getEmailId());
+//		institute.setAddress(instituteDto.getAddress());
+//		institute.setGstNo(instituteDto.getGstNo());
+//		institute.setUpSkillExecutive(instituteDto.getUpSkillExecutive());
+//		institute.setCourseName(instituteDto.getCourseName());
+//		institute.setDesignMaker(instituteDto.getDesignMaker());
+//		institute.setHeadCounselor(instituteDto.getHeadCounselor());
+//		institute.setCounselor(instituteDto.getCounselor());
+//		institute.setEligibility(instituteDto.getEligibility());
+//		institute.setTargetLocality(instituteDto.getTargetLocality());
+//		institute.setAgeLimit(instituteDto.getAgeLimit());
+//		institute.setPerDayLead(instituteDto.getPerDayLead());
+//		institute.setUpdatedBy(instituteDto.getUpdatedBy());
+//        Date date = new Date();
+//		institute.setUpdatedOn(date);
+//		institute.setDeletedFlag(true);
 				
 		
 		 boolean flag=instituteRepository.insertInsituteDao(institute);
@@ -65,5 +66,10 @@ public class InstituteServiceImpl implements InstituteService {
 	        return flag;
 	}
 
-	
+	@Override
+	public List getInstituteByCategoryFromStudentId(Long catId) {
+		return instituteRepository.getInstituteByCategoryFromStudentId(catId);
+	}
+
+
 }

@@ -1,9 +1,14 @@
 package com.upskillutoday.crmRoot.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
+import com.upskillutoday.crmRoot.response.DailyReportModelDto;
+import com.upskillutoday.crmRoot.response.EmployeeNameWithId;
+import com.upskillutoday.crmRoot.service.RemarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,6 +44,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	CategoryServiceImpl categoryService;
+
+	@Autowired
+	private RemarkService remarkService;
 
 	@Override
 	public boolean insertEmployeeService(EmployeeDto employeeDto) throws Exception {
@@ -260,5 +268,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public Long getEmployeeAutomatically(Long studentId) {
 		return employeeRepository.getEmployeeFromCategory(studentId);
+	}
+
+	@Override
+	public List getDailyCountOfEmployees() {
+		List<EmployeeNameWithId> employeeVeAndAdCo = employeeRepository.getVerifiactionAndAdmissionConusellor();
+		ArrayList<DailyReportModelDto> dailyLeadReportDtos = new ArrayList<>();
+		for(EmployeeNameWithId employeeNameWithId : employeeVeAndAdCo) {
+			dailyLeadReportDtos.add(new DailyReportModelDto(employeeNameWithId.getEmpId(), employeeNameWithId.getEmployeeName(), remarkService.getRemarkWithCountForEmployee(employeeNameWithId.getEmpId())));
+		}
+
+		return dailyLeadReportDtos;
 	}
 }

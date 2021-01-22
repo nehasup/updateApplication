@@ -133,7 +133,8 @@ public class EmpLeadServiceImpl implements EmpLeadService {
 			empLead.setLeadMaster(leadMaster);
 			empLead.setUpdatedOn(new Date());
 			empLead.setDeletedFlag(true);
-			historyRepository.insertHistory(new History(leadMaster.getComments() == null ? leadMaster.getComments():"null" ,new Date(), employeeMaster, leadMaster, remarkService.getRemarkById(leadMaster.getRemarkId())));
+			boolean b = historyRepository.insertHistory(new History(leadMaster.getComments() == null ? leadMaster.getComments():"null" ,new Date(), employeeMaster, leadMaster, remarkService.getRemarkById(leadMaster.getRemarkId())));
+
 			empLeadRepository.addEmpLead(empLead);
 		}
 	}

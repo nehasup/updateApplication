@@ -34,3 +34,4 @@ build/
 
 ### Spring Boot files ###
 /src/main/resources/application.properties
+/databaseAPI.log

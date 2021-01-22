@@ -1,19 +1,7 @@
 package com.upskillutoday.crmRoot.model;
 
 import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "institute_master")
@@ -27,8 +15,14 @@ public class InstituteMaster {
 	@Column(name = "institute_name")
 	private String instituteName;
 
-	@Column(name = "legal_name")
-	private String legalName;
+	@Column(name = "lead_comitted")
+	private String commitedLead;
+
+	@Column(name = "conversion_per_comited")
+	private String conversion;
+
+	@Column(name = "addmission_comitted")
+	private String addmissionComitted;
 
 	@Column(name = "contact_no")
 	private String contactNo;
@@ -36,41 +30,18 @@ public class InstituteMaster {
 	@Column(name = "email_id")
 	private String emailId;
 
-	@Column(name = "address")
-	private String address;
-
-	@Column(name = "gst_no")
-	private String gstNo;
-
-	@Column(name = "upskill_executive")
-	private String upSkillExecutive;
-
-	@Column(name = "course_name")
-	private String courseName;
-
-	@Column(name = "design_maker")
+	@Column(name = "decision_maker_name")
 	private String designMaker;
 
-	@Column(name = "head_counselor")
-	private String headCounselor;
+	@Column(name = "complete_address")
+	private String address;
 
-	@Column(name = "counselor")
-	private String counselor;
+	@Column(name = "additional_comitted")
+	private String additionalCommited;
 
-	@Column(name = "eligibility")
-	private String eligibility;
-
-	@Column(name = "target_locality")
-	private String targetLocality;
-
-	@Column(name = "age_limit")
-	private String ageLimit;
-
-	@Column(name = "per_day_lead")
-	private String perDayLead;
-
-	@Column(name = "updated_by")
-	private int updatedBy;
+	@ManyToOne
+	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
+	private CategoryMaster categoryMaster;
 
 	@Column(name = "updated_on")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -78,13 +49,6 @@ public class InstituteMaster {
 
 	@Column(name = "deleted_flag")
 	private boolean deletedFlag;
-
-	
-//	  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, 
-//			  mappedBy ="institute")
-//	  private UserMaster user;
-//	 
-//	
 
 	public Long getInstituteId() {
 		return instituteId;
@@ -102,12 +66,28 @@ public class InstituteMaster {
 		this.instituteName = instituteName;
 	}
 
-	public String getLegalName() {
-		return legalName;
+	public String getCommitedLead() {
+		return commitedLead;
 	}
 
-	public void setLegalName(String legalName) {
-		this.legalName = legalName;
+	public void setCommitedLead(String commitedLead) {
+		this.commitedLead = commitedLead;
+	}
+
+	public String getConversion() {
+		return conversion;
+	}
+
+	public void setConversion(String conversion) {
+		this.conversion = conversion;
+	}
+
+	public String getAddmissionComitted() {
+		return addmissionComitted;
+	}
+
+	public void setAddmissionComitted(String addmissionComitted) {
+		this.addmissionComitted = addmissionComitted;
 	}
 
 	public String getContactNo() {
@@ -126,38 +106,6 @@ public class InstituteMaster {
 		this.emailId = emailId;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getGstNo() {
-		return gstNo;
-	}
-
-	public void setGstNo(String gstNo) {
-		this.gstNo = gstNo;
-	}
-
-	public String getUpSkillExecutive() {
-		return upSkillExecutive;
-	}
-
-	public void setUpSkillExecutive(String upSkillExecutive) {
-		this.upSkillExecutive = upSkillExecutive;
-	}
-
-	public String getCourseName() {
-		return courseName;
-	}
-
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
-	}
-
 	public String getDesignMaker() {
 		return designMaker;
 	}
@@ -166,60 +114,28 @@ public class InstituteMaster {
 		this.designMaker = designMaker;
 	}
 
-	public String getHeadCounselor() {
-		return headCounselor;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setHeadCounselor(String headCounselor) {
-		this.headCounselor = headCounselor;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
-	public String getCounselor() {
-		return counselor;
+	public String getAdditionalCommited() {
+		return additionalCommited;
 	}
 
-	public void setCounselor(String counselor) {
-		this.counselor = counselor;
+	public void setAdditionalCommited(String additionalCommited) {
+		this.additionalCommited = additionalCommited;
 	}
 
-	public String getEligibility() {
-		return eligibility;
+	public CategoryMaster getCategoryMaster() {
+		return categoryMaster;
 	}
 
-	public void setEligibility(String eligibility) {
-		this.eligibility = eligibility;
-	}
-
-	public String getTargetLocality() {
-		return targetLocality;
-	}
-
-	public void setTargetLocality(String targetLocality) {
-		this.targetLocality = targetLocality;
-	}
-
-	public String getAgeLimit() {
-		return ageLimit;
-	}
-
-	public void setAgeLimit(String ageLimit) {
-		this.ageLimit = ageLimit;
-	}
-
-	public String getPerDayLead() {
-		return perDayLead;
-	}
-
-	public void setPerDayLead(String perDayLead) {
-		this.perDayLead = perDayLead;
-	}
-
-	public int getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(int updatedBy) {
-		this.updatedBy = updatedBy;
+	public void setCategoryMaster(CategoryMaster categoryMaster) {
+		this.categoryMaster = categoryMaster;
 	}
 
 	public Date getUpdatedOn() {
@@ -237,16 +153,4 @@ public class InstituteMaster {
 	public void setDeletedFlag(boolean deletedFlag) {
 		this.deletedFlag = deletedFlag;
 	}
-
-	
-//	  public UserMaster getUser() { return user; }
-//	  
-//	  
-//	  
-//	  public void setUser(UserMaster user) { this.user = user; }
-//	  
-//	  
-	  
-	 
-
 }

@@ -144,4 +144,9 @@ public class EmployeeController {
         EmpLoginResDto empLoginResDto = employeeService.login(new EmpLoginReqDto(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
         return userLoginService.createAuthenticationToken(authenticationRequest);
     }
+
+    @GetMapping(value = "/getDailyReport")
+    public List getDailyReport() {
+	    return employeeService.getDailyCountOfEmployees();
+    }
 }

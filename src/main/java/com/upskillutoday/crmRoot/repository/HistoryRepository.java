@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+
 public interface HistoryRepository {
     boolean insertHistory(History history);
     List getHistory();

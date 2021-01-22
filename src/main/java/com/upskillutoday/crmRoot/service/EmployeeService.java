@@ -19,4 +19,5 @@ public interface EmployeeService {
 	EmployeeMaster getEmployeeByEmpId(Long empId);
 	List getAllVerificationCounsellor();
 	Long getEmployeeAutomatically(Long studentId);
+	List getDailyCountOfEmployees();
 }
