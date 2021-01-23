@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.upskillutoday.crmRoot.request.AuthenticationRequest;
+import com.upskillutoday.crmRoot.response.AuthenticationResponse;
 import com.upskillutoday.crmRoot.service.UserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -144,7 +145,8 @@ public class EmployeeController {
             HttpServletResponse response
     ) throws Exception {
         EmpLoginResDto empLoginResDto = employeeService.login(new EmpLoginReqDto(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
-        return ResponseEntity.ok("Done");
+//        userLoginService.createAuthenticationToken(authenticationRequest);
+        return ResponseEntity.ok(new AuthenticationResponse(empLoginResDto.getUserId(), empLoginResDto.getEmployeeName(), empLoginResDto.getEmployeeId(), empLoginResDto.getEmployeeName(), empLoginResDto.getRoleMaster().getRoleId(), empLoginResDto.getRoleMaster().getRoleName(), empLoginResDto.getContactNo(), empLoginResDto.getEmailId()));
     }
 
     @GetMapping(value = "/getDailyReport")
