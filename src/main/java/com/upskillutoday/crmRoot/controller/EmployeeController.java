@@ -139,10 +139,12 @@ public class EmployeeController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(
-            @RequestBody AuthenticationRequest authenticationRequest
+            @RequestBody AuthenticationRequest authenticationRequest,
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws Exception {
         EmpLoginResDto empLoginResDto = employeeService.login(new EmpLoginReqDto(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
-        return userLoginService.createAuthenticationToken(authenticationRequest);
+        return ResponseEntity.ok("Done");
     }
 
     @GetMapping(value = "/getDailyReport")
