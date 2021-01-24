@@ -145,8 +145,7 @@ public class EmployeeController {
             HttpServletResponse response
     ) throws Exception {
         EmpLoginResDto empLoginResDto = employeeService.login(new EmpLoginReqDto(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
-//        userLoginService.createAuthenticationToken(authenticationRequest);
-        return ResponseEntity.ok(new AuthenticationResponse(empLoginResDto.getUserId(), empLoginResDto.getEmployeeName(), empLoginResDto.getEmployeeId(), empLoginResDto.getEmployeeName(), empLoginResDto.getRoleMaster().getRoleId(), empLoginResDto.getRoleMaster().getRoleName(), empLoginResDto.getContactNo(), empLoginResDto.getEmailId()));
+        return ResponseEntity.ok(userLoginService.createAuthenticationToken(authenticationRequest));
     }
 
     @GetMapping(value = "/getDailyReport")
