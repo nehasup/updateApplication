@@ -131,4 +131,9 @@ public class RemarkController {
     public List getAllRemarkWithCountByEmp(@RequestParam("empId") Long empId) {
 	    return remarkService.getRemarkWithCountForEmployee(empId);
     }
+
+    @GetMapping("/getAllCountForEmpDatewise")
+    public List getAllCountForEmpDatewise(@RequestParam("empId") Long empId, @RequestParam("date") String date) {
+	    return remarkService.getAllCountOfEmpDatewise(empId, date);
+    }
 }

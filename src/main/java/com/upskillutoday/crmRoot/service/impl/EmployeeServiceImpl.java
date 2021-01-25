@@ -280,4 +280,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		return dailyLeadReportDtos;
 	}
+
+	@Override
+	public List getCountOfEmployeesDateWise(String date) {
+		List<EmployeeNameWithId> employeeVeAndAdCo = employeeRepository.getVerifiactionAndAdmissionConusellor();
+		ArrayList<DailyReportModelDto> dailyLeadReportDtos = new ArrayList<>();
+		for(EmployeeNameWithId employeeNameWithId : employeeVeAndAdCo) {
+			dailyLeadReportDtos.add(new DailyReportModelDto(employeeNameWithId.getEmpId(), employeeNameWithId.getEmployeeName(), remarkService.getAllCountOfEmpDatewise(employeeNameWithId.getEmpId(), date)));
+		}
+
+		return dailyLeadReportDtos;
+	}
 }

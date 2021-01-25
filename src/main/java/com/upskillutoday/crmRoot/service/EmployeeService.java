@@ -20,4 +20,5 @@ public interface EmployeeService {
 	List getAllVerificationCounsellor();
 	Long getEmployeeAutomatically(Long studentId);
 	List getDailyCountOfEmployees();
+	List getCountOfEmployeesDateWise(String date);
 }

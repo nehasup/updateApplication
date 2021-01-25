@@ -18,6 +18,10 @@ public class InstituteNameResponse {
         this.instituteName = instituteName;
     }
 
+    public InstituteNameResponse() {
+
+    }
+
     public String getInstituteName() {
         return instituteName;
     }

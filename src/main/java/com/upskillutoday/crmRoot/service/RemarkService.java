@@ -15,4 +15,5 @@ public interface RemarkService {
 	RemarkMaster getRemarkById(Long id);
 	List getAllRemarkWithCount();
 	List getRemarkWithCountForEmployee(Long empId);
+	List getAllCountOfEmpDatewise(Long empId, String date);
 }

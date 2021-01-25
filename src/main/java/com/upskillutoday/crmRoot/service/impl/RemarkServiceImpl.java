@@ -83,4 +83,11 @@ public class RemarkServiceImpl implements RemarkService {
 		list.add(remarkRepository.getAllCountForEmp(empId));
 		return list;
 	}
+
+	@Override
+	public List getAllCountOfEmpDatewise(Long empId, String date) {
+		List list = remarkRepository.getReamrkWithCountForEmpDatewise(empId, date);
+		list.add(remarkRepository.getAllCountForEmpDatewise(empId, date));
+		return list;
+	}
 }

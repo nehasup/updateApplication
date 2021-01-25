@@ -115,10 +115,34 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 	}
 
 	@Override
+	public List getReamrkWithCountForEmpDatewise(Long empId, String date) {
+    return entityManager
+        .createQuery(
+            "select new CountRemarkDto (rm.remarkId, rm.remarkName, COUNT(lm.studentId)) from History as h\n"
+                + "    inner join h.leadMaster as lm \n"
+                + "    inner join h.remarkMaster as rm \n"
+				+ "    inner join h.employeeMaster as em \n"
+                + "    where em.employeeId = " + empId + " \n"
+                + "    and h.updatedOn = Date('" + date + "') \n"
+                + "    group by rm.remarkId")
+        .getResultList();
+	}
+
+	@Override
+	public CountRemarkDto getAllCountForEmpDatewise(Long empId, String date) {
+		return  entityManager
+				.createQuery(
+						"select new CountRemarkDto (COUNT(lm.studentId)) from History as h\n"
+								+ "    inner join h.leadMaster as lm \n"
+								+ "    inner join h.remarkMaster as rm \n"
+								+ "    inner join h.employeeMaster as em \n"
+								+ "    where em.employeeId = " + empId + " \n"
+								+ "    and h.updatedOn = Date('" + date + "')", CountRemarkDto.class )
+				.getSingleResult();
+	}
+
+	@Override
 	public RemarkMaster getRemarkById(Long id) {
 		return entityManager.createQuery("SELECT rm FROM RemarkMaster as rm WHERE rm.remarkId = " + id, RemarkMaster.class).getSingleResult();
 	}
-
-
-
 }

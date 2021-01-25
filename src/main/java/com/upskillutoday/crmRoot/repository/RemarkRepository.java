@@ -16,4 +16,6 @@ public interface RemarkRepository {
 	RemarkMaster getRemarkById(Long id);
 	CountRemarkDto getAllCount();
 	CountRemarkDto getAllCountForEmp(Long empId);
+	List getReamrkWithCountForEmpDatewise(Long empId, String date);
+	CountRemarkDto getAllCountForEmpDatewise(Long empId, String date);
 }

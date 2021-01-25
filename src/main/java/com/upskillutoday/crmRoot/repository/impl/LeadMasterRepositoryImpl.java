@@ -187,10 +187,12 @@ try{
 	public List getAllLeadFromStatusByEmp(Long remarkId, Long userId) {
     return entityManager
         .createQuery(
-            "SELECT lm FROM LeadMaster as lm\n"
+            "SELECT new LeadResponseDto ( lm.studentId, lm.studentName, lm.contactNo, lm.emailId, lm.courseName, lm.city, lm.area, lm.modeOfCourse, lm.address, lm.budget, lm.modificationStage, lm.remark, lm.comments, lm.instituteName, cat.categoryId, cat.categoryName, rm.remarkId, rm.remarkName, lm.updatedBy, lm.updatedOn) FROM LeadMaster as lm\n"
                 + "    inner join EmpLead as el on lm.studentId = el.leadMaster.studentId \n"
                 + "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId \n"
-                + "    inner join UserMaster as um on e.userMaster.userId = um.userId"
+                + "    inner join UserMaster as um on e.userMaster.userId = um.userId\n"
+				+ "		inner join lm.categoryMaster as cat \n"
+				+ "		inner join lm.remarkMaster as rm \n"
                 + "    where um.userId = " + userId
                 + " and lm.remarkMaster.remarkId = "
                 + remarkId)
