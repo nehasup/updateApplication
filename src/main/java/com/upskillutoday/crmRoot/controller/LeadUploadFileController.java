@@ -399,12 +399,14 @@ public class LeadUploadFileController {
 		return responseVO;
 	}
 
+	// For sending mail
 	@GetMapping(value = "/sendEmail")
 	public String setEmail() throws Exception {
 		sendEmail();
 		return "Done";
 	}
 
+	// For sending mail through method change method body to use
 	private void sendEmail() throws Exception{
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
