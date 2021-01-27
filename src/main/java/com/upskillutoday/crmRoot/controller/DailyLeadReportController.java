@@ -5,11 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
@@ -25,11 +21,11 @@ public class DailyLeadReportController {
 	@Autowired
 	DailyLeadReportService dailyLeadReportService;
 	
-	@PostMapping("/dailydateReportLead")
+	@GetMapping("/dailydateReportLead")
 	public List<LeadReportRes> dailyLeadReport(
-			@RequestBody DailyLeadReportDto dailyLeadReportDto
+			@RequestParam("date") String date
 	) throws ParseException {
-		List<LeadReportRes> list=dailyLeadReportService.getDailyLeadReportService(dailyLeadReportDto);
+		List<LeadReportRes> list = dailyLeadReportService.getDailyLeadReportService(date);
 		return list;
 	}
 }

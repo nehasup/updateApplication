@@ -11,4 +11,5 @@ public interface InstituteRepository {
 	
 	boolean insertInsituteDao(InstituteMaster institute);
 	List getInstituteByCategoryFromStudentId(Long catId);
+	InstituteMaster getInstituteById(Long id);
 }

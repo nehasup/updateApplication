@@ -5,13 +5,13 @@ import java.util.Date;
 
 
 public class DailyLeadReportDto {
-	private Date updatedOn;
+	private String updatedOn;
 
-	public Date getUpdatedOn() {
+	public String getUpdatedOn() {
 		return updatedOn;
 	}
 
-	public void setUpdatedOn(Date updatedOn) {
+	public void setUpdatedOn(String updatedOn) {
 		this.updatedOn = updatedOn;
 	}
 }

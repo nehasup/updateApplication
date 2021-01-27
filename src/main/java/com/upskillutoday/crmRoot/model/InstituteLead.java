@@ -1,0 +1,64 @@
+package com.upskillutoday.crmRoot.model;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Table(name = "institute_lead")
+public class InstituteLead {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="idInstitute_lead")
+    private Long instituteleadId;
+
+    @Column(name = "sent_on")
+    private Date sentOn;
+
+    @JoinColumn(name="institute_id",referencedColumnName="institute_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private InstituteMaster instituteMaster;
+
+    @JoinColumn(name="student_id",referencedColumnName="student_id")
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private LeadMaster leadMaster;
+
+    public Long getInstituteleadId() {
+        return instituteleadId;
+    }
+
+    public void setInstituteleadId(Long instituteleadId) {
+        this.instituteleadId = instituteleadId;
+    }
+
+    public Date getSentOn() {
+        return sentOn;
+    }
+
+    public void setSentOn(Date sentOn) {
+        this.sentOn = sentOn;
+    }
+
+    public InstituteMaster getInstituteMaster() {
+        return instituteMaster;
+    }
+
+    public void setInstituteMaster(InstituteMaster instituteMaster) {
+        this.instituteMaster = instituteMaster;
+    }
+
+    public LeadMaster getLeadMaster() {
+        return leadMaster;
+    }
+
+    public void setLeadMaster(LeadMaster leadMaster) {
+        this.leadMaster = leadMaster;
+    }
+
+    public InstituteLead(Date sentOn, InstituteMaster instituteMaster, LeadMaster leadMaster) {
+        this.sentOn = sentOn;
+        this.instituteMaster = instituteMaster;
+        this.leadMaster = leadMaster;
+    }
+}

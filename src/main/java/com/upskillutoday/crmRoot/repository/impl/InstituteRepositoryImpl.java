@@ -46,5 +46,14 @@ public class InstituteRepositoryImpl implements InstituteRepository {
         .getResultList();
 	}
 
+	@Override
+	public InstituteMaster getInstituteById(Long id) {
+		return entityManager
+				.createQuery(
+						"SELECT im FROM InstituteMaster as im\n"
+								+ "    where im.instituteId = " + id, InstituteMaster.class)
+				.getSingleResult();
+	}
+
 
 }

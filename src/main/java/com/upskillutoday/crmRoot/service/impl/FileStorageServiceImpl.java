@@ -90,7 +90,6 @@ public class FileStorageServiceImpl implements FileStorageService {
 		else if(extension.equalsIgnoreCase("xls") || extension.equalsIgnoreCase("xlsx")) {
 			result = readDataFromExcel(file, 1);
 		}
-		leadMasterService.assignUnverifiedLeadToVerifiers();
 		return result;
 	}
 
@@ -181,95 +180,93 @@ public class FileStorageServiceImpl implements FileStorageService {
 
 		if(i == 1) {
 			for(Row row:sheet) {
-
 				InstituteMaster instituteMaster = new InstituteMaster();
-
 				if(!row.getCell(0).toString().trim().equals("Client Name")) {
-				String clientName;
-				if(row.getCell(0) != null) {
-				clientName = row.getCell(0).toString();
-				} else {
-				throw new ResourceNotFoundException("Client Name Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String clientName;
+					if(row.getCell(0) != null) {
+					clientName = row.getCell(0).toString();
+					} else {
+					throw new ResourceNotFoundException("Client Name Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				String commitedLeads;
-				if(row.getCell(1) != null) {
-				commitedLeads = row.getCell(1).toString();
-				} else {
-				throw new ResourceNotFoundException("Client commited leads Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String commitedLeads;
+					if(row.getCell(1) != null) {
+						commitedLeads = row.getCell(1).toString();
+					} else {
+					throw new ResourceNotFoundException("Client commited leads Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				String conversionPrecentage;
-				if(row.getCell(2) != null) {
-				conversionPrecentage = row.getCell(2).toString();
-				} else {
-				throw new ResourceNotFoundException("Client conversion percentage Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String conversionPrecentage;
+					if(row.getCell(2) != null) {
+					conversionPrecentage = row.getCell(2).toString();
+					} else {
+					throw new ResourceNotFoundException("Client conversion percentage Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				String confirmAddmission;
-				if(row.getCell(3) != null) {
-				confirmAddmission = row.getCell(3).toString();
-				} else {
-				throw new ResourceNotFoundException("Client confirm addmission Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String confirmAddmission;
+					if(row.getCell(3) != null) {
+					confirmAddmission = row.getCell(3).toString();
+					} else {
+					throw new ResourceNotFoundException("Client confirm addmission Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				String mobileNumber;
-				if(row.getCell(4) != null) {
-				mobileNumber = row.getCell(4).toString();
-				} else {
-				throw new ResourceNotFoundException("Client mobile number Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String mobileNumber;
+					if(row.getCell(4) != null) {
+					mobileNumber = row.getCell(4).toString();
+					} else {
+					throw new ResourceNotFoundException("Client mobile number Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				String emailId;
-				if(row.getCell(5) != null) {
-				emailId = row.getCell(5).toString();
-				} else {
-				throw new ResourceNotFoundException("Client email id Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String emailId;
+					if(row.getCell(5) != null) {
+					emailId = row.getCell(5).toString();
+					} else {
+					throw new ResourceNotFoundException("Client email id Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				String decisionMakerName;
-				if(row.getCell(6) != null) {
-				decisionMakerName = row.getCell(6).toString();
-				} else {
-				throw new ResourceNotFoundException("Client decision maker name Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String decisionMakerName;
+					if(row.getCell(6) != null) {
+					decisionMakerName = row.getCell(6).toString();
+					} else {
+					throw new ResourceNotFoundException("Client decision maker name Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				String address;
-				if(row.getCell(7) != null) {
-				address = row.getCell(7).toString();
-				} else {
-				throw new ResourceNotFoundException("Client address Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String address;
+					if(row.getCell(7) != null) {
+					address = row.getCell(7).toString();
+					} else {
+					throw new ResourceNotFoundException("Client address Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				String additionalCommitment;
-				if(row.getCell(8) != null) {
-				additionalCommitment = row.getCell(8).toString();
-				} else {
-				throw new ResourceNotFoundException("Client additional commitment Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String additionalCommitment;
+					if(row.getCell(8) != null) {
+					additionalCommitment = row.getCell(8).toString();
+					} else {
+					throw new ResourceNotFoundException("Client additional commitment Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				String category;
-				if(row.getCell(9) != null) {
-				category = row.getCell(9).toString();
-				} else {
-				throw new ResourceNotFoundException("Client category Not Found" + ": Uploaded Client Count - " + count);
-				}
+					String category;
+					if(row.getCell(9) != null) {
+					category = row.getCell(9).toString();
+					} else {
+					throw new ResourceNotFoundException("Client category Not Found" + ": Uploaded Client Count - " + count);
+					}
 
-				instituteMaster.setInstituteName(clientName);
-				instituteMaster.setEmailId(emailId);
-				instituteMaster.setDesignMaker(decisionMakerName);
-				instituteMaster.setContactNo(mobileNumber);
-				instituteMaster.setAddress(address);
-				instituteMaster.setCommitedLead(commitedLeads);
-				instituteMaster.setAddmissionComitted(confirmAddmission);
-				instituteMaster.setAdditionalCommited(additionalCommitment);
-				instituteMaster.setCategoryMaster(categoryRepository.getCatIdByName(category));
-				instituteMaster.setConversion(conversionPrecentage);
-				instituteMaster.setDeletedFlag(true);
-				instituteMaster.setUpdatedOn(new Date());
+					instituteMaster.setInstituteName(clientName);
+					instituteMaster.setEmailId(emailId);
+					instituteMaster.setDesignMaker(decisionMakerName);
+					instituteMaster.setContactNo(mobileNumber);
+					instituteMaster.setAddress(address);
+					instituteMaster.setCommitedLead(commitedLeads);
+					instituteMaster.setAddmissionComitted(confirmAddmission);
+					instituteMaster.setAdditionalCommited(additionalCommitment);
+					instituteMaster.setCategoryMaster(categoryRepository.getCatIdByName(category));
+					instituteMaster.setConversion(conversionPrecentage);
+					instituteMaster.setDeletedFlag(true);
+					instituteMaster.setUpdatedOn(new Date());
 
-				instituteRepository.insertInsituteDao(instituteMaster);
-				count ++;
+					instituteRepository.insertInsituteDao(instituteMaster);
+					count ++;
 				}
 			}
 		}

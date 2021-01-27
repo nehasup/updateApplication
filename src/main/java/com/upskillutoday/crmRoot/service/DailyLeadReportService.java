@@ -11,5 +11,5 @@ import com.upskillutoday.crmRoot.response.LeadReportRes;
 public interface DailyLeadReportService {
 	
 
-	List<LeadReportRes> getDailyLeadReportService(DailyLeadReportDto dailyLeadReportDto) throws ParseException;
+	List<LeadReportRes> getDailyLeadReportService(String date) throws ParseException;
 }

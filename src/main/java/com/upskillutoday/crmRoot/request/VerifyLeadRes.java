@@ -4,20 +4,20 @@ import java.util.ArrayList;
 
 public class VerifyLeadRes {
 
-    private ArrayList<Long> stduentId;
+    private ArrayList<StudentWithInst> studentWithInsts;
 
     public VerifyLeadRes() {
     }
 
-    public VerifyLeadRes(ArrayList<Long> stduentId) {
-        this.stduentId = stduentId;
+    public VerifyLeadRes(ArrayList<StudentWithInst> studentWithInsts) {
+        this.studentWithInsts = studentWithInsts;
     }
 
-    public ArrayList<Long> getStduentId() {
-        return stduentId;
+    public ArrayList<StudentWithInst> getStudentWithInsts() {
+        return studentWithInsts;
     }
 
-    public void setStduentId(ArrayList<Long> stduentId) {
-        this.stduentId = stduentId;
+    public void setStudentWithInsts(ArrayList<StudentWithInst> studentWithInsts) {
+        this.studentWithInsts = studentWithInsts;
     }
 }

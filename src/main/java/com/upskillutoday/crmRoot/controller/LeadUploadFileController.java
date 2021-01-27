@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.mail.internet.MimeMessage;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.request.StudentWithInst;
 import com.upskillutoday.crmRoot.request.VerifyLeadRes;
 import com.upskillutoday.crmRoot.response.*;
 import com.upskillutoday.crmRoot.service.*;
@@ -90,6 +91,12 @@ public class LeadUploadFileController {
 
 	@Autowired
 	private JavaMailSender sender;
+
+	@Autowired
+	private InstituteLeadRepository instituteLeadRepository;
+
+	@Autowired
+	private InstituteRepository instituteRepository;
 
 	//import excel sheet
 	@PostMapping("/upload")
@@ -364,22 +371,27 @@ public class LeadUploadFileController {
 
 	@PostMapping(value = "/verifyTheLeadAssignAutomatically")
 	@ResponseBody
-	public ResponseVO verifyTheLead(@RequestBody VerifyLeadRes verifyLeadRes) {
-		for(Long leadId : verifyLeadRes.getStduentId()) {
-			Long empId = empLeadService.assignLeadAutomatically(leadId);
-			EmployeeMaster employeeMaster = employeeService.getEmployeeByEmpId(empId);
-			LeadMaster leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId, true);
-			EmpLead empLead = new EmpLead();
-			empLead.setLeadMaster(leadMasterObj);
-			empLead.setEmployeeMaster(employeeMaster);
-			empLead.setUpdatedOn(new Date());
-			empLead.setDeletedFlag(true);
-			empleadJparepository.save(empLead);
-			leadMasterObj.setAssignLeadFlag(true);
-			leadJpaMasterRepository.save(leadMasterObj);
-			LeadMaster leadMaster = leadMasterService.getLeadByStudentId(leadId);
-			historyRepository.insertHistory(new History("Verified" ,new Date(), employeeMaster,  leadMaster, leadMaster.getRemarkMaster()));
+	public ResponseVO verifyTheLead(@RequestBody StudentWithInst leadId) {
+
+		Long empId = empLeadService.assignLeadAutomatically(leadId.getStudentId());
+		EmployeeMaster employeeMaster = employeeService.getEmployeeByEmpId(empId);
+		LeadMaster leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId.getStudentId(), true);
+		EmpLead empLead = new EmpLead();
+		empLead.setLeadMaster(leadMasterObj);
+		empLead.setEmployeeMaster(employeeMaster);
+		empLead.setUpdatedOn(new Date());
+		empLead.setDeletedFlag(true);
+		empleadJparepository.save(empLead);
+		leadMasterObj.setAssignLeadFlag(true);
+		leadJpaMasterRepository.save(leadMasterObj);
+		LeadMaster leadMaster = leadMasterService.getLeadByStudentId(leadId.getStudentId());
+		historyRepository.insertHistory(new History("Verified" ,new Date(), employeeMaster,  leadMaster, leadMaster.getRemarkMaster()));
+		for(Long instituteId : leadId.getInstituteIds()) {
+			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
+			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster,leadMaster));
+			String email = instituteMaster.getEmailId();
 		}
+
 		ResponseVO responseVO = new ResponseVO();
 		responseVO.setStatusCode("200");
 		responseVO.setMessage("All Done");
