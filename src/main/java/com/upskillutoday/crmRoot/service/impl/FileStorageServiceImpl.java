@@ -173,7 +173,6 @@ public class FileStorageServiceImpl implements FileStorageService {
 						leadMaster.setAssignLeadFlag(false);
 						leadMaster.setFileType(FilenameUtils.getExtension(file.getOriginalFilename()));
 						fileuploadrepository.save(leadMaster);
-						historyRepository.insertHistory(new History(leadMaster.getComments() == null ? leadMaster.getComments():"Inserted" ,new Date(), null, leadMaster, remarkService.getRemarkById(leadMaster.getRemarkId())));
 						count ++;
 					}
 				}

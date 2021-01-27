@@ -126,8 +126,8 @@ public class EmpLeadServiceImpl implements EmpLeadService {
 	}
 
 	@Override
-	public void setAllLeadToThisEmployee(List<LeadMaster> leadMasters, EmployeeMaster employeeMaster) {
-		for(LeadMaster leadMaster : leadMasters) {
+	public void setAllLeadToThisEmployee(List leadMasters, EmployeeMaster employeeMaster) {
+		for(LeadMaster leadMaster : (List<LeadMaster>) leadMasters) {
 			EmpLead empLead = new EmpLead();
 			empLead.setEmployeeMaster(employeeMaster);
 			empLead.setLeadMaster(leadMaster);

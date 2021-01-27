@@ -43,4 +43,10 @@ public class HistoryRepositoryImpl implements HistoryRepository {
         Query query = entityManager.createQuery("SELECT history FROM History as history WHERE history.employeeMaster.employeeId = " + empId, History.class);
         return ((List<History>) query.getResultList());
     }
+
+    @Override
+    public List getHistoryOfLead(Long studentId) {
+        Query query = entityManager.createQuery("SELECT history FROM History as history WHERE history.leadMaster.studentId = " + studentId, History.class);
+        return ((List<History>) query.getResultList());
+    }
 }

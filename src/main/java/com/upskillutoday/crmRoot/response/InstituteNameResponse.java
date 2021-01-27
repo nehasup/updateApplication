@@ -9,12 +9,12 @@ import javax.persistence.Id;
 public class InstituteNameResponse {
 
     @Id
-    @JsonIgnore
-    private String id;
+    private Long id;
 
     private String instituteName;
 
-    public InstituteNameResponse(String instituteName) {
+    public InstituteNameResponse(Long id, String instituteName) {
+        this.id = id;
         this.instituteName = instituteName;
     }
 
@@ -30,12 +30,12 @@ public class InstituteNameResponse {
         this.instituteName = instituteName;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Id
-    public String getId() {
+    public Long getId() {
         return id;
     }
 }

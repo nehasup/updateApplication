@@ -174,7 +174,7 @@ try{
 	public List getAllUnassignedNewLeads() {
 		return entityManager.createQuery(
 				"SELECT lm FROM LeadMaster as lm where lm.remarkMaster.remarkId = 3"
-		).getResultList();
+		, LeadMaster.class).getResultList();
 	}
 
 	@Override

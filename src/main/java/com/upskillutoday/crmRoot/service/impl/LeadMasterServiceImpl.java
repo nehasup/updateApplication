@@ -12,6 +12,7 @@ import com.upskillutoday.crmRoot.repository.*;
 import com.upskillutoday.crmRoot.repository.impl.EmpLeadRepository;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.EmployeeService;
+import com.upskillutoday.crmRoot.service.RemarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,15 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 
 	@Autowired
 	private EmpLeadService empLeadService;
+
+	@Autowired
+	EmpLeadRepository empLeadRepository;
+
+	@Autowired
+	RemarkService remarkService;
+
+	@Autowired
+	HistoryRepository historyRepository;
 
 	@Override
 	public boolean insertLeadService(LeadMasterDto leadMasterDto) {
@@ -319,12 +329,22 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 			int start = 0;
 			int end = numberOfStudent;
 
-			for(int i=0; i < verificationCounsellor.size(); i++) {
+			for (Object o : verificationCounsellor) {
 				stringBuilder.append("Start: " + start + "\n");
 				stringBuilder.append("End: " + end + "\n");
-				stringBuilder.append("EmpId: " + verificationCounsellor.get(i) + "\n");
+				stringBuilder.append("EmpId: " + o + "\n");
 
-				empLeadService.setAllLeadToThisEmployee(((List<LeadMaster>)leadMasters).subList(start, end), ((List<EmployeeMaster>) verificationCounsellor).get(i));
+				for(int i=start; i < end; i++) {
+					EmpLead empLead = new EmpLead();
+					empLead.setEmployeeMaster((EmployeeMaster) o);
+					empLead.setLeadMaster((LeadMaster) leadMasters.get(i));
+					empLead.setUpdatedOn(new Date());
+					empLead.setDeletedFlag(true);
+					historyRepository.insertHistory(new History("Inserted" ,new Date(), (EmployeeMaster) o, ((LeadMaster) leadMasters.get(i)), remarkService.getRemarkById(3L)));
+					empLeadRepository.addEmpLead(empLead);
+				}
+
+//				empLeadService.setAllLeadToThisEmployee(leadMasters.subList(start, end), (EmployeeMaster) o);
 				start = end + 1;
 				end = Math.min((end + numberOfStudent), leadMasters.size());
 			}

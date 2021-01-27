@@ -40,7 +40,7 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	public List getInstituteByCategoryFromStudentId(Long stduentId) {
     return entityManager
         .createQuery(
-            "SELECT new InstituteNameResponse (im.instituteName) FROM InstituteMaster as im\n"
+            "SELECT new InstituteNameResponse (im.instituteId, im.instituteName) FROM InstituteMaster as im\n"
                 + "    inner join CategoryMaster as c on im.categoryMaster.categoryId = c.categoryId\n"
                 + "    where im.categoryMaster.categoryId = " + stduentId)
         .getResultList();

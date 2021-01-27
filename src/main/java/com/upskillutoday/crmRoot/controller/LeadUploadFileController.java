@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
 import com.upskillutoday.crmRoot.request.VerifyLeadRes;
@@ -45,7 +43,6 @@ import com.upskillutoday.crmRoot.repository.UserMasterRepository;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
-
 
 @RestController
 @RequestMapping("/api/v1")
@@ -155,7 +152,7 @@ public class LeadUploadFileController {
 		//user obj
 		try {
 			RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
-			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
+			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
 				//Admin // All leads
 				List list = leadMasterService.getAllLeadRecordService();
 				if(list!=null) {
@@ -167,7 +164,7 @@ public class LeadUploadFileController {
 					response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
 					response.setMessage("Data is not Present");
 				}
-			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
+			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 				// Cousler     //Category based leads
 				List<LeadMasterDto>  leadMasterDtoList = leadMasterRepository.getAllLeadListByquery(userId);
 				//List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
@@ -407,4 +404,8 @@ public class LeadUploadFileController {
 		sender.send(message);
 	}
 
+	@GetMapping(value = "/getHistory")
+	public List getHistory(@RequestParam("studentId") Long studentId) {
+		return historyRepository.getHistoryOfLead(studentId);
+	}
 }

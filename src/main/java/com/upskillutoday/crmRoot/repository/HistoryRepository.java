@@ -10,4 +10,5 @@ public interface HistoryRepository {
     boolean insertHistory(History history);
     List getHistory();
     List getHistoryOfEmp(Long empId);
+    List getHistoryOfLead(Long studentId);
 }
