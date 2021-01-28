@@ -141,4 +141,33 @@ public class SubCategoryController {
     public List<SubCategoryMaster> getAllSubCategories() {
         return subCategoryJpaRepository.findAll();
     }
+    
+  //get sub category by category id
+    @GetMapping("/getSubCategoryByCategoryid/{id}")
+    @ResponseBody public ResponseVO<List<SubCategoryDto>>getSubCategoryListBycategoryId(
+            @PathVariable(value = "id") Long categoryId
+    ) 
+    {
+    	ResponseVO<List<SubCategoryDto>> response = new ResponseVO<List<SubCategoryDto>>();
+        SubCategoryDto subCategoryDto = new SubCategoryDto();
+        subCategoryDto.setCategoryId(categoryId);
+        //System.out.println("category id"+subCategoryDto.getCategoryId());
+        
+        List<SubCategoryDto> resultSubCatgdto=subCategoryService.getSubCategorybyCategoryIdService(subCategoryDto);
+   
+        
+        if(resultSubCatgdto.size()!=0) {
+        	
+            response.setStatusCode(String.valueOf(HttpStatus.OK));
+            response.setMessage("Data is Present Successfully!!");
+          response.setResult(resultSubCatgdto);
+        } else {
+            response.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+            response.setMessage("Data is Not Present!!");
+        }
+        return response;
+        
+       
+   }
+    
 }

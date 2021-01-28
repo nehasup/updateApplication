@@ -99,6 +99,28 @@ public class SubCategoryRepositoryImpl implements SubCategoryRepository {
 	            return false;
 	        }
 	}
+	
+	@Override
+	
+	public List<SubCategoryMaster> getSubcategoryByCategoryIdDao(CategoryMaster categoryMaster) {
+		List<SubCategoryMaster> list = null;
+		System.out.println("id"+categoryMaster.getCategoryId());
+		try{
+	       // Query query = entityManager.createQuery("select sb.subCategoryId as subCategoryId,sb.subCategoryName as subCategoryName,c.categoryId as categoryId,c.categoryName as categoryName from SubCategory as sb INNER JOIN sb.Category as c WHERE subCategoryId=:id");
+	        Query query = entityManager.createQuery("select sub from SubCategoryMaster as sub inner join sub.category as cat WHERE cat.categoryId=:id");
+	        query.setParameter("id",categoryMaster.getCategoryId());
+	        list = query.getResultList();
+
+	       // SubCategoryMaster subCategory2 = (SubCategoryMaster) query.getSingleResult();      
+	        	        
+	        return list;
+	    }
+	        catch (Exception e)
+	    {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
 
 	
 	

@@ -17,6 +17,8 @@ public interface SubCategoryRepository {
 
 	boolean updateSubCategoryRepository(SubCategoryMaster subCategory);
 
+	List<SubCategoryMaster> getSubcategoryByCategoryIdDao(CategoryMaster categoryMaster);
+
 	
 
 	//City getrecordCityIdDao(Long cityId);

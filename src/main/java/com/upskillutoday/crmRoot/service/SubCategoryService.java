@@ -15,6 +15,8 @@ public interface SubCategoryService {
 
 	boolean updateService(SubCategoryDto subCategoryDto);
 
+	List<SubCategoryDto> getSubCategorybyCategoryIdService(SubCategoryDto subCategoryDto);
+
 	
 
 }
