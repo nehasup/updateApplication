@@ -117,8 +117,13 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     return entityManager
         .createQuery(
             "SELECT em.employeeId FROM EmployeeMaster as em \n"
-                + "    inner join EmpCategy as ec on em.employeeId = ec.employeeMaster.employeeId\n"
-                + "    where ec.categoryMaster.categoryId = (SELECT lm.categoryMaster.categoryId FROM LeadMaster lm where lm.studentId = " + studentId + ")",
+                + "    inner join EmpCategy as ec on em.employeeId = ec.employeeMaster.employeeId \n"
+                + "    inner join UserMaster as um on em.userMaster.userId = um.userId\n"
+                + "    inner join UserRole as ur on um.userId = ur.users.userId \n"
+                + "    where ec.categoryMaster.categoryId = (SELECT lm.categoryMaster.categoryId FROM LeadMaster lm where lm.studentId = "
+                + studentId
+				+ "\n and ur.roles.roleId = 11"
+                + ")",
             Long.class)
         .getSingleResult();
 	}

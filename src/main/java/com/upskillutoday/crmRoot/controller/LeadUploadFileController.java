@@ -210,7 +210,7 @@ public class LeadUploadFileController {
 		 try {
 			 EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
 			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
-			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
+			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
 //				 Admin // All leads
 					List list = leadMasterService.getAllLeadRecordService();
 					if(list!=null) {
@@ -222,7 +222,7 @@ public class LeadUploadFileController {
 						response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
 						response.setMessage("Data is not Present");
 					}
-			 } else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
+			 } else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 				 //Cousler     //Category based leads
 					List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getCategoryWiseandverifyLeadService(employeeMaster);
 					if(leadMasterDtoList!=null) {
@@ -339,7 +339,7 @@ public class LeadUploadFileController {
 		 try {
 			 EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
 			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
-			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
+			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
 				//Admin // All leads
 				//List list=leadMasterService.getAllLeadRecordService();
 				List list = leadMasterRepository.getAllLeadForMe();
@@ -352,7 +352,7 @@ public class LeadUploadFileController {
 					response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
 					response.setMessage("Data is not Present");
 				}
-			 } else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")) {
+			 } else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")  || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 				 //Cousler     //Category based leads
 				 List<LeadMasterDto> leadMasterDtoList=leadMasterService.getAllAssignLeadListService(employeeMaster);
 				if(leadMasterDtoList!=null) {
