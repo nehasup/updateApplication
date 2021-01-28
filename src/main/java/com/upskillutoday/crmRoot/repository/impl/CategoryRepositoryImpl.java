@@ -112,9 +112,18 @@ try{
 
 	@Override
 	public CategoryMaster getCatIdByName(String name) {
-		for(CategoryMaster categoryMaster : ((List<CategoryMaster>)this.getCategoryListDao())) {
-			if(categoryMaster.getCategoryName().equalsIgnoreCase(name))
-				return categoryMaster;
+    	List<CategoryMaster> categoryMasters = entityManager.createQuery("SELECT cat FROM CategoryMaster as cat", CategoryMaster.class).getResultList();
+		name = name.toLowerCase();
+    	for(CategoryMaster categoryMaster : categoryMasters) {
+    		if(name.equalsIgnoreCase(categoryMaster.getCategoryName().toLowerCase()))
+    			return categoryMaster;
+
+    		if(categoryMaster.getCategoryName().toLowerCase().contains(name))
+    			return categoryMaster;
+
+    		if(name.contains(categoryMaster.getCategoryName().toLowerCase()))
+    			return categoryMaster;
+
 		}
 		return null;
 	}

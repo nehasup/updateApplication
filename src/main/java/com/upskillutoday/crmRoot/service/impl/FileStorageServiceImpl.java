@@ -156,12 +156,16 @@ public class FileStorageServiceImpl implements FileStorageService {
 							throw new ResourceNotFoundException("'Mode of Course' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
 						}
 
-						CategoryMaster categoryMaster = categoryRepository.getCatIdByName(row.getCell(7).toString());
-						if(categoryMaster!= null) {
-							leadMaster.setCategoryMaster(categoryMaster);
-						} else {
-							throw new ResourceNotFoundException("'Category' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+						if(row.getCell(7) != null) {
+							String catName = row.getCell(7).toString();
+							CategoryMaster categoryMaster = categoryRepository.getCatIdByName(row.getCell(7).toString());
+							if(categoryMaster!= null) {
+								leadMaster.setCategoryMaster(categoryMaster);
+							} else {
+								throw new ResourceNotFoundException("'Category' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+							}
 						}
+
 
 						long id = 3;
 
