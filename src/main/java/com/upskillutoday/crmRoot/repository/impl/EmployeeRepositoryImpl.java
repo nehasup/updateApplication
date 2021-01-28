@@ -139,4 +139,17 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                 + "where rm.roleName = 'Admissions counsellor' or rm.roleName = 'Verification counsellor'")
         .getResultList();
 	}
+
+	@Override
+	public EmployeeMaster getVerificationConsellorByCategory(Long catId) {
+		return entityManager
+				.createQuery(
+						"select e \n"
+								+ "from EmployeeMaster as e\n"
+								+ "inner join e.userMaster as um \n"
+								+ "inner join UserRole as ur on ur.users.userId = um.userId \n"
+								+ "inner join EmpCategy as ec on e.employeeId = ec.employeeMaster.employeeId \n"
+								+ "where ec.categoryMaster.categoryId = " + catId + " and ur.roles.roleId = 10", EmployeeMaster.class)
+				.getSingleResult();
+	}
 }

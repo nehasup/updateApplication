@@ -28,4 +28,14 @@ public class DailyLeadReportController {
 		List<LeadReportRes> list = dailyLeadReportService.getDailyLeadReportService(date);
 		return list;
 	}
+
+	@GetMapping("/getInstituteReport")
+	public List getInstituteReport() {
+		return dailyLeadReportService.getInstituteTotalReport();
+	}
+
+	@GetMapping("/getInstituteReportDatewise")
+	public List getInstituteReportDatewise(@RequestParam("date") String date) {
+		return dailyLeadReportService.getInstituteTotalReportDateWise(date);
+	}
 }

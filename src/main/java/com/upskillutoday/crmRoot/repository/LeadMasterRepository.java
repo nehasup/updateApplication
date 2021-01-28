@@ -3,7 +3,9 @@ package com.upskillutoday.crmRoot.repository;
 import java.util.List;
 
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
+import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
+import com.upskillutoday.crmRoot.response.LeadResponseDto;
 
 
 public interface LeadMasterRepository {
@@ -12,9 +14,9 @@ public interface LeadMasterRepository {
 	LeadMaster getRecordByStudentIdDao(LeadMaster leadMaster);
 	void updateLeadRepository(LeadMaster leadMaster);
 	List<LeadMaster> getAllLeadByassignFlag();
-	List<LeadMasterDto> getAllLeadForMe();
+	List<LeadResponseDto> getAllLeadForMe();
 	List getLeadsByRemark(Long remarkId);
-	List<LeadMasterDto> getAllLeadListByquery(Long userId);
+	List getAllLeadListByquery(Long userId);
 	List getAllUnassignedNewLeads();
 	LeadMaster getLeadByStudentId(Long stduentId);
 	List getAllLeadFromStatusByEmp(Long remarkId, Long userId);

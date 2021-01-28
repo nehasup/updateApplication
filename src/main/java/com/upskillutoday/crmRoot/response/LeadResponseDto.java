@@ -1,10 +1,14 @@
 package com.upskillutoday.crmRoot.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.upskillutoday.crmRoot.model.History;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -36,6 +40,9 @@ public class LeadResponseDto {
 	private String roleName;
 	private String remark;
 	private Long updatedBy;
+
+	@OneToMany
+	private List<History> history;
 
 	public LeadResponseDto(
 			Long studentId,
@@ -80,6 +87,51 @@ public class LeadResponseDto {
 		this.updatedOn = updatedOn;
 	}
 
+	public LeadResponseDto(
+			Long studentId,
+			String studentName,
+			String contactNo,
+			String emailId,
+			String courseName,
+			String city,
+			String area,
+			String modeOfCourse,
+			String address,
+			String budget,
+			String modificationStage,
+			String remark,
+			String comments,
+			String instituteName,
+			Long categoryId,
+			String categoryName,
+			Long remarkId,
+			String remarkName,
+			Long updatedBy,
+			Date updatedOn,
+			List<History> history) {
+		this.studentId = studentId;
+		this.studentName = studentName;
+		this.contactNo = contactNo;
+		this.emailId = emailId;
+		this.courseName = courseName;
+		this.city = city;
+		this.area = area;
+		this.modeOfCourse = modeOfCourse;
+		this.address = address;
+		this.budget = budget;
+		this.modificationStage = modificationStage;
+		this.remark = remark;
+		this.comments = comments;
+		this.instituteName = instituteName;
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
+		this.remarkId= remarkId;
+		this.remarkName = remarkName;
+		this.updatedBy = updatedBy;
+		this.updatedOn = updatedOn;
+		this.history = history;
+	}
+
 	public LeadResponseDto(Long studentId, String studentName, String courseName, String contactNo, String area, String city, String emailId, String modeOfCourse, String modificationStage, String address, String budget, Long remarkId, String remarkName, String comments, String instituteName, Long categoryId, String categoryName, Date updatedOn, String employeeName, String roleName) {
 		this.studentId = studentId;
 		this.studentName = studentName;
@@ -101,6 +153,30 @@ public class LeadResponseDto {
 		this.updatedOn = updatedOn;
 		this.employeeName = employeeName;
 		this.roleName = roleName;
+	}
+
+	public LeadResponseDto(Long studentId, String studentName, String courseName, String contactNo, String area, String city, String emailId, String modeOfCourse, String modificationStage, String address, String budget, Long remarkId, String remarkName, String comments, String instituteName, Long categoryId, String categoryName, Date updatedOn, String employeeName, String roleName, List<History> history) {
+		this.studentId = studentId;
+		this.studentName = studentName;
+		this.courseName = courseName;
+		this.contactNo = contactNo;
+		this.area = area;
+		this.city = city;
+		this.emailId = emailId;
+		this.modeOfCourse = modeOfCourse;
+		this.modificationStage = modificationStage;
+		this.address = address;
+		this.budget = budget;
+		this.remarkId = remarkId;
+		this.remarkName = remarkName;
+		this.comments = comments;
+		this.instituteName = instituteName;
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
+		this.updatedOn = updatedOn;
+		this.employeeName = employeeName;
+		this.roleName = roleName;
+		this.history = history;
 	}
 
 	public LeadResponseDto() {}
@@ -271,5 +347,29 @@ public class LeadResponseDto {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
+	}
+
+	public String getInstituteName() {
+		return instituteName;
+	}
+
+	public void setInstituteName(String instituteName) {
+		this.instituteName = instituteName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public List<History> getHistory() {
+		return history;
+	}
+
+	public void setHistory(List<History> history) {
+		this.history = history;
 	}
 }

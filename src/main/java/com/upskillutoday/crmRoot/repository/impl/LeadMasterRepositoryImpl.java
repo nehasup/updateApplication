@@ -11,6 +11,7 @@ import javax.persistence.Query;
 
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.EmpLead;
+import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
 import com.upskillutoday.crmRoot.response.LeadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,13 +121,14 @@ try{
 				"lm.updatedOn, " +
 				"emp.employeeName, " +
 				"rm.roleName) " +
-				"FROM LeadMaster as lm inner join lm.categoryMaster as cm inner join lm.remarkMaster as rmk \n"+
+				"FROM LeadMaster as lm " +
+				"inner join lm.categoryMaster as cm " +
+				"inner join lm.remarkMaster as rmk \n"+
 				"left join EmpLead as el on lm.studentId = el.leadMaster.studentId \n" +
-				//"left join CategoryMaster as cm on cm.categoryId = el.leadMaster.categoryMaster.categoryId" +
 				"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
 				"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
-				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId \n " +
-				"left join CategoryMaster as cm on cm.categoryId = el.leadMaster.categoryMaster.categoryId").getResultList();
+				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId ")
+				.getResultList();
 	}
 
 
@@ -138,35 +140,38 @@ try{
 	}
 
 	@Override
-	public List<LeadMasterDto> getAllLeadListByquery(Long userId) {
-		  List<LeadMasterDto> list = null;
-		Query query = entityManager.createQuery("Select NEW com.upskillutoday.crmRoot.response.LeadResponseDto("
-				+ "lead.studentId as studentId,\r\n"
-        		+ "lead.studentName as studentName,\r\n"
-        		+ "lead.contactNo as contactNo,\r\n"
-        		+ "lead.emailId as emailId,\r\n"
-        		+ "lead.courseName as courseName,\r\n"
-        		+ "lead.city as city,\r\n"
-        		+ "lead.area as area,\r\n"
-        		+ "lead.modeOfCourse as modeOfCourse,\r\n"
-        		+ "lead.address as address,\r\n"
-        		+ "lead.budget as budget,\r\n"
-        		+ "lead.modificationStage as modificationStage,\r\n"
-        		+ "lead.remark as remark,\r\n"
-        		+ "lead.comments as comments,\r\n"
-        		+ "lead.instituteName as instituteName,\r\n"
-        		+ "cm.categoryId as categoryId,\r\n"
-        		+ "cm.categoryName as categoryName,\r\n"
-        		+ "rmk.remarkId as remarkId,\r\n"
-        		+ "rmk.remarkName as remarkName,\r\n"
-        		+ "lead.updatedBy as updatedBy,\r\n"
-        		+ "lead.updatedOn as updatedOn)"
-				+ " FROM LeadMaster as lead inner join lead.categoryMaster as cm inner join lead.remarkMaster as rmk"
-				+ " where cm.categoryId IN (\r\n"
-				+ "	SELECT c.categoryId FROM EmpCategy ec inner join ec.employeeMaster emp inner join ec.categoryMaster c where emp.employeeId = :id)");
-			    query.setParameter("id",userId);
+	public List getAllLeadListByquery(Long userId) {
+		  List list = null;
+		Query query = entityManager.createQuery("Select NEW LeadResponseDto("
+				+ "lead.studentId ,"
+        		+ "lead.studentName ,"
+        		+ "lead.contactNo,"
+        		+ "lead.emailId ,"
+        		+ "lead.courseName ,"
+        		+ "lead.city ,"
+        		+ "lead.area ,"
+        		+ "lead.modeOfCourse ,"
+        		+ "lead.address ,"
+        		+ "lead.budget,"
+        		+ "lead.modificationStage,"
+        		+ "lead.remark ,"
+        		+ "lead.comments ,"
+        		+ "lead.instituteName ,"
+        		+ "cm.categoryId ,"
+        		+ "cm.categoryName ,"
+        		+ "rmk.remarkId ,"
+        		+ "rmk.remarkName ,"
+        		+ "lead.updatedBy , "
+        		+ "lead.updatedOn )"
+				+ " FROM LeadMaster as lead " +
+				"	inner join lead.categoryMaster as cm " +
+				"	inner join lead.remarkMaster as rmk " +
+				"  	inner join EmpLead as el on el.leadMaster.studentId = lead.studentId " +
+				"	inner join el.employeeMaster as em " +
+				"	where em.employeeId = " + userId);
 			     
 			       list = query.getResultList();
+
 				return list;
 	}
 
@@ -187,7 +192,7 @@ try{
 	public List getAllLeadFromStatusByEmp(Long remarkId, Long userId) {
     return entityManager
         .createQuery(
-            "SELECT new LeadResponseDto ( lm.studentId, lm.studentName, lm.contactNo, lm.emailId, lm.courseName, lm.city, lm.area, lm.modeOfCourse, lm.address, lm.budget, lm.modificationStage, lm.remark, lm.comments, lm.instituteName, cat.categoryId, cat.categoryName, rm.remarkId, rm.remarkName, lm.updatedBy, lm.updatedOn) FROM LeadMaster as lm\n"
+            "SELECT new LeadResponseDto ( lm.studentId, lm.studentName, lm.contactNo, lm.emailId, lm.courseName, lm.city, lm.area, lm.modeOfCourse, lm.address, lm.budget, lm.modificationStage, lm.remark, lm.comments, lm.instituteName, cat.categoryId, cat.categoryName, rm.remarkId, rm.remarkName, lm.updatedBy, lm.updatedOn) as history FROM LeadMaster as lm\n"
                 + "    inner join EmpLead as el on lm.studentId = el.leadMaster.studentId \n"
                 + "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId \n"
                 + "    inner join UserMaster as um on e.userMaster.userId = um.userId\n"

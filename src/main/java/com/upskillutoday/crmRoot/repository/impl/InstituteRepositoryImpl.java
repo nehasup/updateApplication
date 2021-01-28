@@ -55,5 +55,39 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 				.getSingleResult();
 	}
 
+	@Override
+	public List getInstituteReport() {
+    return entityManager
+        .createQuery(
+            "select new InstituteReport (im.instituteName, COUNT(lm.studentId), e.employeeName,  COUNT(h.employeeMaster.employeeId))  from InstituteMaster as im\n"
+                + "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
+                + "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
+                + "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
+                + "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
+                + "    where h.comment = 'Verified'\n"
+                + "    group by h.employeeMaster.employeeId , il.instituteMaster.instituteId")
+        .getResultList();
+	}
 
+	@Override
+	public List getInstituteReportDatewise(String date) {
+    return entityManager
+        .createQuery(
+				"select new InstituteReport (im.instituteName, COUNT(lm.studentId), e.employeeName,  COUNT(h.employeeMaster.employeeId))  from InstituteMaster as im\n"
+						+ "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
+						+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
+						+ "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
+						+ "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
+						+ "    where h.comment = 'Verified' and il.sentOn = DATE( '" + date + "' ) \n"
+						+ "    group by h.employeeMaster.employeeId , il.instituteMaster.instituteId")
+        .getResultList();
+	}
+
+	@Override
+	public List getInstitute() {
+		return entityManager.createQuery(
+				"SELECT im FROM InstituteMaster as im",
+				InstituteMaster.class
+		).getResultList();
+	}
 }

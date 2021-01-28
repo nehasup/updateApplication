@@ -22,28 +22,12 @@ import com.upskillutoday.crmRoot.service.RemarkService;
 
 @Service
 public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
-	
-	@Autowired
-	private LeadJpaMasterRepository leadJpaMasterRepository;
-	
-	@Autowired
-	private DailyLeadReportRepository dailyLeadReportRepository;
-	
-	@Autowired
-	private LeadMasterService leadMasterService;
-	
-	@Autowired
-	private RemarkService remarkService;
-	
-	@Autowired
-	private EmpLeadJpaRepository empLeadJpaRepository;
-	
-	@Autowired
-	private EmployeeJpaRepository employeeJpaRepository;
 
 	@Autowired
 	private HistoryRepository historyRepository;
-	
+
+	@Autowired
+	private InstituteRepository instituteRepository;
 
 	@Override
 	public List<LeadReportRes> getDailyLeadReportService(String date) throws ParseException {
@@ -59,5 +43,15 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 						history.getLeadMaster().getInstituteName(), history.getRemarkMaster().getRemarkName(), history.getEmployeeMaster().getEmployeeName()));
 		}
 		return leadReportRess;
+	}
+
+	@Override
+	public List getInstituteTotalReport() {
+		return instituteRepository.getInstituteReport();
+	}
+
+	@Override
+	public List getInstituteTotalReportDateWise(String date) {
+		return instituteRepository.getInstituteReportDatewise(date);
 	}
 }

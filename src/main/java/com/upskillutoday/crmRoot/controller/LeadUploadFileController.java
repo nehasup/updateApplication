@@ -162,6 +162,11 @@ public class LeadUploadFileController {
 			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
 				//Admin // All leads
 				List list = leadMasterService.getAllLeadRecordService();
+
+				for(int i=0; i < list.size(); i++) {
+					((LeadResponseDto)(list.get(i))).setHistory(historyRepository.getHistoryOfLead(((LeadResponseDto)(list.get(i))).getStudentId()));
+				}
+
 				if(list!=null) {
 					response.setResult(list);
 				}
@@ -173,8 +178,13 @@ public class LeadUploadFileController {
 				}
 			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 				// Cousler     //Category based leads
-				List<LeadMasterDto>  leadMasterDtoList = leadMasterRepository.getAllLeadListByquery(userId);
-				//List<LeadMasterDto>  leadMasterDtoList = leadMasterService.getAllLeadListCategoryWiseService(employeeMaster);
+				List  leadMasterDtoList = leadMasterRepository.getAllLeadListByquery(userId);
+
+
+				for(int i=0; i < leadMasterDtoList.size(); i++) {
+					((LeadResponseDto)(leadMasterDtoList.get(i))).setHistory(historyRepository.getHistoryOfLead(((LeadResponseDto)(leadMasterDtoList.get(i))).getStudentId()));
+				}
+
 				if(leadMasterDtoList!=null) {
 					response.setResult(leadMasterDtoList);
 				}
@@ -192,13 +202,29 @@ public class LeadUploadFileController {
 	@GetMapping(value = "getAllLeadFromStatus", params = {"lead_status"})
 	public List getAllLeadFromStatus(
 			@RequestParam("lead_status") Long leadStatus
-	) { return leadMasterRepository.getLeadsByRemark(leadStatus); }
+	) {
+		List list =  leadMasterRepository.getLeadsByRemark(leadStatus);
+
+		for(int i=0; i < list.size(); i++) {
+			((LeadResponseDto)(list.get(i))).setHistory(historyRepository.getHistoryOfLead(((LeadResponseDto)(list.get(i))).getStudentId()));
+		}
+
+		return list;
+	}
 
 	@GetMapping(value = "getAllLeadFromStatusByEmp", params = {"lead_status", "userId"})
 	public List getAllLeadFromStatusByEmp(
 			@RequestParam("lead_status") Long remarkId,
 			@RequestParam("userId") Long userId
-	) { return leadMasterRepository.getAllLeadFromStatusByEmp(remarkId, userId); }
+	) {
+		List list = leadMasterRepository.getAllLeadFromStatusByEmp(remarkId, userId);
+
+		for(int i=0; i < list.size(); i++) {
+			((LeadResponseDto)(list.get(i))).setHistory(historyRepository.getHistoryOfLead(((LeadResponseDto)(list.get(i))).getStudentId()));
+		}
+
+		return list;
+	}
 
 	 @GetMapping("/getAllVerifiedLeadList")	  
 	 public @ResponseBody ResponseVO<List> getAllVerifiedLeadList(
@@ -371,7 +397,7 @@ public class LeadUploadFileController {
 
 	@PostMapping(value = "/verifyTheLeadAssignAutomatically")
 	@ResponseBody
-	public ResponseVO verifyTheLead(@RequestBody StudentWithInst leadId) {
+	public ResponseVO verifyTheLead(@RequestBody StudentWithInst leadId) throws Exception {
 
 		Long empId = empLeadService.assignLeadAutomatically(leadId.getStudentId());
 		EmployeeMaster employeeMaster = employeeService.getEmployeeByEmpId(empId);
@@ -390,6 +416,7 @@ public class LeadUploadFileController {
 			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
 			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster,leadMaster));
 			String email = instituteMaster.getEmailId();
+			sendEmail(leadMaster, email);
 		}
 
 		ResponseVO responseVO = new ResponseVO();
@@ -399,22 +426,28 @@ public class LeadUploadFileController {
 		return responseVO;
 	}
 
-	// For sending mail
-	@GetMapping(value = "/sendEmail")
-	public String setEmail() throws Exception {
-		sendEmail();
-		return "Done";
-	}
+//	// For sending mail
+//	@GetMapping(value = "/sendEmail")
+//	public String setEmail() throws Exception {
+//		sendEmail();
+//		return "Done";
+//	}
 
 	// For sending mail through method change method body to use
-	private void sendEmail() throws Exception{
+	private void sendEmail(LeadMaster leadMaster, String email) throws Exception{
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-
-		helper.setTo("amrutaupskillutoday@gmail.com");
-		helper.setText("this email is send by java spring boot server");
-		helper.setSubject("Spring boot connection to email is done");
-
+		helper.setTo(email);
+		String stringBuilder = "Congratulations!\n" +
+				"Students are coming your way. upskillUtoday brings you a new prospect." +
+				"Student Detail" +
+				"Student Name : " + leadMaster.getStudentName() +
+				"\n" + "Contact No : " + leadMaster.getContactNo() +
+				"\n" + "Email ID : " + leadMaster.getEmailId() +
+				"\n" + "Course Name : " + leadMaster.getCategoryMaster().getCategoryName() +
+				"\nThank you";
+		helper.setText(stringBuilder);
+		helper.setSubject("New Lead Generated - from upSkilluToday");
 		sender.send(message);
 	}
 

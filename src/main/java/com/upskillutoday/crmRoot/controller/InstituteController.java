@@ -75,4 +75,9 @@ public class InstituteController {
 	public List getInstituteByCategoryFromStudentId(@RequestParam("catId") Long catId) {
 	 	return instituteService.getInstituteByCategoryFromStudentId(catId);
 	}
+
+	@GetMapping("/getInstitutes")
+	public List getInstitute() {
+	 	return instituteRepository.getInstitute();
+	}
 }

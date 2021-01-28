@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
 import com.upskillutoday.crmRoot.repository.impl.EmpLeadRepository;
+import com.upskillutoday.crmRoot.response.LeadResponseDto;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.EmployeeService;
 import com.upskillutoday.crmRoot.service.RemarkService;
@@ -73,6 +74,9 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	@Autowired
 	HistoryRepository historyRepository;
 
+	@Autowired
+	private EmployeeRepository employeeRepository;
+
 	@Override
 	public boolean insertLeadService(LeadMasterDto leadMasterDto) {
 		
@@ -128,8 +132,12 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 
 	@Override
 	public List getAllLeadRecordService() {
-		return leadRepostiory.getAllLeadForMe();
-    }
+		List list = leadRepostiory.getAllLeadForMe();
+		for(int i=0; i < list.size(); i++) {
+			((LeadResponseDto)(list.get(i))).setHistory(historyRepository.getHistoryOfLead(((LeadResponseDto)(list.get(i))).getStudentId()));
+		}
+		return list;
+	}
 	
 	@Override
     public LeadMasterDto getRecordByStudentIdService(LeadMasterDto leadMasterDto) {
@@ -320,33 +328,16 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 	public String assignUnverifiedLeadToVerifiers() {
 		List leadMasters = leadRepostiory.getAllUnassignedNewLeads();
 		List verificationCounsellor = employeeService.getAllVerificationCounsellor();
-
 		StringBuilder stringBuilder = new StringBuilder();
-
 		if (leadMasters != null && verificationCounsellor != null) {
-			int numberOfStudent = leadMasters.size() / verificationCounsellor.size();
-
-			int start = 0;
-			int end = numberOfStudent;
-
-			for (Object o : verificationCounsellor) {
-				stringBuilder.append("Start: " + start + "\n");
-				stringBuilder.append("End: " + end + "\n");
-				stringBuilder.append("EmpId: " + o + "\n");
-
-				for(int i=start; i < end; i++) {
+			for (LeadMaster leadMaster : (List<LeadMaster> )leadMasters) {
 					EmpLead empLead = new EmpLead();
-					empLead.setEmployeeMaster((EmployeeMaster) o);
-					empLead.setLeadMaster((LeadMaster) leadMasters.get(i));
+					empLead.setLeadMaster(leadMaster);
+					empLead.setEmployeeMaster(employeeRepository.getVerificationConsellorByCategory(leadMaster.getCategoryMaster().getCategoryId()));
 					empLead.setUpdatedOn(new Date());
 					empLead.setDeletedFlag(true);
-					historyRepository.insertHistory(new History("Inserted" ,new Date(), (EmployeeMaster) o, ((LeadMaster) leadMasters.get(i)), remarkService.getRemarkById(3L)));
+					historyRepository.insertHistory(new History("Inserted" ,new Date(), empLead.getEmployeeMaster(), empLead.getLeadMaster(), remarkService.getRemarkById(3L)));
 					empLeadRepository.addEmpLead(empLead);
-				}
-
-//				empLeadService.setAllLeadToThisEmployee(leadMasters.subList(start, end), (EmployeeMaster) o);
-				start = end + 1;
-				end = Math.min((end + numberOfStudent), leadMasters.size());
 			}
 		}
 		return stringBuilder.toString();

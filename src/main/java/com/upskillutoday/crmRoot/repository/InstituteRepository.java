@@ -12,4 +12,7 @@ public interface InstituteRepository {
 	boolean insertInsituteDao(InstituteMaster institute);
 	List getInstituteByCategoryFromStudentId(Long catId);
 	InstituteMaster getInstituteById(Long id);
+	List getInstituteReport();
+	List getInstituteReportDatewise(String date);
+	List getInstitute();
 }
