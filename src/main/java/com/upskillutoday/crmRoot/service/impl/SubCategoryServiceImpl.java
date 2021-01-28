@@ -1,5 +1,6 @@
 package com.upskillutoday.crmRoot.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -120,6 +121,40 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 		
 
 	}
+	
+	@Override
+	
+    public List<SubCategoryDto> getSubCategorybyCategoryIdService(SubCategoryDto subCategoryDto) {
+
+		 
+//		SubCategoryMaster subCategory = new SubCategoryMaster();
+//		subCategory.setSubCategoryId(subCategoryDto.getSubCategoryId());
+		
+		CategoryMaster categoryMaster= new CategoryMaster();
+		categoryMaster.setCategoryId(subCategoryDto.getCategoryId());
+	 
+		 List<SubCategoryDto> subCategoryDto2 = new ArrayList<>();
+		List<SubCategoryMaster> subCategory11=subCategoryRepository.getSubcategoryByCategoryIdDao(categoryMaster);
+		
+		for(SubCategoryMaster subCategoryMaster:subCategory11)
+		
+		{
+			SubCategoryDto subCategoryDto1= new SubCategoryDto();
+			
+			subCategoryDto1.setSubCategoryId(subCategoryMaster.getSubCategoryId());
+			subCategoryDto1.setSubCategoryName(subCategoryMaster.getSubCategoryName()); 
+			subCategoryDto1.setCategoryId(subCategoryMaster.getCategory().getCategoryId());	        
+			subCategoryDto1.setCategory(subCategoryMaster.getCategory());
+			subCategoryDto2.add(subCategoryDto1);
+		}
+	        
+
+	        
+	        
+	        return subCategoryDto2;
+	
+		
+    }
     
 	
 
