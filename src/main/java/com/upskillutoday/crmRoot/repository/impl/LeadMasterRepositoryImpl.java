@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.EmpLead;
@@ -21,8 +23,10 @@ import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
 
 @Repository
+@Transactional
 public class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	 @Autowired
+	 @PersistenceContext
 	 private EntityManager entityManager;
 
   	@Autowired
@@ -49,9 +53,6 @@ public class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            return false;
-	        }
-		 finally {
-	            entityManager.close();
 	        }
 	}
 
@@ -133,9 +134,33 @@ try{
 
 	@Override
 	public List getLeadsByRemark(Long remarkId) {
-		return entityManager.createQuery("select lead from LeadMaster as lead " +
-				"where lead.remarkMaster.remarkId = " + remarkId,
-				LeadMaster.class).getResultList();
+		return entityManager.createQuery("Select NEW LeadResponseDto("
+				+ "lead.studentId ,"
+				+ "lead.studentName ,"
+				+ "lead.contactNo,"
+				+ "lead.emailId ,"
+				+ "lead.courseName ,"
+				+ "lead.city ,"
+				+ "lead.area ,"
+				+ "lead.modeOfCourse ,"
+				+ "lead.address ,"
+				+ "lead.budget,"
+				+ "lead.modificationStage,"
+				+ "lead.remark ,"
+				+ "lead.comments ,"
+				+ "lead.instituteName ,"
+				+ "cm.categoryId ,"
+				+ "cm.categoryName ,"
+				+ "rmk.remarkId ,"
+				+ "rmk.remarkName ,"
+				+ "lead.updatedBy , "
+				+ "lead.updatedOn )"
+				+ " FROM LeadMaster as lead " +
+				"	inner join lead.categoryMaster as cm " +
+				"	inner join lead.remarkMaster as rmk " +
+				"	where lead.remarkMaster.remarkId = " + remarkId,
+		LeadResponseDto.class
+		).getResultList();
 	}
 
 	@Override
@@ -220,5 +245,14 @@ try{
                 + "    where um.userId = " + userId
                 + " and lm.remarkMaster.remarkId = " + remarkId)
         .getResultList();
+	}
+
+	@Override
+	public List getLeadMasterByNameEmailContactDeleteFlag(String name, String contact, String email, boolean flag) {
+		return entityManager.createQuery(
+				"SELECT lm FROM LeadMaster as lm " +
+						" WHERE lm.emailId = '" + email + "'" +
+						" and lm.contactNo = " + contact
+		).getResultList();
 	}
 }

@@ -124,9 +124,10 @@ public class FileStorageServiceImpl implements FileStorageService {
 						throw new ResourceNotFoundException("'Email' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
 					}
 
-					LeadMaster presentLead = fileuploadrepository.findByStudentNameAndContactNoAndEmailIdAndDeletedFlag(studentName, contactNo, emailId, false);
+//					LeadMaster presentLead = fileuploadrepository.findByStudentNameAndContactNoAndEmailIdAndDeletedFlag(studentName, contactNo, emailId, false);
+					List presentLead = leadMasterRepository.getLeadMasterByNameEmailContactDeleteFlag(studentName, contactNo, emailId, false);
 
-					if(presentLead==null) {
+					if(presentLead.size() == 0) {
 						LeadMaster leadMaster = new LeadMaster();
 						leadMaster.setStudentName(studentName);
 						leadMaster.setContactNo(contactNo);
@@ -165,10 +166,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 								throw new ResourceNotFoundException("'Category' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
 							}
 						}
-
-
 						long id = 3;
-
 						RemarkMaster remarkMaster = remarkJpaRepository.findById(id).orElse(null);
 						leadMaster.setRemarkMaster(remarkMaster);
 						leadMaster.setUpdatedOn(new Date());
@@ -176,8 +174,8 @@ public class FileStorageServiceImpl implements FileStorageService {
 						leadMaster.setAssignLeadFlag(false);
 						leadMaster.setFileType(FilenameUtils.getExtension(file.getOriginalFilename()));
 						fileuploadrepository.save(leadMaster);
-						count ++;
 					}
+					count ++;
 				}
 			}
 		}

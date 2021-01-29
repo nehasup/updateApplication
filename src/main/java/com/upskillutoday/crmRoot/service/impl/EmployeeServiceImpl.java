@@ -120,13 +120,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         EmployeeMaster employee = new EmployeeMaster();
         employee.setEmployeeId(employeeDto.getEmployeeId());
-     
         EmployeeMaster employee2 = employeeRepository.getRecordByEmployeeIdDao(employee);
-        
-    
+
         if(employee2!=null) {
         	EmployeeDto employeeDto2 = new EmployeeDto();
-        	 
         	employeeDto2.setEmployeeId(employee2.getEmployeeId());
         	employeeDto2.setEmployeeName(employee2.getEmployeeName());
         	employeeDto2.setAddress(employee2.getAddress());
@@ -135,24 +132,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         	employeeDto2.setEmailId(employee2.getEmailId());
         	employeeDto2.setGuardianNo(employee2.getGuardianNo());
         	employeeDto2.setGender(employee2.getGender());
-//        	employeeDto2.setCategoryId(employee2.getCategory().getCategoryId());
-//        	employeeDto2.setCategory(employee2.getCategory());
         	employeeDto2.setUsers(employee2.getUserMaster());
-        	
-        	
-        	UserRole userRole = userRoleRepository.findByUsersAndDeletedFlag(employee2.getUserMaster(), true); 
-        	
+        	UserRole userRole = userRoleRepository.findByUsersAndDeletedFlag(employee2.getUserMaster(), true);
         	employeeDto2.setRoles(userRole.getRoles());
         	employeeDto2.setRoleId(userRole.getRoles().getRoleId());  
-
-       	return employeeDto2;
-        	
+			employeeDto2.setCatNames(employeeRepository.getCatsByEmpId(employee2.getEmployeeId()));
+       		return employeeDto2;
         }
         else {
         	return null;
         }
-   
-        
     }
 
 	@Override
@@ -177,19 +166,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setEmailId(employeeDto.getEmailId());
 		employee.setGuardianNo(employeeDto.getGuardianNo());
 		employee.setGender(employeeDto.getGender());
-//		employee.setCategory(employeeDto.getCategory());
-
-		category.setCategoryId(employeeDto.getCategoryId());
 
 		employee.setUserMaster(employeeDto.getUsers());
 		employee.setUpdatedOn(new Date());
 		employee.setDeletedFlag(true);
-//		employee.setCategory(category);
-		employee.setCategoryId(employeeDto.getCategoryId());
 
 	 try {
 		 employeeRepository.updateEmployeeRepository(employee);
-
 		 // Added By Laukik
 		 for (Long catId: employeeDto.getCategories()) {
 			 EmpCategy empCategy = new EmpCategy();
@@ -197,7 +180,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 			 empCategy.setCategoryMaster(categoryService.getCatgoryById(catId));
 			 empCategyRepository.save(empCategy);
 		 }
-
 
 		 return true;
         } catch (Exception e) {

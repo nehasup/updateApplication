@@ -129,6 +129,21 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 	}
 
 	@Override
+	public Long getEmployeeByCategory(Long catId) {
+		return entityManager
+				.createQuery(
+						"SELECT em.employeeId FROM EmployeeMaster as em \n"
+								+ "    inner join EmpCategy as ec on em.employeeId = ec.employeeMaster.employeeId \n"
+								+ "    inner join UserMaster as um on em.userMaster.userId = um.userId\n"
+								+ "    inner join UserRole as ur on um.userId = ur.users.userId \n"
+								+ "    where ec.categoryMaster.categoryId = " + catId
+								+ "\n and ur.roles.roleId = 11"
+								+ ")",
+						Long.class)
+				.getSingleResult();
+	}
+
+	@Override
 	public List getVerifiactionAndAdmissionConusellor() {
     return entityManager
         .createQuery(
@@ -151,5 +166,16 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 								+ "inner join EmpCategy as ec on e.employeeId = ec.employeeMaster.employeeId \n"
 								+ "where ec.categoryMaster.categoryId = " + catId + " and ur.roles.roleId = 10", EmployeeMaster.class)
 				.getSingleResult();
+	}
+
+	@Override
+	public List getCatsByEmpId(Long empId) {
+    return entityManager
+        .createQuery(
+            "select cat.categoryName  from CategoryMaster as cat\n"
+                + "    inner join EmpCategy as ec on cat.categoryId = ec.categoryMaster.categoryId\n"
+                + "    inner join EmployeeMaster as e on ec.employeeMaster.employeeId = e.employeeId \n"
+                + "    where e.employeeId = " + empId)
+        .getResultList();
 	}
 }

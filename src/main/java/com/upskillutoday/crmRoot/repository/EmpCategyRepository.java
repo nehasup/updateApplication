@@ -11,6 +11,5 @@ import org.springframework.stereotype.Repository;
 // Added By Laukik
 @Repository
 public interface EmpCategyRepository extends CrudRepository<EmpCategy, Long> {
-
 	List<EmpCategy> findByCategoryMaster(CategoryMaster categoryMaster);
 }

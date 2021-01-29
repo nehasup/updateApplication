@@ -20,4 +20,5 @@ public interface LeadMasterRepository {
 	List getAllUnassignedNewLeads();
 	LeadMaster getLeadByStudentId(Long stduentId);
 	List getAllLeadFromStatusByEmp(Long remarkId, Long userId);
+	List getLeadMasterByNameEmailContactDeleteFlag(String name, String contact, String email, boolean flag);
 }

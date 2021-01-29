@@ -98,6 +98,9 @@ public class LeadUploadFileController {
 	@Autowired
 	private InstituteRepository instituteRepository;
 
+	@Autowired
+	private EmployeeRepository employeeRepository;
+
 	//import excel sheet
 	@PostMapping("/upload")
 	public ResponseEntity<ResponseMessage> uploadFile(
@@ -141,7 +144,8 @@ public class LeadUploadFileController {
 			responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
 			responseVO.setMessage("Insert Successfully");
 			responseVO.setResult(leadMasterDto);
-			historyRepository.insertHistory(new History(leadMasterDto.getComments() == null ? leadMasterDto.getComments():"Inserted" ,new Date(), employeeService.getEmployeeByEmpId(leadMasterDto.getEmployeeId()), leadJpaMasterRepository.findByStudentId(leadMasterDto.getStudentId()), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
+
+//			historyRepository.insertHistory(new History("Inserted" ,new Date(), employeeService.getEmployeeByEmpId(), leadJpaMasterRepository.findByStudentId(leadMasterDto.getStudentId()), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
 		} else {
 			responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 			responseVO.setMessage("Insert Failed!!");
@@ -201,11 +205,6 @@ public class LeadUploadFileController {
 			@RequestParam("lead_status") Long leadStatus
 	) {
 		List list =  leadMasterRepository.getLeadsByRemark(leadStatus);
-
-		for(int i=0; i < list.size(); i++) {
-			((LeadResponseDto)(list.get(i))).setHistory(historyRepository.getHistoryOfLead(((LeadResponseDto)(list.get(i))).getStudentId()));
-		}
-
 		return list;
 	}
 
@@ -413,7 +412,7 @@ public class LeadUploadFileController {
 			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
 			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster,leadMaster));
 			String email = instituteMaster.getEmailId();
-			sendEmail(leadMaster, email);
+//			sendEmail(leadMaster, email);
 		}
 
 		ResponseVO responseVO = new ResponseVO();

@@ -110,7 +110,7 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		leadMaster.setDeletedFlag(true);
 		leadMaster.setAssignLeadFlag(false);
 		leadMaster.setCategoryMaster(categoryMaster);
-		leadMaster.setSubCategoryMaster(subCategoryMaster);
+		// leadMaster.setSubCategoryMaster(subCategoryMaster);
 		leadMaster.setRemarkMaster(remarkMaster);
 	
 		

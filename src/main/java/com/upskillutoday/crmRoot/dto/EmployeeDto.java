@@ -1,6 +1,7 @@
 package com.upskillutoday.crmRoot.dto;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import com.upskillutoday.crmRoot.model.CategoryMaster;
@@ -31,6 +32,7 @@ public class EmployeeDto {
 	private RoleMaster roles;
 	private Integer responseCode;
 	private String message;
+	private List catNames;
 
 	public Long[] getCategories() {
 		return categories;
@@ -198,5 +200,13 @@ public class EmployeeDto {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public List getCatNames() {
+		return catNames;
+	}
+
+	public void setCatNames(List catNames) {
+		this.catNames = catNames;
 	}
 }
