@@ -158,7 +158,8 @@ try{
 				+ " FROM LeadMaster as lead " +
 				"	inner join lead.categoryMaster as cm " +
 				"	inner join lead.remarkMaster as rmk " +
-				"	where lead.remarkMaster.remarkId = " + remarkId,
+				"	where lead.remarkMaster.remarkId = " + remarkId +
+						" and lead.deletedFlag = true" ,
 		LeadResponseDto.class
 		).getResultList();
 	}
@@ -192,7 +193,9 @@ try{
 				"	inner join lead.remarkMaster as rmk " +
 				"  	inner join EmpLead as el on el.leadMaster.studentId = lead.studentId " +
 				"	inner join el.employeeMaster as em " +
-				"	where em.employeeId = " + userId);
+				"	where em.employeeId = " + userId+
+				" and lead.deletedFlag = true"
+		);
 			     
 			       list = query.getResultList();
 
@@ -202,14 +205,16 @@ try{
 	@Override
 	public List getAllUnassignedNewLeads() {
 		return entityManager.createQuery(
-				"SELECT lm FROM LeadMaster as lm where lm.remarkMaster.remarkId = 3"
+				"SELECT lm FROM LeadMaster as lm where lm.remarkMaster.remarkId = 3" +
+						" and lm.deletedFlag = true"
 		, LeadMaster.class).getResultList();
 	}
 
 	@Override
 	public LeadMaster getLeadByStudentId(Long stduentId) {
 		return entityManager.createQuery(
-				"SELECT lm FROM  LeadMaster as lm WHERE lm.studentId = " + stduentId, LeadMaster.class).getSingleResult();
+				"SELECT lm FROM  LeadMaster as lm WHERE lm.studentId = " + stduentId +
+						" and lm.deletedFlag = true", LeadMaster.class).getSingleResult();
 	}
 
 	@Override
@@ -243,7 +248,8 @@ try{
 				+ "		inner join lm.categoryMaster as cat \n"
 				+ "		inner join lm.remarkMaster as rm \n"
                 + "    where um.userId = " + userId
-                + " and lm.remarkMaster.remarkId = " + remarkId)
+                + " and lm.remarkMaster.remarkId = " + remarkId +
+					" and lm.deletedFlag = true")
         .getResultList();
 	}
 
@@ -252,7 +258,8 @@ try{
 		return entityManager.createQuery(
 				"SELECT lm FROM LeadMaster as lm " +
 						" WHERE lm.emailId = '" + email + "'" +
-						" and lm.contactNo = " + contact
+						" and lm.contactNo = " + contact +
+						" and lm.deletedFlag = true"
 		).getResultList();
 	}
 }

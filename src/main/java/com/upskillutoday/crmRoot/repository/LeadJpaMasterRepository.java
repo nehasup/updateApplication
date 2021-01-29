@@ -14,7 +14,10 @@ import com.upskillutoday.crmRoot.model.EmpLead;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.model.RemarkMaster;
 
+import javax.transaction.Transactional;
+
 @Repository
+@Transactional
 public interface LeadJpaMasterRepository extends JpaRepository<LeadMaster, Long> {
 
 	public LeadMaster findByStudentNameAndContactNoAndCourseNameAndDeletedFlag(String string, String string2,

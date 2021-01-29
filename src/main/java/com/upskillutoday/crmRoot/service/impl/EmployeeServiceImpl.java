@@ -147,13 +147,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public boolean updateEmployeeService(EmployeeDto employeeDto) {
 		//cat obj by id
-		CategoryMaster category = categoryJpaRepository.findById(employeeDto.getCategoryId()).orElse(null);
-	
+//		CategoryMaster category = categoryJpaRepository.findById(employeeDto.getCategoryId()).orElse(null);
+//
 		//save rolemaster //  role repositry
 		RoleMaster roles =roleRepository.getroleByid(employeeDto.getRoleId());
 		
 		//getuserroleby userid		
-		UserRole userRole=userRoleRepository.findByuserRole(employeeDto.getUsers().getUserId());
+		UserRole userRole=userRoleRepository.findByuserRole(employeeDto.getUserId());
 		userRole.setRoles(roles);
 		userRoleRepository.save(userRole);
 	 

@@ -88,11 +88,9 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		
 		
 		long id = 3;
-			RemarkMaster remarkMaster = remarkJpaRepository.findById(id).orElse(null);
-		
-		
+		RemarkMaster remarkMaster = remarkJpaRepository.findById(id).orElse(null);
+
 		LeadMaster leadMaster = new LeadMaster();
-		
 		leadMaster.setStudentName(leadMasterDto.getStudentName());
 		leadMaster.setCourseName(leadMasterDto.getCourseName());
 		leadMaster.setContactNo(leadMasterDto.getContactNo());
@@ -112,22 +110,15 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		leadMaster.setCategoryMaster(categoryMaster);
 		// leadMaster.setSubCategoryMaster(subCategoryMaster);
 		leadMaster.setRemarkMaster(remarkMaster);
-	
-		
-		
-		//leadMaster.setUpdatedBy();
-		
+
 		  try {
 			  leadRepostiory.insertLeadRepository(leadMaster);
 	            return true;
 	        }
-
 	        catch (Exception e){
 	            e.printStackTrace();
 	            return false;
 	        }
-		
-		
 	}
 
 	@Override

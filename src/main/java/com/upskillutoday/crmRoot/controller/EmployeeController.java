@@ -83,7 +83,7 @@ public class EmployeeController {
          ResponseVO<EmployeeDto> response = new ResponseVO<EmployeeDto>();
          EmployeeDto employeeDto = new EmployeeDto();
          employeeDto.setEmployeeId(employeeId);
-         EmployeeDto resultEmployeeDto =employeeService.getRecordByEmpIdService(employeeDto);
+         EmployeeDto resultEmployeeDto = employeeService.getRecordByEmpIdService(employeeDto);
          if(resultEmployeeDto!=null) {
              response.setMessage("Search By Data Sucessfully");
              response.setStatusCode(String.valueOf(HttpStatus.OK));

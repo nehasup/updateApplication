@@ -145,7 +145,18 @@ public class LeadUploadFileController {
 			responseVO.setMessage("Insert Successfully");
 			responseVO.setResult(leadMasterDto);
 
-//			historyRepository.insertHistory(new History("Inserted" ,new Date(), employeeService.getEmployeeByEmpId(), leadJpaMasterRepository.findByStudentId(leadMasterDto.getStudentId()), remarkService.getRemarkById(leadMasterDto.getRemarkId())));
+			EmployeeMaster employeeMaster = employeeService.getEmployeeByEmpId(leadMasterDto.getEmployeeId());
+			List leadMasterObjs = leadMasterRepository.getLeadMasterByNameEmailContactDeleteFlag(leadMasterDto.getStudentName(), leadMasterDto.getContactNo(), leadMasterDto.getEmailId(), true);
+			if(leadMasterObjs.size() > 0) {
+				LeadMaster leadMasterObj = (LeadMaster) leadMasterObjs.get(0);
+				EmpLead empLead = new EmpLead();
+				empLead.setLeadMaster(leadMasterObj);
+				empLead.setEmployeeMaster(employeeMaster);
+				empLead.setUpdatedOn(new Date());
+				empLead.setDeletedFlag(true);
+				empleadJparepository.save(empLead);
+				historyRepository.insertHistory(new History("Inserted" ,new Date(), employeeService.getEmployeeByEmpId(leadMasterDto.getEmployeeId()), leadMasterObj, remarkService.getRemarkById(leadMasterObj.getRemarkMaster().getRemarkId())));
+			}
 		} else {
 			responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
 			responseVO.setMessage("Insert Failed!!");
@@ -163,7 +174,7 @@ public class LeadUploadFileController {
 		//user obj
 		try {
 			RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
-			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
+			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Director") || roleMaster.getRoleName().equalsIgnoreCase("Founder")) {
 				//Admin // All leads
 				List list = leadMasterService.getAllLeadRecordService();
 
@@ -232,7 +243,7 @@ public class LeadUploadFileController {
 		 try {
 			 EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
 			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
-			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
+			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager") || roleMaster.getRoleName().equalsIgnoreCase("Director") || roleMaster.getRoleName().equalsIgnoreCase("Founder")) {
 //				 Admin // All leads
 					List list = leadMasterService.getAllLeadRecordService();
 					if(list!=null) {
@@ -310,7 +321,7 @@ public class LeadUploadFileController {
 	@DeleteMapping("/deleteLead/{id}")
 	public Map<String, Boolean> deleteLead(
 			@PathVariable(value = "id") Long studentId,
-			@RequestParam(value = "empId") Long empUserId
+			@RequestParam(value = "userId") Long empUserId
 	) throws ResourceNotFoundException {
 		LeadMaster leadMaster = leadJpaMasterRepository.findById(studentId)
 	   .orElseThrow(() -> new ResourceNotFoundException("Student Id not found for this id :: " + studentId));
@@ -318,7 +329,7 @@ public class LeadUploadFileController {
 		leadJpaMasterRepository.save(leadMaster);
 	    Map<String, Boolean> response = new HashMap<>();
 	    response.put("deletedFlag", Boolean.TRUE);
-		historyRepository.insertHistory(new History("Deleted Lead by Employee", new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(studentId), remarkService.getRemarkById(remarkService.getRemarkById("Deleted"))));
+		historyRepository.insertHistory(new History("Deleted Lead by Employee", new Date(), employeeService.getEmployeeByUserId(empUserId), leadJpaMasterRepository.findByStudentId(studentId), null));
 		return response;
 	} 
 
@@ -412,7 +423,7 @@ public class LeadUploadFileController {
 			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
 			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster,leadMaster));
 			String email = instituteMaster.getEmailId();
-//			sendEmail(leadMaster, email);
+			sendEmail(leadMaster, email);
 		}
 
 		ResponseVO responseVO = new ResponseVO();
@@ -429,14 +440,14 @@ public class LeadUploadFileController {
 		helper.setTo(email);
 		String stringBuilder = "Congratulations!\n" +
 				"Students are coming your way. upskillUtoday brings you a new prospect." +
-				"Student Detail" +
-				"Student Name : " + leadMaster.getStudentName() +
+				"\n" + "Student Detail" +
+				"\n" + "Student Name : " + leadMaster.getStudentName() +
 				"\n" + "Contact No : " + leadMaster.getContactNo() +
 				"\n" + "Email ID : " + leadMaster.getEmailId() +
 				"\n" + "Course Name : " + leadMaster.getCategoryMaster().getCategoryName() +
-				"\nThank you";
+				"\n\nThank you";
 		helper.setText(stringBuilder);
-		helper.setSubject("");
+		helper.setSubject("New UpSkilluToday Student enquiry");
 		sender.send(message);
 	}
 

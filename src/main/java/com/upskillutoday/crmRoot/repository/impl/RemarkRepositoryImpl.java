@@ -75,7 +75,8 @@ public class RemarkRepositoryImpl implements RemarkRepository {
     return entityManager
         .createQuery(
             "SELECT new CountRemarkDto(rmkm.remarkId, rmkm.remarkName, COUNT(l.studentId) ) FROM RemarkMaster as rmkm\n"
-                + "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId\n"
+                + "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId\n"  +
+					" WHERE l.deletedFlag = true"
                 + "    group by rmkm.remarkId")
         .getResultList();
 	}
@@ -85,7 +86,8 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 		return (CountRemarkDto) entityManager
 				.createQuery(
 						"SELECT new CountRemarkDto(COUNT(l.studentId)) FROM RemarkMaster as rmkm\n"
-								+ "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId \n")
+								+ "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId \n" +
+								" WHERE l.deletedFlag = true")
 				.getSingleResult();
 	}
 
@@ -97,7 +99,8 @@ public class RemarkRepositoryImpl implements RemarkRepository {
                 + "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId \n"
                 + "    inner join EmpLead as el on l.studentId = el.leadMaster.studentId \n"
                 + "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId \n"
-                + "    where e.employeeId = " + empId + " \n"
+                + "    where e.employeeId = " + empId + " \n"+
+					" and l.deletedFlag = true"
                 + "    group by rmkm.remarkId")
         .getResultList();
 	}
