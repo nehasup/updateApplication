@@ -1,5 +1,7 @@
 package com.upskillutoday.crmRoot.response;
 
+import java.util.List;
+
 public class LeadReportRes {
     private String studentName;
     private String contactNo;
@@ -13,6 +15,7 @@ public class LeadReportRes {
     private String leadStatus;
     private String updatedOn;
     private String employeeName;
+    private List instituteNames;
 
     public LeadReportRes() {}
 
@@ -37,6 +40,31 @@ public class LeadReportRes {
         this.courseName = courseName;
         this.comments = comments;
         this.instituteName = instituteName;
+        this.leadStatus = leadStatus;
+        this.employeeName=employeeName;
+    }
+
+    public LeadReportRes(
+            String studentName,
+            String contactNo,
+            String city,
+            String area,
+            String address,
+            String emailId,
+            String courseName,
+            String comments,
+            List instituteNames,
+            String leadStatus,
+            String employeeName) {
+        this.studentName = studentName;
+        this.contactNo = contactNo;
+        this.city = city;
+        this.area = area;
+        this.address = address;
+        this.emailId = emailId;
+        this.courseName = courseName;
+        this.comments = comments;
+        this.instituteNames = instituteNames;
         this.leadStatus = leadStatus;
         this.employeeName=employeeName;
     }
@@ -135,5 +163,13 @@ public class LeadReportRes {
 
     public void setInstituteName(String instituteName) {
         this.instituteName = instituteName;
+    }
+
+    public List getInstituteNames() {
+        return instituteNames;
+    }
+
+    public void setInstituteNames(List instituteNames) {
+        this.instituteNames = instituteNames;
     }
 }

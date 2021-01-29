@@ -40,9 +40,9 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	public List getInstituteByCategoryFromStudentId(Long stduentId) {
     return entityManager
         .createQuery(
-            "SELECT new InstituteNameResponse (im.instituteId, im.instituteName) FROM InstituteMaster as im\n"
+            "SELECT DISTINCT new InstituteNameResponse (im.instituteId, im.instituteName) FROM InstituteMaster as im\n"
                 + "    inner join CategoryMaster as c on im.categoryMaster.categoryId = c.categoryId\n"
-                + "    where im.categoryMaster.categoryId = " + stduentId)
+                + "    where im.categoryMaster.categoryId = " + stduentId + " and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL")
         .getResultList();
 	}
 
@@ -51,7 +51,7 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 		return entityManager
 				.createQuery(
 						"SELECT im FROM InstituteMaster as im\n"
-								+ "    where im.instituteId = " + id, InstituteMaster.class)
+								+ "    where im.instituteId = " + id + " and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL", InstituteMaster.class)
 				.getSingleResult();
 	}
 
@@ -64,7 +64,7 @@ public class InstituteRepositoryImpl implements InstituteRepository {
                 + "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
                 + "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
                 + "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
-                + "    where h.comment = 'Verified'\n"
+                + "    where h.comment = 'Verified' and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL\n"
                 + "    group by h.employeeMaster.employeeId , il.instituteMaster.instituteId")
         .getResultList();
 	}
@@ -78,7 +78,7 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 						+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
 						+ "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
 						+ "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
-						+ "    where h.comment = 'Verified' and il.sentOn = DATE( '" + date + "' ) \n"
+						+ "    where h.comment = 'Verified' and il.sentOn = DATE( '" + date + "' ) and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL \n"
 						+ "    group by h.employeeMaster.employeeId , il.instituteMaster.instituteId")
         .getResultList();
 	}
@@ -86,8 +86,19 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	@Override
 	public List getInstitute() {
 		return entityManager.createQuery(
-				"SELECT im FROM InstituteMaster as im",
+				"SELECT im FROM InstituteMaster as im where im.instituteName IS NOT NULL and im.contactNo IS NOT NULL",
 				InstituteMaster.class
 		).getResultList();
+	}
+
+	@Override
+	public List getInstituteOfStudent(Long studentId) {
+    return entityManager
+        .createQuery(
+            "SELECT im.instituteName FROM InstituteLead  as il \n"
+                + "    inner join il.instituteMaster as im \n"
+                + "    where il.leadMaster.studentId = " + studentId + " and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL", String.class
+		)
+        .getResultList();
 	}
 }

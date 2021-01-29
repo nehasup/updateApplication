@@ -40,7 +40,7 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 						history.getLeadMaster().getCity(),
 						history.getLeadMaster().getArea(), history.getLeadMaster().getAddress(),
 						history.getLeadMaster().getEmailId(), history.getLeadMaster().getCourseName(), history.getLeadMaster().getComments(),
-						history.getLeadMaster().getInstituteName(), history.getRemarkMaster().getRemarkName(), history.getEmployeeMaster().getEmployeeName()));
+						instituteRepository.getInstituteOfStudent(history.getLeadMaster().getStudentId()), history.getRemarkMaster().getRemarkName(), history.getEmployeeMaster().getEmployeeName()));
 		}
 		return leadReportRess;
 	}

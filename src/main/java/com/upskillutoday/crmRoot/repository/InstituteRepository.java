@@ -15,4 +15,5 @@ public interface InstituteRepository {
 	List getInstituteReport();
 	List getInstituteReportDatewise(String date);
 	List getInstitute();
+	List getInstituteOfStudent(Long studentId);
 }
