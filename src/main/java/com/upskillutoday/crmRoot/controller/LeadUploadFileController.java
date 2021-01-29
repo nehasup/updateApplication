@@ -163,13 +163,10 @@ public class LeadUploadFileController {
 				//Admin // All leads
 				List list = leadMasterService.getAllLeadRecordService();
 
-				for(int i=0; i < list.size(); i++) {
-					((LeadResponseDto)(list.get(i))).setHistory(historyRepository.getHistoryOfLead(((LeadResponseDto)(list.get(i))).getStudentId()));
-				}
-
 				if(list!=null) {
 					response.setResult(list);
 				}
+
 				else {
 					//Data not present
 					response.setResult(list);
@@ -426,13 +423,6 @@ public class LeadUploadFileController {
 		return responseVO;
 	}
 
-//	// For sending mail
-//	@GetMapping(value = "/sendEmail")
-//	public String setEmail() throws Exception {
-//		sendEmail();
-//		return "Done";
-//	}
-
 	// For sending mail through method change method body to use
 	private void sendEmail(LeadMaster leadMaster, String email) throws Exception{
 		MimeMessage message = sender.createMimeMessage();
@@ -447,7 +437,7 @@ public class LeadUploadFileController {
 				"\n" + "Course Name : " + leadMaster.getCategoryMaster().getCategoryName() +
 				"\nThank you";
 		helper.setText(stringBuilder);
-		helper.setSubject("New Lead Generated - from upSkilluToday");
+		helper.setSubject("");
 		sender.send(message);
 	}
 
