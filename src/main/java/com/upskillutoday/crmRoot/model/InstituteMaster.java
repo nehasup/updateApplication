@@ -39,6 +39,35 @@ public class InstituteMaster {
 	@Column(name = "additional_comitted")
 	private String additionalCommited;
 
+	@Column(name = "usps")
+	private String usps;
+
+	@Column(name = "city_to_target")
+	private String city;
+
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	@Column(name = "locality_targeted")
+	private String locality;
+
+
+	@Column(name = "course_name")
+	private String courseName;
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
 	private CategoryMaster categoryMaster;
@@ -152,5 +181,21 @@ public class InstituteMaster {
 
 	public void setDeletedFlag(boolean deletedFlag) {
 		this.deletedFlag = deletedFlag;
+	}
+
+	public String getUsps() {
+		return usps;
+	}
+
+	public void setUsps(String usps) {
+		this.usps = usps;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 }

@@ -37,6 +37,15 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	}
 
 	@Override
+	public void updateInstitute(InstituteMaster instituteMaster) {
+		try {
+			entityManager.merge(instituteMaster);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	public List getInstituteByCategoryFromStudentId(Long stduentId) {
     return entityManager
         .createQuery(

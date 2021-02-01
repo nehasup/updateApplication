@@ -49,6 +49,24 @@ public class InstituteController {
 	        return responseVO;
 	}
 
+	@PutMapping("/updateInstitute")
+	@ResponseBody public ResponseVO  updateInstitute(
+			@RequestBody InstituteMaster instituteMaster
+	) {
+		ResponseVO<InstituteMaster>responseVO=new ResponseVO<InstituteMaster>();
+		boolean flag= instituteService.updateInstitute(instituteMaster);
+		if(flag) {
+			responseVO.setStatusCode(String.valueOf(HttpStatus.OK));
+			responseVO.setMessage("Insert Successfully!!");
+			responseVO.setResult(instituteMaster);
+		} else {
+			responseVO.setStatusCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+			responseVO.setMessage("Insert Failed!!");
+			responseVO.setResult(instituteMaster);
+		}
+		return responseVO;
+	}
+
 	@PostMapping("/saveInstituteFromFile")
 	@ResponseBody public ResponseEntity<ResponseMessage>  saveInstituteFromFile(
 			@RequestParam("file") MultipartFile file
@@ -78,6 +96,6 @@ public class InstituteController {
 
 	@GetMapping("/getInstitutes")
 	public List getInstitute() {
-	 	return instituteRepository.getInstitute();
+	 	return instituteService.getInstitutes();
 	}
 }

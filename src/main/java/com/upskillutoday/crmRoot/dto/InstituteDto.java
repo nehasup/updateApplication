@@ -1,5 +1,7 @@
 package com.upskillutoday.crmRoot.dto;
 
+import com.upskillutoday.crmRoot.model.CategoryMaster;
+
 import java.util.Date;
 
 public class InstituteDto {
@@ -25,21 +27,22 @@ public class InstituteDto {
 	private boolean deleted_flag;
 	private String userName;
 	private String pass;
+	private String additionalCommited;
+	private CategoryMaster category;
+	private String city;
+	private String usps;
+	private String locality;
+	private String commitedLead;
+	private String conversion;
+	private String addmissionComitted;
+	private String categoryId;
 
-	public String getUserName() {
-		return userName;
+	public long getInstituteId() {
+		return instituteId;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getPass() {
-		return pass;
-	}
-
-	public void setPass(String pass) {
-		this.pass = pass;
+	public void setInstituteId(long instituteId) {
+		this.instituteId = instituteId;
 	}
 
 	public String getInstituteName() {
@@ -186,11 +189,91 @@ public class InstituteDto {
 		this.deleted_flag = deleted_flag;
 	}
 
-	public long getInstituteId() {
-		return instituteId;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setInstituteId(long instituteId) {
-		this.instituteId = instituteId;
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPass() {
+		return pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+
+	public String getAdditionalCommited() {
+		return additionalCommited;
+	}
+
+	public void setAdditionalCommited(String additionalCommited) {
+		this.additionalCommited = additionalCommited;
+	}
+
+	public CategoryMaster getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryMaster category) {
+		this.category = category;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getUsps() {
+		return usps;
+	}
+
+	public void setUsps(String usps) {
+		this.usps = usps;
+	}
+
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	public String getCommitedLead() {
+		return commitedLead;
+	}
+
+	public void setCommitedLead(String commitedLead) {
+		this.commitedLead = commitedLead;
+	}
+
+	public String getConversion() {
+		return conversion;
+	}
+
+	public void setConversion(String conversion) {
+		this.conversion = conversion;
+	}
+
+	public String getAddmissionComitted() {
+		return addmissionComitted;
+	}
+
+	public void setAddmissionComitted(String addmissionComitted) {
+		this.addmissionComitted = addmissionComitted;
+	}
+
+	public String getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
 	}
 }

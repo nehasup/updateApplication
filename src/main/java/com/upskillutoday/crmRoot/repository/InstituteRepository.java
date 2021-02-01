@@ -16,4 +16,5 @@ public interface InstituteRepository {
 	List getInstituteReportDatewise(String date);
 	List getInstitute();
 	List getInstituteOfStudent(Long studentId);
+	void updateInstitute(InstituteMaster instituteMaster);
 }
