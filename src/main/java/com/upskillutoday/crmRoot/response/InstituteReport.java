@@ -33,6 +33,13 @@ public class InstituteReport {
         this.count = count;
     }
 
+    public InstituteReport(String name) {
+        this.name = name;
+        this.totalCount = 0L;
+        this.employeeName = "";
+        this.count = 0L;
+    }
+
     public String getName() {
         return name;
     }

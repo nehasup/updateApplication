@@ -74,7 +74,23 @@ public class InstituteRepositoryImpl implements InstituteRepository {
                 + "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
                 + "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
                 + "    where h.comment = 'Verified' and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL\n"
-                + "    group by h.employeeMaster.employeeId , il.instituteMaster.instituteId")
+                + "    group by il.instituteMaster.instituteId, h.employeeMaster.employeeId ")
+        .getResultList();
+	}
+
+	@Override
+	public List getInstituteWithZero() {
+    return entityManager
+        .createQuery(
+            "select new InstituteReport (im.instituteName)  from InstituteMaster as im \n"
+                + " where im.instituteName not in (select im2.instituteName from InstituteMaster as im2 "
+				+ " inner join InstituteLead as il on im2.instituteId = il.instituteMaster.instituteId "
+				+ " inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId "
+                + " inner join History as h on lm.studentId = h.leadMaster.studentId "
+                + " inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId "
+                + " where h.comment = 'Verified' and im2.instituteName IS NOT NULL and im2.contactNo IS NOT NULL"
+                + " group by il.instituteMaster.instituteId, h.employeeMaster.employeeId )"
+                + " group by im.instituteId ")
         .getResultList();
 	}
 
@@ -90,6 +106,21 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 						+ "    where h.comment = 'Verified' and il.sentOn = DATE( '" + date + "' ) and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL \n"
 						+ "    group by h.employeeMaster.employeeId , il.instituteMaster.instituteId")
         .getResultList();
+	}
+
+	@Override
+	public List getInstituteReportDatewiseWithZero(String date) {
+		return entityManager
+				.createQuery("select new InstituteReport (im2.instituteName)  from InstituteMaster as im2 \n"
+						+ " where im2.instituteName not in (select im.instituteName from InstituteMaster as im\n"
+								+ "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
+								+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
+								+ "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
+								+ "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
+								+ "    where h.comment = 'Verified' and il.sentOn = DATE( '" + date + "' ) and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL \n"
+								+ "    group by h.employeeMaster.employeeId , il.instituteMaster.instituteId)"
+								+ " group by im2.instituteId ")
+				.getResultList();
 	}
 
 	@Override

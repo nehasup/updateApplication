@@ -47,11 +47,15 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 
 	@Override
 	public List getInstituteTotalReport() {
-		return instituteRepository.getInstituteReport();
+		List list = instituteRepository.getInstituteReport();
+		list.addAll(instituteRepository.getInstituteWithZero());
+		return list;
 	}
 
 	@Override
 	public List getInstituteTotalReportDateWise(String date) {
-		return instituteRepository.getInstituteReportDatewise(date);
+		List list = instituteRepository.getInstituteReportDatewise(date);
+		list.addAll(instituteRepository.getInstituteReportDatewiseWithZero(date));
+		return list;
 	}
 }

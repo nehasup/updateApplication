@@ -13,7 +13,9 @@ public interface InstituteRepository {
 	List getInstituteByCategoryFromStudentId(Long catId);
 	InstituteMaster getInstituteById(Long id);
 	List getInstituteReport();
+	List getInstituteWithZero();
 	List getInstituteReportDatewise(String date);
+	List getInstituteReportDatewiseWithZero(String date);
 	List getInstitute();
 	List getInstituteOfStudent(Long studentId);
 	void updateInstitute(InstituteMaster instituteMaster);
