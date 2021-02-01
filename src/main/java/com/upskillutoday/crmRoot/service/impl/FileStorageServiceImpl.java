@@ -74,7 +74,11 @@ public class FileStorageServiceImpl implements FileStorageService {
 		else if(extension.equalsIgnoreCase("xls") || extension.equalsIgnoreCase("xlsx")) {
 			 result = readDataFromExcel(file, 0);
 		}
-		leadMasterService.assignUnverifiedLeadToVerifiers();
+		try {
+			leadMasterService.assignUnverifiedLeadToVerifiers();
+		} catch (Exception ignore) {
+		}
+
 		return result;
 	}
 
@@ -108,6 +112,10 @@ public class FileStorageServiceImpl implements FileStorageService {
 						studentName = row.getCell(0).toString();
 					} else {
 						throw new ResourceNotFoundException("Student name Not Found" + ": Uploaded Student Count - " + count);
+					}
+
+					if(studentName.equalsIgnoreCase("")) {
+						return count;
 					}
 
 					String contactNo;
