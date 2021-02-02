@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.upskillutoday.crmRoot.model.InstituteMaster;
 import com.upskillutoday.crmRoot.repository.InstituteRepository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -68,12 +69,12 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	public List getInstituteReport() {
     return entityManager
         .createQuery(
-            "select new InstituteReport (im.instituteName, COUNT(lm.studentId), e.employeeName,  COUNT(h.employeeMaster.employeeId))  from InstituteMaster as im\n"
+            "select new InstituteReport (im.instituteId, im.instituteName, e.employeeName,  COUNT(h.employeeMaster.employeeId))  from InstituteMaster as im\n"
                 + "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
                 + "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
                 + "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
                 + "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
-                + "    where h.comment = 'Verified' and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL\n"
+                + "    where h.comment = 'Verified' and il.sentOn = DATE( '" + (new Date()).toString() + "' ) and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL\n"
                 + "    group by il.instituteMaster.instituteId, h.employeeMaster.employeeId ")
         .getResultList();
 	}

@@ -404,8 +404,7 @@ public class LeadUploadFileController {
 
 	@PostMapping(value = "/verifyTheLeadAssignAutomatically")
 	@ResponseBody
-	public ResponseVO verifyTheLead(@RequestBody StudentWithInst leadId) throws Exception {
-
+	public ResponseVO verifyTheLead(@RequestParam("userId") String userId, @RequestBody StudentWithInst leadId) throws Exception {
 		Long empId = empLeadService.assignLeadAutomatically(leadId.getStudentId());
 		EmployeeMaster employeeMaster = employeeService.getEmployeeByEmpId(empId);
 		LeadMaster leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId.getStudentId(), true);
@@ -418,12 +417,12 @@ public class LeadUploadFileController {
 		leadMasterObj.setAssignLeadFlag(true);
 		leadJpaMasterRepository.save(leadMasterObj);
 		LeadMaster leadMaster = leadMasterService.getLeadByStudentId(leadId.getStudentId());
-		historyRepository.insertHistory(new History("Verified" ,new Date(), employeeMaster,  leadMaster, leadMaster.getRemarkMaster()));
+		historyRepository.insertHistory(new History("Verified" ,new Date(), employeeService.getEmployeeByUserId(Long.parseLong(userId)),  leadMaster, leadMaster.getRemarkMaster()));
 		for(Long instituteId : leadId.getInstituteIds()) {
 			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
 			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster,leadMaster));
 			String email = instituteMaster.getEmailId();
-			sendEmail(leadMaster, email);
+//			sendEmail(leadMaster, email);
 		}
 
 		ResponseVO responseVO = new ResponseVO();
