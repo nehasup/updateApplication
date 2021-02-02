@@ -39,7 +39,7 @@ public class InstituteMaster {
 	@Column(name = "additional_comitted")
 	private String additionalCommited;
 
-	@Column(name = "usps")
+	@Column(name = "institute_usp")
 	private String usps;
 
 	@Column(name = "city_to_target")
