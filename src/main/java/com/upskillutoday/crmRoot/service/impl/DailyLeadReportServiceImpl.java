@@ -2,10 +2,12 @@ package com.upskillutoday.crmRoot.service.impl;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.upskillutoday.crmRoot.model.History;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.response.InstituteReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +49,18 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 
 	@Override
 	public List getInstituteTotalReport() {
-		List list = instituteRepository.getInstituteReport();
-		list.addAll(instituteRepository.getInstituteWithZero());
-		return list;
+		Date date = new Date();
+		String dateStr = date.getYear() + "-" + date.getMonth() + "-" + date.getDate();
+		List list = instituteRepository.getInstituteReportDatewise(dateStr);
+		ArrayList<InstituteReport> newList = new ArrayList();
+
+		for(InstituteReport instituteReport : (List<InstituteReport>) list) {
+			instituteReport.setTotalCount(instituteRepository.getTotalCount(instituteReport.getId()));
+			newList.add(instituteReport);
+		}
+
+		newList.addAll(instituteRepository.getInstituteWithZero());
+		return newList;
 	}
 
 	@Override

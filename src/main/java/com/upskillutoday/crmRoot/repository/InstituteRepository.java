@@ -19,4 +19,5 @@ public interface InstituteRepository {
 	List getInstitute();
 	List getInstituteOfStudent(Long studentId);
 	void updateInstitute(InstituteMaster instituteMaster);
+	Long getTotalCount(Long instituteId);
 }

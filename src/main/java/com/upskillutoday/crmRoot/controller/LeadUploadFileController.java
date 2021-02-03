@@ -420,9 +420,9 @@ public class LeadUploadFileController {
 		historyRepository.insertHistory(new History("Verified" ,new Date(), employeeService.getEmployeeByUserId(Long.parseLong(userId)),  leadMaster, leadMaster.getRemarkMaster()));
 		for(Long instituteId : leadId.getInstituteIds()) {
 			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
-			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster,leadMaster));
+			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId))));
 			String email = instituteMaster.getEmailId();
-			sendEmail(leadMaster, email);
+//			sendEmail(leadMaster, email);
 		}
 
 		ResponseVO responseVO = new ResponseVO();
@@ -453,5 +453,10 @@ public class LeadUploadFileController {
 	@GetMapping(value = "/getHistory")
 	public List getHistory(@RequestParam("studentId") Long studentId) {
 		return historyRepository.getHistoryOfLead(studentId);
+	}
+
+	@GetMapping(value = "/webhook")
+	public String webhook() {
+		return "Hello Webhook";
 	}
 }

@@ -47,6 +47,18 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	}
 
 	@Override
+	public Long getTotalCount(Long instituteId) {
+		return entityManager
+				.createQuery(
+						"select COUNT(lm.studentId) from InstituteMaster as im\n"
+								+ "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
+								+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
+								+ "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
+								+ "    where h.comment = 'Verified' and im.instituteId = " + instituteId + " \n", Long.class)
+				.getSingleResult();
+	}
+
+	@Override
 	public List getInstituteByCategoryFromStudentId(Long stduentId) {
     return entityManager
         .createQuery(
@@ -69,12 +81,12 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	public List getInstituteReport() {
     return entityManager
         .createQuery(
-            "select new InstituteReport (im.instituteId, im.instituteName, e.employeeName,  COUNT(h.employeeMaster.employeeId))  from InstituteMaster as im\n"
+            "select new InstituteReport (im.instituteId, im.instituteName, e.employeeName,  COUNT(h.employeeMaster.employeeId))  from InstituteMaster as im \n"
                 + "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
                 + "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
                 + "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
                 + "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
-                + "    where h.comment = 'Verified' and il.sentOn = DATE( '" + (new Date()).toString() + "' ) and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL\n"
+                + "    where h.comment = 'Verified' and il.sentOn = DATE( '2021-02-02' ) and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL \n"
                 + "    group by il.instituteMaster.instituteId, h.employeeMaster.employeeId ")
         .getResultList();
 	}

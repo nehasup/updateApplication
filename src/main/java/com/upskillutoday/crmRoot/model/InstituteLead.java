@@ -24,6 +24,10 @@ public class InstituteLead {
     @ManyToOne(fetch = FetchType.EAGER)
     private LeadMaster leadMaster;
 
+    @JoinColumn(name="sent_by", referencedColumnName = "employee_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private EmployeeMaster employeeMaster;
+
     public Long getInstituteleadId() {
         return instituteleadId;
     }
@@ -60,5 +64,20 @@ public class InstituteLead {
         this.sentOn = sentOn;
         this.instituteMaster = instituteMaster;
         this.leadMaster = leadMaster;
+    }
+
+    public InstituteLead(Date sentOn, InstituteMaster instituteMaster, LeadMaster leadMaster, EmployeeMaster employeeMaster) {
+        this.sentOn = sentOn;
+        this.instituteMaster = instituteMaster;
+        this.leadMaster = leadMaster;
+        this.employeeMaster = employeeMaster;
+    }
+
+    public EmployeeMaster getEmployeeMaster() {
+        return employeeMaster;
+    }
+
+    public void setEmployeeMaster(EmployeeMaster employeeMaster) {
+        this.employeeMaster = employeeMaster;
     }
 }
