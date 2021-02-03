@@ -422,7 +422,7 @@ public class LeadUploadFileController {
 			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
 			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId))));
 			String email = instituteMaster.getEmailId();
-//			sendEmail(leadMaster, email);
+			sendEmail(leadMaster, email.toLowerCase());
 		}
 
 		ResponseVO responseVO = new ResponseVO();
