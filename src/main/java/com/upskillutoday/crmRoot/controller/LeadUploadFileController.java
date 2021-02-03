@@ -1,9 +1,11 @@
 package com.upskillutoday.crmRoot.controller;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.mail.internet.MimeMessage;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
@@ -12,6 +14,9 @@ import com.upskillutoday.crmRoot.request.VerifyLeadRes;
 import com.upskillutoday.crmRoot.response.*;
 import com.upskillutoday.crmRoot.service.*;
 import com.upskillutoday.crmRoot.service.impl.EmpCategyServiceImpl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -423,6 +428,12 @@ public class LeadUploadFileController {
 			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId))));
 			String email = instituteMaster.getEmailId();
 			sendEmail(leadMaster, email.toLowerCase());
+			if(
+			instituteMaster.getInstituteName().equalsIgnoreCase("Aditya Group Of Institutes") ||
+			instituteMaster.getInstituteName().equalsIgnoreCase("npfs") ||
+			instituteMaster.getInstituteName().equalsIgnoreCase("upskillutoday")) {
+				this.adityaGroupOfIstituteSendLead(leadMaster);
+			}
 		}
 
 		ResponseVO responseVO = new ResponseVO();
@@ -448,6 +459,31 @@ public class LeadUploadFileController {
 		helper.setText(stringBuilder);
 		helper.setSubject("New UpSkilluToday Student enquiry");
 		sender.send(message);
+	}
+
+	private void adityaGroupOfIstituteSendLead(LeadMaster leadMaster) throws IOException {
+		OkHttpClient client = new OkHttpClient().newBuilder()
+				.build();
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(
+				"{\r\n    " +
+						"\"college_id\": \"217\",\r\n   " +
+						"\"name\": \" " + leadMaster.getStudentName() + " " +
+						"\",\r\n    \"email\": \" " + leadMaster.getEmailId().toLowerCase() + " " +
+						"\",\r\n    \"country_dial_code\": \"+91\",\r\n   " +
+						"\"mobile\": \" " + leadMaster.getContactNo() + " \",\r\n    " +
+						"\"source\": \"upskillUtoday\",\r\n   " +
+						" \"state\": \"Maharashtra\",\r\n    " +
+						"\"city\": \" " + leadMaster.getCity() + " \",\r\n    " +
+						"\"secret_key\": \"df1441a8ad21ec533d98221629b8f8a1\"\r\n}",
+				mediaType);
+		Request request = new Request.Builder()
+				.url("https://api.nopaperforms.com/dataPorting/217/upskillutoday")
+				.method("POST", body)
+				.addHeader("Content-Type", "application/json")
+				.build();
+		Response response = client.newCall(request).execute();
+		System.out.println(response);
 	}
 
 	@GetMapping(value = "/getHistory")
