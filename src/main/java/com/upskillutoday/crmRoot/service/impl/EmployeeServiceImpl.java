@@ -50,24 +50,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public boolean insertEmployeeService(EmployeeDto employeeDto) throws Exception {
-		
-		//save userpassword and pass
-		//user master
-		
-		
-		// UserMaster user =userMasterRepository.findAllByUserName(employeeDto.getUserName());
 		UserMaster user = new UserMaster();
 		 user.setUserName(employeeDto.getUserName());
 		 user.setPass(employeeDto.getPass());
 		 user.setUpdatedOn(new Date());
 		 user.setDeletedFlag(true);
-		 
 		 userMasterRepository.save(user);
-		 
 		 //user role
 		 UserRole userRole= new UserRole();
-
-		
 		 //role master
 		 RoleMaster roleMaster = roleRepository.getroleByid(employeeDto.getRoleId());
 		 userRole.setRoles(roleMaster);
@@ -75,8 +65,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		 userRole.setUpdatedOn(new Date());
 		 userRole.setDeletedFlag(true);
 		 userRoleRepository.save(userRole);
-		 
-		
 		//employee master
 		EmployeeMaster employee = new EmployeeMaster();		
 		employee.setEmployeeName(employeeDto.getEmployeeName());
@@ -89,13 +77,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setUserMaster(user);
 		employee.setUpdatedOn(new Date());
 		employee.setDeletedFlag(true);
-		
 		//save category id
 		// Commented By Laukik
 //		CategoryMaster category = subCategoryRepository.getCategorybyidDao(employeeDto.getCategoryId());
 //		employee.setCategory(category);
 //		employee.setUserMaster(user);
-
         boolean flag=employeeRepository.insertEmployeeDao(employee);
 
         // Added By Laukik
@@ -105,7 +91,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 			empCategy.setCategoryMaster(categoryService.getCatgoryById(catId));
 			empCategyRepository.save(empCategy);
 		}
-
         return flag;
 	}
 

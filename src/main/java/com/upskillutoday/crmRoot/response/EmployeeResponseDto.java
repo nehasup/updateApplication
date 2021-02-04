@@ -1,8 +1,12 @@
 package com.upskillutoday.crmRoot.response;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
+@Entity
 public class EmployeeResponseDto {
+	@Id
 	private Long employeeId;
 	private String employeeName;
 	private String contactNo;
@@ -57,6 +61,10 @@ public class EmployeeResponseDto {
 		this.address = address;
 		this.birthDate = birthDate;
 		this.gender = gender;
+	}
+
+	public EmployeeResponseDto() {
+
 	}
 
 	public Long getEmployeeId() {

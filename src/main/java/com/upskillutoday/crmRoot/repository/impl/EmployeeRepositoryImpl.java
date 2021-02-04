@@ -39,8 +39,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 	    public List getAllEmpListDao() {
 	        List<String> list = null;
 	        try {
-	            Query query = entityManager.createQuery("Select NEW com.upskillutoday.crmRoot.response.EmployeeResponseDto( emp.employeeId as employeeId,emp.employeeName as employeeName,emp.contactNo as contactNo,emp.guardianNo as guardianNo,emp.emailId as emailId,emp.address as address,emp.birthDate as birthDate,emp.gender,c.categoryName as categoryName,c.categoryId as categoryId )"
-	            		+ " from EmployeeMaster as emp inner join emp.category as c where emp.deletedFlag=1");
+	            Query query = entityManager.createQuery("Select NEW EmployeeResponseDto(emp.employeeId, emp.employeeName, emp.contactNo ,emp.guardianNo , emp.emailId , emp.address, emp.birthDate, emp.gender, c.categoryName, c.categoryId)"
+	            		+ " from EmployeeMaster as emp left join emp.category as c where emp.deletedFlag=1");
 	             list = query.getResultList();
 
 	        } catch (Exception e) {

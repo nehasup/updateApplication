@@ -1,9 +1,14 @@
 package com.upskillutoday.crmRoot.response;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
+@Entity
 public class EmpLeadResponseDto {
-	 private Long studentId;
+
+	@Id
+	private Long studentId;
 	  private String studentName;
 	  private String contactNo;
 	  private String emailId;
@@ -56,6 +61,9 @@ public class EmpLeadResponseDto {
 		this.instituteName = instituteName;
 		this.employeeName = employeeName;
 		this.assignLeadFlag = assignLeadFlag;
+	}
+
+	public EmpLeadResponseDto() {
 	}
 
 	public boolean isAssignLeadFlag() {
