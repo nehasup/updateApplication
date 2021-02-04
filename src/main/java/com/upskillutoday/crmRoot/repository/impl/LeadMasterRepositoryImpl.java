@@ -131,6 +131,41 @@ try{
 				.getResultList();
 	}
 
+	@Override
+	public List<LeadResponseDto> getAllUnAssignedLeads() {
+		return entityManager.createQuery(
+			"SELECT new LeadResponseDto (" +
+					"lm.studentId, " +
+					"lm.studentName, " +
+					"lm.courseName, " +
+					"lm.contactNo, " +
+					"lm.area," +
+					"lm.city, " +
+					"lm.emailId, " +
+					"lm.modeOfCourse, " +
+					"lm.modificationStage, " +
+					"lm.address, " +
+					"lm.budget, " +
+					"rmk.remarkId, " +
+					"rmk.remarkName, " +
+					"lm.comments, " +
+					"lm.instituteName," +
+					"cm.categoryId," +
+					"cm.categoryName," +
+					"lm.updatedOn, " +
+					"emp.employeeName, " +
+					"rm.roleName) " +
+					"FROM LeadMaster as lm " +
+					"inner join lm.categoryMaster as cm " +
+					"inner join lm.remarkMaster as rmk \n"+
+					"left join EmpLead as el on lm.studentId = el.leadMaster.studentId \n" +
+					"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
+					"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
+					"left join RoleMaster as rm on rm.roleId = ur.roles.roleId " +
+					"where lm.studentId not in (select lm1.studentId from LeadMaster as lm1 inner join EmpLead as el1 on lm1.studentId = el1.leadMaster.studentId)"
+		).getResultList();
+	}
+
 
 	@Override
 	public List getLeadsByRemark(Long remarkId) {

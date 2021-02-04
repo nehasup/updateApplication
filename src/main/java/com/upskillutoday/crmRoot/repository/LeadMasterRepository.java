@@ -15,6 +15,7 @@ public interface LeadMasterRepository {
 	void updateLeadRepository(LeadMaster leadMaster);
 	List<LeadMaster> getAllLeadByassignFlag();
 	List<LeadResponseDto> getAllLeadForMe();
+	List<LeadResponseDto> getAllUnAssignedLeads();
 	List getLeadsByRemark(Long remarkId);
 	List getAllLeadListByquery(Long userId);
 	List getAllUnassignedNewLeads();

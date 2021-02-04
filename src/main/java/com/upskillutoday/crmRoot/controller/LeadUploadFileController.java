@@ -439,7 +439,7 @@ public class LeadUploadFileController {
 			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
 				//Admin // All leads
 				//List list=leadMasterService.getAllLeadRecordService();
-				List list = leadMasterRepository.getAllLeadForMe();
+				List list = leadMasterRepository.getAllUnAssignedLeads();
 				if(list!=null) {
 					 response.setResult(list);
 				}

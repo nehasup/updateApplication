@@ -48,13 +48,25 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 
 	@Override
 	public Long getTotalCount(Long instituteId) {
+    return entityManager
+        .createQuery(
+            "select COUNT(lm.studentId) from InstituteLead as il\n"
+                + "    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n"
+                + "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId " +
+					"	where im.instituteId = " + instituteId + "\n",
+            Long.class)
+        .getSingleResult();
+	}
+
+	@Override
+	public Long getTotalCountByDate(Long instituteId, String date) {
 		return entityManager
 				.createQuery(
-						"select COUNT(lm.studentId) from InstituteMaster as im\n"
-								+ "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
-								+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
-								+ "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
-								+ "    where h.comment = 'Verified' and im.instituteId = " + instituteId + " \n", Long.class)
+						"select COUNT(lm.studentId) from InstituteLead as il\n"
+								+ "    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n"
+								+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId " +
+								"	   where im.instituteId = " + instituteId + " and il.sentOn = DATE('" + date + "') ",
+						Long.class)
 				.getSingleResult();
 	}
 
@@ -79,31 +91,24 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 
 	@Override
 	public List getInstituteReport() {
-    return entityManager
-        .createQuery(
-            "select new InstituteReport (im.instituteId, im.instituteName, e.employeeName,  COUNT(h.employeeMaster.employeeId))  from InstituteMaster as im \n"
-                + "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
-                + "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
-                + "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
-                + "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
-                + "    where h.comment = 'Verified' and il.sentOn = DATE( '2021-02-02' ) and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL \n"
-                + "    group by il.instituteMaster.instituteId, h.employeeMaster.employeeId ")
-        .getResultList();
+    return entityManager.createQuery(
+		"select new InstituteReport (im.instituteId, im.instituteName, e.employeeName,  COUNT(lm.studentId)) from InstituteLead as il\n" +
+				"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
+				"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
+				"    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId \n" +
+				"    group by im.instituteId, e.employeeId ").getResultList();
 	}
 
 	@Override
 	public List getInstituteWithZero() {
     return entityManager
         .createQuery(
-            "select new InstituteReport (im.instituteName)  from InstituteMaster as im \n"
-                + " where im.instituteName not in (select im2.instituteName from InstituteMaster as im2 "
-				+ " inner join InstituteLead as il on im2.instituteId = il.instituteMaster.instituteId "
-				+ " inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId "
-                + " inner join History as h on lm.studentId = h.leadMaster.studentId "
-                + " inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId "
-                + " where h.comment = 'Verified' and im2.instituteName IS NOT NULL and im2.contactNo IS NOT NULL"
-                + " group by il.instituteMaster.instituteId, h.employeeMaster.employeeId )"
-                + " group by im.instituteId ")
+				"select new InstituteReport (im2.instituteName) from InstituteMaster as im2 " +
+						"where im2.instituteId not in (select im.instituteId from InstituteLead as il\n" +
+						"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
+						"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
+						"    inner join EmployeeMaster as e on  il.employeeMaster.employeeId = e.employeeId \n" +
+						"    group by im.instituteId, e.employeeId) ")
         .getResultList();
 	}
 
@@ -111,28 +116,25 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	public List getInstituteReportDatewise(String date) {
     return entityManager
         .createQuery(
-				"select new InstituteReport (im.instituteName, COUNT(lm.studentId), e.employeeName,  COUNT(h.employeeMaster.employeeId))  from InstituteMaster as im\n"
-						+ "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
-						+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
-						+ "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
-						+ "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
-						+ "    where h.comment = 'Verified' and il.sentOn = DATE( '" + date + "' ) and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL \n"
-						+ "    group by h.employeeMaster.employeeId , il.instituteMaster.instituteId")
+				"select new InstituteReport (im.instituteId, im.instituteName, e.employeeName,  COUNT(lm.studentId)) from InstituteLead as il\n" +
+						"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
+						"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
+						"    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId \n" +
+						"	 where il.sentOn = DATE('" + date + "')" +
+						"    group by im.instituteId, e.employeeId ")
         .getResultList();
 	}
 
 	@Override
 	public List getInstituteReportDatewiseWithZero(String date) {
 		return entityManager
-				.createQuery("select new InstituteReport (im2.instituteName)  from InstituteMaster as im2 \n"
-						+ " where im2.instituteName not in (select im.instituteName from InstituteMaster as im\n"
-								+ "    inner join InstituteLead as il on im.instituteId = il.instituteMaster.instituteId \n"
-								+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n"
-								+ "    inner join History as h on lm.studentId = h.leadMaster.studentId \n"
-								+ "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
-								+ "    where h.comment = 'Verified' and il.sentOn = DATE( '" + date + "' ) and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL \n"
-								+ "    group by h.employeeMaster.employeeId , il.instituteMaster.instituteId)"
-								+ " group by im2.instituteId ")
+				.createQuery("select new InstituteReport (im2.instituteName) from InstituteMaster as im2 " +
+						"where im2.instituteId not in (select im.instituteId from InstituteLead as il\n" +
+						"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
+						"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
+						"    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId \n" +
+						"	 where il.sentOn = DATE('" + date + "')" +
+						"    group by im.instituteId, e.employeeId )")
 				.getResultList();
 	}
 

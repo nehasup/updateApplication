@@ -50,10 +50,8 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 	@Override
 	public List getInstituteTotalReport() {
 		Date date = new Date();
-		String dateStr = date.getYear() + "-" + date.getMonth() + "-" + date.getDate();
-		List list = instituteRepository.getInstituteReportDatewise(dateStr);
+		List list = instituteRepository.getInstituteReport();
 		ArrayList<InstituteReport> newList = new ArrayList();
-
 		for(InstituteReport instituteReport : (List<InstituteReport>) list) {
 			instituteReport.setTotalCount(instituteRepository.getTotalCount(instituteReport.getId()));
 			newList.add(instituteReport);
@@ -66,7 +64,14 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 	@Override
 	public List getInstituteTotalReportDateWise(String date) {
 		List list = instituteRepository.getInstituteReportDatewise(date);
-		list.addAll(instituteRepository.getInstituteReportDatewiseWithZero(date));
+
+		ArrayList<InstituteReport> newList = new ArrayList();
+		for(InstituteReport instituteReport : (List<InstituteReport>) list) {
+			instituteReport.setTotalCount(instituteRepository.getTotalCountByDate(instituteReport.getId(), date));
+			newList.add(instituteReport);
+		}
+
+		newList.addAll(instituteRepository.getInstituteReportDatewiseWithZero(date));
 		return list;
 	}
 }
