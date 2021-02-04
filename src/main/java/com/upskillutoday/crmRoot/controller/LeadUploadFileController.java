@@ -1,10 +1,7 @@
 package com.upskillutoday.crmRoot.controller;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.mail.internet.MimeMessage;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
@@ -103,6 +100,70 @@ public class LeadUploadFileController {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+
+	  private final ArrayList<String> architectureSub = new ArrayList<String>(Arrays.asList(
+			  "B.voc (Interior Design)",
+			  "Bachelor of Architecture",
+			  "M.Arch"
+	  ));
+
+	private final ArrayList<String> managementSub = new ArrayList<String>(Arrays.asList(
+			"Master of Management Studies",
+			"Post Graduate Diploma in Management"
+	));
+
+	private final ArrayList<String> ndfsSub = new ArrayList<String>(Arrays.asList(
+			"Accounts",
+			"Apparel Merchandising",
+			"Bag Designing",
+			"Banking Expert",
+			"Bfsi Expert",
+			"Business Communication",
+			"Capital Market",
+			"Certified Financial Planner",
+			"Community Journalist",
+			"Construction Supervisor",
+			"Creative Art",
+			"Digital Marketing",
+			"Digital Marketing Manager",
+			"Embroidery And Fashion Craft",
+			"Entrepreneurship Management",
+			"Equity Market",
+			"Event Management",
+			"Family Business Management",
+			"Fashion Business Management",
+			"Fashion Photography",
+			"Fashion Styling and Draping",
+			"Finance Expert",
+			"Foot ware Design",
+			"Front Desk Officer",
+			"Furniture Designing",
+			"Global Fashion Design",
+			"Graphic Design",
+			"Graphic Designer",
+			"GST",
+			"Hr Payroll Management",
+			"Hr Recruitment",
+			"Human Resource Management",
+			"Interior Commercial Design",
+			"Interior Design - Commercial Space",
+			"Interior Design - Home Space",
+			"Interior Home Design",
+			"Jewellery Designing",
+			"Lighting Design",
+			"Loan Officer",
+			"Mutual Funds",
+			"Photography",
+			"Product Design",
+			"Product Management",
+			"Real Estate Management",
+			"Retail Management",
+			"Sales Executive (Media Org.)",
+			"Set Design",
+			"Social Media Manager",
+			"Training Centre Manager",
+			"Training Coordinator"
+	));
 
 	//import excel sheet
 	@PostMapping("/upload")
@@ -432,6 +493,7 @@ public class LeadUploadFileController {
 			instituteMaster.getInstituteName().equalsIgnoreCase("upskillutoday")) {
 				this.adityaGroupOfIstituteSendLead(leadMaster);
 			}
+
 		}
 
 		ResponseVO responseVO = new ResponseVO();
@@ -460,6 +522,18 @@ public class LeadUploadFileController {
 	}
 
 	private void adityaGroupOfIstituteSendLead(LeadMaster leadMaster) throws IOException {
+		String course_name = "";
+
+		if(leadMaster.getCategoryMaster().getCategoryName().equalsIgnoreCase("Design")) {
+			course_name = "Design Studies";
+		} else if(architectureSub.contains(leadMaster.getSubCategoryMaster().getSubCategoryName())) {
+			course_name = "Architecture";
+		} else if(managementSub.contains(leadMaster.getSubCategoryMaster().getSubCategoryName())) {
+			course_name = "Management";
+		} else {
+			course_name = "NSDC"; //9665330497
+		}
+
 		OkHttpClient client = new OkHttpClient().newBuilder()
 				.build();
 		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
@@ -473,6 +547,7 @@ public class LeadUploadFileController {
 						"\"source\": \"upskillUtoday\",\r\n   " +
 						" \"state\": \"Maharashtra\",\r\n    " +
 						"\"city\": \" " + leadMaster.getCity() + " \",\r\n    " +
+						"\"course\": \" " + course_name + " \",\r\n    " +
 						"\"secret_key\": \"df1441a8ad21ec533d98221629b8f8a1\"\r\n}",
 				mediaType);
 		Request request = new Request.Builder()
@@ -481,7 +556,8 @@ public class LeadUploadFileController {
 				.addHeader("Content-Type", "application/json")
 				.build();
 		Response response = client.newCall(request).execute();
-		System.out.println(response);
+		String res = response.body().string();
+		System.out.println(res);
 	}
 
 	@GetMapping(value = "/getHistory")

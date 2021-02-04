@@ -106,84 +106,86 @@ public class FileStorageServiceImpl implements FileStorageService {
 		if(i == 0) {
 			// updated by laukik
 			for(Row row:sheet) {
-				if(!row.getCell(0).toString().trim().equals("Student Name")) {
-					String studentName;
-					if(row.getCell(0) != null) {
-						studentName = row.getCell(0).toString();
-					} else {
-						throw new ResourceNotFoundException("Student name Not Found" + ": Uploaded Student Count - " + count);
-					}
+				if(row.getCell(0) != null) {
+					if(!row.getCell(0).toString().trim().equals("Student Name")) {
+						String studentName;
+						if(row.getCell(0) != null) {
+							studentName = row.getCell(0).toString();
+						} else {
+							throw new ResourceNotFoundException("Student name Not Found" + ": Uploaded Student Count - " + count);
+						}
 
-					if(studentName.equalsIgnoreCase("")) {
-						return count;
-					}
+						if(studentName.equalsIgnoreCase("")) {
+							return count;
+						}
 
-					String contactNo;
-					if(row.getCell(1).getCellType()== Cell.CELL_TYPE_NUMERIC) {
-						contactNo = NumberToTextConverter.toText(row.getCell(1).getNumericCellValue());
-					} else {
-						throw new ResourceNotFoundException("'Contact' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-					}
+						String contactNo;
+						if(row.getCell(1).getCellType()== Cell.CELL_TYPE_NUMERIC) {
+							contactNo = NumberToTextConverter.toText(row.getCell(1).getNumericCellValue());
+						} else {
+							throw new ResourceNotFoundException("'Contact' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+						}
 
-					String emailId;
-					if(row.getCell(2) != null) {
-						emailId = row.getCell(2).toString();
-					} else {
-						throw new ResourceNotFoundException("'Email' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-					}
+						String emailId;
+						if(row.getCell(2) != null) {
+							emailId = row.getCell(2).toString();
+						} else {
+							throw new ResourceNotFoundException("'Email' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+						}
 
 //					LeadMaster presentLead = fileuploadrepository.findByStudentNameAndContactNoAndEmailIdAndDeletedFlag(studentName, contactNo, emailId, false);
-					List presentLead = leadMasterRepository.getLeadMasterByNameEmailContactDeleteFlag(studentName, contactNo, emailId, false);
+						List presentLead = leadMasterRepository.getLeadMasterByNameEmailContactDeleteFlag(studentName, contactNo, emailId, false);
 
-					if(presentLead.size() == 0) {
-						LeadMaster leadMaster = new LeadMaster();
-						leadMaster.setStudentName(studentName);
-						leadMaster.setContactNo(contactNo);
-						leadMaster.setEmailId(emailId);
+						if(presentLead.size() == 0) {
+							LeadMaster leadMaster = new LeadMaster();
+							leadMaster.setStudentName(studentName);
+							leadMaster.setContactNo(contactNo);
+							leadMaster.setEmailId(emailId);
 
-						if(row.getCell(3) != null) {
-							leadMaster.setCourseName(row.getCell(3).toString());
-						} else {
-							throw new ResourceNotFoundException("'Course Name' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-						}
-
-						if(row.getCell(4) != null) {
-							leadMaster.setCity(row.getCell(4).toString());
-						} else {
-							throw new ResourceNotFoundException("'City' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-						}
-
-						if(row.getCell(5) != null) {
-							leadMaster.setArea(row.getCell(5).toString());
-						} else {
-							throw new ResourceNotFoundException("'Area' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-						}
-
-						if(row.getCell(6) != null) {
-							leadMaster.setModeOfCourse(row.getCell(6).toString());
-						} else {
-							throw new ResourceNotFoundException("'Mode of Course' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
-						}
-
-						if(row.getCell(7) != null) {
-							String catName = row.getCell(7).toString();
-							CategoryMaster categoryMaster = categoryRepository.getCatIdByName(row.getCell(7).toString());
-							if(categoryMaster!= null) {
-								leadMaster.setCategoryMaster(categoryMaster);
+							if(row.getCell(3) != null) {
+								leadMaster.setCourseName(row.getCell(3).toString());
 							} else {
-								throw new ResourceNotFoundException("'Category' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+								throw new ResourceNotFoundException("'Course Name' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
 							}
+
+							if(row.getCell(4) != null) {
+								leadMaster.setCity(row.getCell(4).toString());
+							} else {
+								throw new ResourceNotFoundException("'City' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+							}
+
+							if(row.getCell(5) != null) {
+								leadMaster.setArea(row.getCell(5).toString());
+							} else {
+								throw new ResourceNotFoundException("'Area' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+							}
+
+							if(row.getCell(6) != null) {
+								leadMaster.setModeOfCourse(row.getCell(6).toString());
+							} else {
+								throw new ResourceNotFoundException("'Mode of Course' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+							}
+
+							if(row.getCell(7) != null) {
+								String catName = row.getCell(7).toString();
+								CategoryMaster categoryMaster = categoryRepository.getCatIdByName(row.getCell(7).toString());
+								if(categoryMaster!= null) {
+									leadMaster.setCategoryMaster(categoryMaster);
+								} else {
+									throw new ResourceNotFoundException("'Category' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
+								}
+							}
+							long id = 3;
+							RemarkMaster remarkMaster = remarkJpaRepository.findById(id).orElse(null);
+							leadMaster.setRemarkMaster(remarkMaster);
+							leadMaster.setUpdatedOn(new Date());
+							leadMaster.setDeletedFlag(true);
+							leadMaster.setAssignLeadFlag(false);
+							leadMaster.setFileType(FilenameUtils.getExtension(file.getOriginalFilename()));
+							fileuploadrepository.save(leadMaster);
 						}
-						long id = 3;
-						RemarkMaster remarkMaster = remarkJpaRepository.findById(id).orElse(null);
-						leadMaster.setRemarkMaster(remarkMaster);
-						leadMaster.setUpdatedOn(new Date());
-						leadMaster.setDeletedFlag(true);
-						leadMaster.setAssignLeadFlag(false);
-						leadMaster.setFileType(FilenameUtils.getExtension(file.getOriginalFilename()));
-						fileuploadrepository.save(leadMaster);
+						count ++;
 					}
-					count ++;
 				}
 			}
 		}

@@ -72,8 +72,8 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	public InstituteMaster getInstituteById(Long id) {
 		return entityManager
 				.createQuery(
-						"SELECT im FROM InstituteMaster as im\n"
-								+ "    where im.instituteId = " + id + " and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL", InstituteMaster.class)
+						"SELECT im FROM InstituteMaster as im \n"
+								+ "    where im.instituteId = " + id, InstituteMaster.class)
 				.getSingleResult();
 	}
 

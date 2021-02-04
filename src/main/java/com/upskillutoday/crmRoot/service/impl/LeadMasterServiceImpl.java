@@ -177,6 +177,7 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		//cat obj by id
 		CategoryMaster category = categoryJpaRepository.findById(leadMasterDto.getCategoryId()).orElse(null);
 		RemarkMaster remarkMaster = remarkJpaRepository.findById(leadMasterDto.getRemarkId()).orElse(null);
+		SubCategoryMaster subCategoryMaster = subCategoryRepository.findBySubCategoryId(leadMasterDto.getSubCategoryId());
 		LeadMaster leadMaster = new LeadMaster();
 		leadMaster.setStudentId(leadMasterDto.getStudentId());
 		leadMaster.setStudentName(leadMasterDto.getStudentName());
@@ -196,7 +197,7 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 		leadMaster.setUpdatedBy(employeeService.getEmpIdFromUserId(userId));
 		leadMaster.setDeletedFlag(true);
 		leadMaster.setCategoryMaster(category);
-		leadMaster.setSubCategoryMaster(leadMasterDto.getSubCategoryMaster());
+		leadMaster.setSubCategoryMaster(subCategoryMaster);
 		leadMaster.setRemarkMaster(remarkMaster);
 	 	try {
 		 	leadRepostiory.updateLeadRepository(leadMaster);
@@ -327,7 +328,7 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 					empLead.setEmployeeMaster(employeeRepository.getVerificationConsellorByCategory(leadMaster.getCategoryMaster().getCategoryId()));
 					empLead.setUpdatedOn(new Date());
 					empLead.setDeletedFlag(true);
-					historyRepository.insertHistory(new History("Inserted" ,new Date(), empLead.getEmployeeMaster(), empLead.getLeadMaster(), remarkService.getRemarkById(3L)));
+					historyRepository.insertHistory(new History("Assigned" ,new Date(), empLead.getEmployeeMaster(), empLead.getLeadMaster(), remarkService.getRemarkById(3L)));
 					empLeadRepository.addEmpLead(empLead);
 			}
 		}
