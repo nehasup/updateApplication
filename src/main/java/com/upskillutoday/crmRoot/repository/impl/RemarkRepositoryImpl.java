@@ -126,7 +126,7 @@ public class RemarkRepositoryImpl implements RemarkRepository {
                 + "    inner join LeadMaster as lm on h.leadMaster.studentId = lm.studentId \n"
                 + "    inner join RemarkMaster as rs on h.remarkMaster.remarkId = rs.remarkId \n"
                 + "    where e.employeeId = " + empId + " and h.updatedOn = DATE('" + date + "')\n"
-                + "    group by rs.remarkName \n")
+                + "    group by rs.remarkId \n")
         .getResultList();
 	}
 
