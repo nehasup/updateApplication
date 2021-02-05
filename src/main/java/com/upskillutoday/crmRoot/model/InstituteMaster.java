@@ -79,6 +79,9 @@ public class InstituteMaster {
 	@Column(name = "deleted_flag")
 	private boolean deletedFlag;
 
+	@Column(name = "mode_of_training")
+	private String modeOfCourse;
+
 	public Long getInstituteId() {
 		return instituteId;
 	}
@@ -197,5 +200,13 @@ public class InstituteMaster {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public String getModeOfCourse() {
+		return modeOfCourse;
+	}
+
+	public void setModeOfCourse(String modeOfCourse) {
+		this.modeOfCourse = modeOfCourse;
 	}
 }

@@ -1,6 +1,8 @@
 package com.upskillutoday.crmRoot.service.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,8 +51,9 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 
 	@Override
 	public List getInstituteTotalReport() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
-		List list = instituteRepository.getInstituteReport();
+		List list = instituteRepository.getInstituteReportDatewise(dateFormat.format(date));
 		ArrayList<InstituteReport> newList = new ArrayList();
 		for(InstituteReport instituteReport : (List<InstituteReport>) list) {
 			instituteReport.setTotalCount(instituteRepository.getTotalCount(instituteReport.getId()));

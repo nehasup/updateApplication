@@ -130,8 +130,10 @@ public class RemarkRepositoryImpl implements RemarkRepository {
         .getResultList();
 	}
 
-	@Override
-	public CountRemarkDto getAllCountForEmpDatewise(Long empId, String date) {
+  //	ALTER TABLE `institute_master` CHANGE COLUMN `institute_usp` `institute_usp` LONGTEXT NULL DEFAULT NULL , CHANGE COLUMN `course_name` `course_name` LONGTEXT NULL DEFAULT NULL ;
+
+  @Override
+  public CountRemarkDto getAllCountForEmpDatewise(Long empId, String date) {
     return entityManager
         .createQuery(
             "select new CountRemarkDto ( COUNT(lm.studentId) ) from History as h\n"
