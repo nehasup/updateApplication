@@ -1,5 +1,6 @@
 package com.upskillutoday.crmRoot.service.impl;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,7 @@ import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
 import com.upskillutoday.crmRoot.repository.RemarkJpaRepository;
 import com.upskillutoday.crmRoot.repository.SubCategoryJpaRepository;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
+import reactor.core.publisher.Flux;
 
 
 @Service
@@ -123,11 +125,12 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 
 	@Override
 	public List getAllLeadRecordService() {
-		List list = leadRepostiory.getAllLeadForMe();
-		for(int i=0; i < list.size(); i++) {
-			((LeadResponseDto)(list.get(i))).setHistory(historyRepository.getHistoryOfLead(((LeadResponseDto)(list.get(i))).getStudentId()));
-		}
-		return list;
+		return leadRepostiory.getAllLeadForMe();
+	}
+
+	@Override
+	public Flux getAllLeadRecordServiceFlux() {
+		return leadRepostiory.getAllLeadForMeFlux().delayElements(Duration.ofSeconds(1));
 	}
 	
 	@Override

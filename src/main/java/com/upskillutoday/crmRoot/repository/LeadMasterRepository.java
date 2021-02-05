@@ -6,6 +6,7 @@ import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.response.LeadResponseDto;
+import reactor.core.publisher.Flux;
 
 
 public interface LeadMasterRepository {
@@ -14,7 +15,8 @@ public interface LeadMasterRepository {
 	LeadMaster getRecordByStudentIdDao(LeadMaster leadMaster);
 	void updateLeadRepository(LeadMaster leadMaster);
 	List<LeadMaster> getAllLeadByassignFlag();
-	List<LeadResponseDto> getAllLeadForMe();
+	List getAllLeadForMe();
+	Flux getAllLeadForMeFlux();
 	List<LeadResponseDto> getAllUnAssignedLeads();
 	List getLeadsByRemark(Long remarkId);
 	List getAllLeadListByquery(Long userId);

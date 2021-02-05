@@ -1,26 +1,21 @@
 package com.upskillutoday.crmRoot.repository.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
-import com.upskillutoday.crmRoot.dto.LeadMasterDto;
-import com.upskillutoday.crmRoot.model.EmpLead;
-import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
+import com.upskillutoday.crmRoot.repository.HistoryRepository;
 import com.upskillutoday.crmRoot.response.LeadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
+import reactor.core.publisher.Flux;
 
 @Repository
 @Transactional
@@ -31,6 +26,9 @@ public class LeadMasterRepositoryImpl implements LeadMasterRepository {
 
   	@Autowired
 	EmpLeadJpaRepository empLeadJpaRepository;
+
+  	@Autowired
+	HistoryRepository historyRepository;
 
 	@Override
 	public LeadMaster findByEmail(String email) {
@@ -129,6 +127,42 @@ try{
 				"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
 				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId ")
 				.getResultList();
+	}
+
+	@Override
+	public Flux getAllLeadForMeFlux() {
+		return Flux.fromStream(entityManager.createQuery("SELECT new LeadResponseDto (" +
+				"lm.studentId, " +
+				"lm.studentName, " +
+				"lm.courseName, " +
+				"lm.contactNo, " +
+				"lm.area," +
+				"lm.city, " +
+				"lm.emailId, " +
+				"lm.modeOfCourse, " +
+				"lm.modificationStage, " +
+				"lm.address, " +
+				"lm.budget, " +
+				"rmk.remarkId, " +
+				"rmk.remarkName, " +
+				"lm.comments, " +
+				"lm.instituteName," +
+				"cm.categoryId," +
+				"cm.categoryName," +
+				"lm.updatedOn, " +
+				"emp.employeeName, " +
+				"rm.roleName) " +
+				"FROM LeadMaster as lm " +
+				"inner join lm.categoryMaster as cm " +
+				"inner join lm.remarkMaster as rmk \n"+
+				"left join EmpLead as el on lm.studentId = el.leadMaster.studentId \n" +
+				"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
+				"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
+				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId ", LeadResponseDto.class)
+				.getResultList().stream().filter(e -> {
+					e.setHistory(historyRepository.getHistoryOfLead(e.getStudentId()));
+					return true;
+				}));
 	}
 
 	@Override

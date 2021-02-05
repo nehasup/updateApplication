@@ -29,7 +29,6 @@ public class InstituteReport {
     public InstituteReport(Long id, String name, String employeeName, Long count) {
         this.id = id;
         this.name = name;
-        this.totalCount = totalCount;
         this.employeeName = employeeName;
         this.count = count;
     }
@@ -39,6 +38,14 @@ public class InstituteReport {
         this.totalCount = totalCount;
         this.employeeName = employeeName;
         this.count = count;
+    }
+
+    public InstituteReport(Long id, String name) {
+        this.id = id;
+        this.name = name;
+        this.totalCount = 0L;
+        this.employeeName = "";
+        this.count = 0L;
     }
 
     public InstituteReport(String name) {

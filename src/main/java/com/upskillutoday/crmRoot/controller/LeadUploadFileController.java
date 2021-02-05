@@ -1,6 +1,7 @@
 package com.upskillutoday.crmRoot.controller;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.*;
 import javax.mail.internet.MimeMessage;
 import com.upskillutoday.crmRoot.model.*;
@@ -44,6 +45,7 @@ import com.upskillutoday.crmRoot.repository.UserMasterRepository;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -274,6 +276,16 @@ public class LeadUploadFileController {
 		} catch (NullPointerException ignored) {}
 		return response;
 	}
+  // ALTER TABLE `institute_master` CHANGE COLUMN `locality_targeted` `locality_targeted` LONGTEXT NULL DEFAULT NULL ;
+  @GetMapping(
+      value = "getAllLeadInFluxStream",
+      produces = MediaType.APPLICATION_STREAM_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public Flux getAllLeadInFluxStream(@RequestParam(name = "userId") Long userId) {
+		return Flux.fromStream(leadMasterService.getAllLeadRecordService().stream())
+				.buffer(15)
+				.delaySequence(Duration.ofSeconds(1));
+	}
 
 	@GetMapping(value = "getAllLeadFromStatus", params = {"lead_status"})
 	public List getAllLeadFromStatus(
@@ -297,7 +309,7 @@ public class LeadUploadFileController {
 		return list;
 	}
 
-	 @GetMapping("/getAllVerifiedLeadList")	  
+	 @GetMapping("/getAllVerifiedLeadList")
 	 public @ResponseBody ResponseVO<List> getAllVerifiedLeadList(
 	 		@RequestParam(name = "userId") Long userId
 	 ) {

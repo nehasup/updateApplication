@@ -103,7 +103,7 @@ public class InstituteRepositoryImpl implements InstituteRepository {
 	public List getInstituteWithZero() {
     return entityManager
         .createQuery(
-				"select new InstituteReport (im2.instituteName) from InstituteMaster as im2 " +
+				"select new InstituteReport (im2.instituteId, im2.instituteName) from InstituteMaster as im2 " +
 						"where im2.instituteId not in (select im.instituteId from InstituteLead as il\n" +
 						"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
 						"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +

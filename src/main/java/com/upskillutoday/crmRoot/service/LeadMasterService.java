@@ -10,11 +10,13 @@ import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
+import reactor.core.publisher.Flux;
 
 public interface LeadMasterService {
 
 	boolean insertLeadService(LeadMasterDto leadMasterDto);
 	List getAllLeadRecordService();
+	Flux getAllLeadRecordServiceFlux();
 	LeadMasterDto getRecordByStudentIdService(LeadMasterDto leadMasterDto);
 	boolean updateLeadService(Long userId, LeadMasterDto leadMasterDto);
 	List<LeadMasterDto> getCategoryWiseandverifyLeadService(EmployeeMaster employeeMaster);
