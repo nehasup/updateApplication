@@ -152,7 +152,7 @@ public class InstituteRepositoryImpl implements InstituteRepository {
         .createQuery(
             "SELECT im.instituteName FROM InstituteLead  as il \n"
                 + "    inner join il.instituteMaster as im \n"
-                + "    where il.leadMaster.studentId = " + studentId + " and im.instituteName IS NOT NULL and im.contactNo IS NOT NULL", String.class
+                + "    where il.leadMaster.studentId = " + studentId + " and im.instituteName IS NOT NULL ", String.class
 		)
         .getResultList();
 	}

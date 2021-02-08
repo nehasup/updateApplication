@@ -10,7 +10,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.TimeZone;
 
 @SpringBootApplication
 public class UpskillcrmApplication {
@@ -26,6 +29,12 @@ public class UpskillcrmApplication {
 //		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 //		source.registerCorsConfiguration("/**", configuration);
 //		return source;
+//	}
+
+//	@PostConstruct
+//	public void init(){
+//		TimeZone.setDefault(TimeZone.getTimeZone("UT"));   // It will set UTC timezone
+//		System.out.println("Spring boot application running in UTC timezone :"+new Date());   // It will print UTC timezone
 //	}
 
 	@Bean

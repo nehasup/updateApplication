@@ -53,6 +53,6 @@ public class HistoryRepositoryImpl implements HistoryRepository {
     @Override
     public List getHistoryOfTheDate(String date) {
         Query query = entityManager.createQuery("SELECT DISTINCT history FROM History as history WHERE history.updatedOn = DATE('" + date + "')" , History.class);
-        return ((List<History>) query.getResultList());
+        return query.getResultList();
     }
 }

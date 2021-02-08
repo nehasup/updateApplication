@@ -7,16 +7,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.upskillutoday.crmRoot.model.History;
+import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
 import com.upskillutoday.crmRoot.response.InstituteReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
-import com.upskillutoday.crmRoot.model.EmpLead;
-import com.upskillutoday.crmRoot.model.EmployeeMaster;
-import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
 import com.upskillutoday.crmRoot.response.LeadReportRes;
 import com.upskillutoday.crmRoot.response.LeadResponseDto;
@@ -44,7 +41,7 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 						history.getLeadMaster().getCity(),
 						history.getLeadMaster().getArea(), history.getLeadMaster().getAddress(),
 						history.getLeadMaster().getEmailId(), history.getLeadMaster().getCourseName(), history.getLeadMaster().getComments(),
-						instituteRepository.getInstituteOfStudent(history.getLeadMaster().getStudentId()), history.getRemarkMaster().getRemarkName(), history.getEmployeeMaster().getEmployeeName()));
+						instituteRepository.getInstituteOfStudent(history.getLeadMaster().getStudentId()) , history.getRemarkMaster() == null ? "" : history.getRemarkMaster().getRemarkName(), history.getEmployeeMaster().getEmployeeName()));
 		}
 		return leadReportRess;
 	}
