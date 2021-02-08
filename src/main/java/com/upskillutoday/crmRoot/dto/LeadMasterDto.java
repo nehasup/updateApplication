@@ -1,6 +1,7 @@
 package com.upskillutoday.crmRoot.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.upskillutoday.crmRoot.model.*;
@@ -8,8 +9,12 @@ import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
 import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.*;
+
+@Entity
 public class LeadMasterDto {
 
+	@Id
 	private Long studentId;
   	private String studentName;
   	private String contactNo;
@@ -33,13 +38,25 @@ public class LeadMasterDto {
 	private Long remarkId;
 	private String categoryName;
 	private String subCategoryName;
+
+	@ManyToOne
 	private CategoryMaster categoryMaster;
+
+	@ManyToOne
 	private SubCategoryMaster subCategoryMaster;
+
+	@ManyToOne
 	private RemarkMaster remarkMaster;
+
+	@ManyToMany
+	private List<History> historyList;
+
 	private String remarkName;
 	private String employeeName;
 	private boolean assignLeadFlag;
 	private Long employeeId;
+
+
 
 	public Long getEmployeeId() {
 	return employeeId;
@@ -279,6 +296,14 @@ public class LeadMasterDto {
 
 	public void setSubCategoryName(String subCategoryName) {
 		this.subCategoryName = subCategoryName;
+	}
+
+	public List<History> getHistoryList() {
+		return historyList;
+	}
+
+	public void setHistoryList(List<History> historyList) {
+		this.historyList = historyList;
 	}
 
 	public LeadMasterDto(LeadMaster leadMaster) {

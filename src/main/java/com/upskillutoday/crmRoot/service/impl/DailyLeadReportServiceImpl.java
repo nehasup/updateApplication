@@ -54,7 +54,7 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		List list = instituteRepository.getInstituteReportDatewise(dateFormat.format(date));
-		list.addAll(instituteRepository.getInstituteWithZero());
+		list.addAll(instituteRepository.getInstituteReportDatewiseWithZero(dateFormat.format(date)));
 		ArrayList<InstituteReport> newList = new ArrayList();
 		for(InstituteReport instituteReport : (List<InstituteReport>) list) {
 			instituteReport.setTotalCount(instituteRepository.getTotalCount(instituteReport.getId()));
@@ -72,6 +72,6 @@ public class DailyLeadReportServiceImpl  implements DailyLeadReportService{
 			instituteReport.setTotalCount(instituteRepository.getTotalCount(instituteReport.getId()));
 			newList.add(instituteReport);
 		}
-		return list;
+		return newList;
 	}
 }

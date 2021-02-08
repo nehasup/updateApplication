@@ -258,58 +258,9 @@ public class LeadMasterServiceImpl implements LeadMasterService{
 
 	
 	@Override
-	public List<LeadMasterDto> getAllAssignLeadListService(EmployeeMaster employeeMaster) {
+	public List getAllAssignLeadListService(EmployeeMaster employeeMaster) {
 		//third table
-		List<EmpLead> emList=empleadJparepository.findByEmployeeMasterAndDeletedFlag(employeeMaster, true);
-		
-		
-		List<LeadMasterDto> leadMasterDtoList = new ArrayList<LeadMasterDto>();
-			if(emList!=null) {
-				for(EmpLead empLead:emList) 
-				{	
-		
-		LeadMaster leadMaster= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(empLead.getLeadMaster().getStudentId(), true);
-		LeadMasterDto leadMasterDto = new LeadMasterDto();
-		
-		leadMasterDto.setStudentId(leadMaster.getStudentId());
-		leadMasterDto.setStudentName(leadMaster.getStudentName());
-		leadMasterDto.setCourseName(leadMaster.getCourseName());
-		leadMasterDto.setContactNo(leadMaster.getContactNo());
-		leadMasterDto.setArea(leadMaster.getArea());
-		leadMasterDto.setCity(leadMaster.getCity());
-		leadMasterDto.setEmailId(leadMaster.getEmailId());
-		leadMasterDto.setModeOfCourse(leadMaster.getModeOfCourse());
-		leadMasterDto.setAddress(leadMaster.getAddress());
-		leadMasterDto.setBudget(leadMaster.getBudget());
-		leadMasterDto.setModificationStage(leadMaster.getModificationStage());
-		leadMasterDto.setRemark(leadMaster.getRemark());
-		leadMasterDto.setComments(leadMaster.getComments());
-		leadMasterDto.setInstituteName(leadMaster.getInstituteName());
-		leadMasterDto.setUpdatedOn(new Date());
-		leadMasterDto.setDeletedFlag(true);
-		leadMasterDto.setEmployeeName(employeeMaster.getEmployeeName());
-		
-		CategoryMaster categoryMaster = categoryJpaRepository.findByCategoryId(leadMaster.getCategoryId());
-		leadMasterDto.setCategoryMaster(categoryMaster);
-		leadMasterDto.setCategoryName(leadMaster.getCategoryMaster().getCategoryName());
-		leadMasterDto.setCategoryId(leadMaster.getCategoryMaster().getCategoryId());
-
-		RemarkMaster remarkMaster=remarkJpaRepository.findByRemarkId(leadMaster.getRemarkId());
-
-		leadMasterDto.setRemarkMaster(remarkMaster);
-		
-		//leadMasterDto.setSubCategoryName(leadMaster.getSubCategoryMaster().getSubCategoryName());
-		leadMasterDto.setRemarkName(leadMaster.getRemarkMaster().getRemarkName());
-		leadMasterDto.setRemarkId(leadMaster.getRemarkMaster().getRemarkId());
-		
-		leadMasterDtoList.add(leadMasterDto);
-	
-	}
-		}
-		
-		
-		
-	
+		List leadMasterDtoList = empLeadRepository.getAllLeadsFromEmployeeId(employeeMaster.getEmployeeId());
 		return leadMasterDtoList;
 	}
 

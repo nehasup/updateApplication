@@ -95,13 +95,12 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 	public List getRemarkWithCountForEmployee(Long empId) {
     return entityManager
         .createQuery(
-            "SELECT new CountRemarkDto ( rmkm.remarkId, rmkm.remarkName, COUNT(l.studentId) ) FROM RemarkMaster as rmkm\n"
-                + "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId \n"
-                + "    inner join EmpLead as el on l.studentId = el.leadMaster.studentId \n"
-                + "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId \n"
-                + "    where e.employeeId = " + empId + " \n"+
-					" and l.deletedFlag = true"
-                + "    group by rmkm.remarkId")
+				"select new CountRemarkDto ( rs.remarkId, rs.remarkName, COUNT(lm.studentId) )from History as h\n"
+						+ "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
+						+ "    inner join LeadMaster as lm on h.leadMaster.studentId = lm.studentId \n"
+						+ "    inner join RemarkMaster as rs on h.remarkMaster.remarkId = rs.remarkId \n"
+						+ "    where e.employeeId = " + empId + "\n"
+						+ "    group by rs.remarkId \n")
         .getResultList();
 	}
 
@@ -109,11 +108,11 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 	public CountRemarkDto getAllCountForEmp(Long empId) {
 		return (CountRemarkDto) entityManager
 				.createQuery(
-						"SELECT new CountRemarkDto ( COUNT(l.studentId) ) FROM RemarkMaster as rmkm\n"
-								+ "    inner join LeadMaster as l on l.remarkMaster.remarkId = rmkm.remarkId \n"
-								+ "    inner join EmpLead as el on l.studentId = el.leadMaster.studentId \n"
-								+ "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId \n"
-								+ "    where e.employeeId = " + empId + " \n")
+						"select new CountRemarkDto ( COUNT(lm.studentId) ) from History as h\n"
+								+ "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
+								+ "    inner join LeadMaster as lm on h.leadMaster.studentId = lm.studentId \n"
+								+ "    inner join RemarkMaster as rs on h.remarkMaster.remarkId = rs.remarkId \n"
+								+ "    where e.employeeId = " + empId )
 				.getSingleResult();
 	}
 

@@ -6,6 +6,7 @@ import java.util.*;
 import javax.mail.internet.MimeMessage;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.repository.impl.EmpLeadRepository;
 import com.upskillutoday.crmRoot.request.StudentWithInst;
 import com.upskillutoday.crmRoot.response.*;
 import com.upskillutoday.crmRoot.service.*;
@@ -102,6 +103,9 @@ public class LeadUploadFileController {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	private EmpLeadRepository empLeadRepository;
 
 	  private final ArrayList<String> architectureSub = new ArrayList<String>(Arrays.asList(
 			  "B.voc (Interior Design)",
@@ -256,9 +260,8 @@ public class LeadUploadFileController {
 				}
 			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor") || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 				// Cousler     //Category based leads
-				List  leadMasterDtoList = leadMasterRepository.getAllLeadListByquery(userId);
-
-
+				EmployeeMaster employeeMaster = employeeService.getEmployeeByUserId(userId);
+				List  leadMasterDtoList = leadMasterRepository.getAllLeadListByquery(employeeMaster.getEmployeeId());
 				for(int i=0; i < leadMasterDtoList.size(); i++) {
 					((LeadResponseDto)(leadMasterDtoList.get(i))).setHistory(historyRepository.getHistoryOfLead(((LeadResponseDto)(leadMasterDtoList.get(i))).getStudentId()));
 				}
@@ -276,7 +279,7 @@ public class LeadUploadFileController {
 		} catch (NullPointerException ignored) {}
 		return response;
 	}
-  // ALTER TABLE `institute_master` CHANGE COLUMN `locality_targeted` `locality_targeted` LONGTEXT NULL DEFAULT NULL ;
+
   @GetMapping(
       value = "getAllLeadInFluxStream",
       produces = MediaType.APPLICATION_STREAM_JSON_VALUE,
@@ -287,7 +290,17 @@ public class LeadUploadFileController {
 				.delaySequence(Duration.ofSeconds(1));
 	}
 
-	@GetMapping(value = "getAllLeadFromStatus", params = {"lead_status"})
+	@GetMapping(value = "/getAllLeadCount")
+	public Long getAllLeadCount() {
+		return leadMasterRepository.getAllLeadCount();
+	}
+
+	@GetMapping(value = "/getLeadWithOffsetAndLimit")
+	public List getAllLeadInStream(@RequestParam("offset") int offset, @RequestParam("limit") int limit) {
+		return leadMasterRepository.getAllLeadListFromOffsetAndLimit(offset, limit);
+	}
+
+	@GetMapping(value = "/getAllLeadFromStatus", params = {"lead_status"})
 	public List getAllLeadFromStatus(
 			@RequestParam("lead_status") Long leadStatus
 	) {
@@ -295,7 +308,7 @@ public class LeadUploadFileController {
 		return list;
 	}
 
-	@GetMapping(value = "getAllLeadFromStatusByEmp", params = {"lead_status", "userId"})
+	@GetMapping(value = "/getAllLeadFromStatusByEmp", params = {"lead_status", "userId"})
 	public List getAllLeadFromStatusByEmp(
 			@RequestParam("lead_status") Long remarkId,
 			@RequestParam("userId") Long userId
@@ -410,7 +423,7 @@ public class LeadUploadFileController {
 	} 
 
 	//assign lead to employee
-	@PostMapping(value = "/saveleadassignemp", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/saveleadassignemp")
 	@ResponseBody 
 	public ResponseVO assignLeadtoEmployee(
 			@RequestBody EmployeeLeadDto employeeLeadDto
@@ -422,14 +435,23 @@ public class LeadUploadFileController {
 			//bring leadMasterObj from leadid
 			leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId, true);
 			EmployeeMaster employeeMaster = employeeJpaRepository.findByEmployeeIdAndDeletedFlag(employeeLeadDto.getEmployeeId(),true);
-			//insert
-			EmpLead empLead = new EmpLead();
-			empLead.setEmployeeMaster(employeeMaster);
-			empLead.setLeadMaster(leadMasterObj);
-			empLead.setUpdatedOn(new Date());
-			empLead.setDeletedFlag(true);
-		   	empleadJparepository.save(empLead);
-		 	//change flag assignleadflag
+			List<EmpLead> empLeads = empLeadRepository.getEmpLeadFromStudentId(leadId);
+
+			if(empLeads.size() == 1) {
+				//insert
+				EmpLead empLead = empLeads.get(0);
+				empLead.setEmployeeMaster(employeeMaster);
+				empLead.setUpdatedOn(new Date());
+				empleadJparepository.save(empLead);
+			} else if (empLeads.size() > 1) {
+				EmpLead empLead = empLeads.get(0);
+				empLead.setEmployeeMaster(employeeMaster);
+				empLead.setUpdatedOn(new Date());
+				for(EmpLead empLead1 : empLeads) {
+					empleadJparepository.delete(empLead1);
+				}
+				empleadJparepository.save(empLead);
+			}
 			leadMasterObj.setAssignLeadFlag(true);
 			leadJpaMasterRepository.save(leadMasterObj);
 		}
@@ -463,7 +485,7 @@ public class LeadUploadFileController {
 				}
 			 } else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")  || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
 				 //Cousler     //Category based leads
-				 List<LeadMasterDto> leadMasterDtoList=leadMasterService.getAllAssignLeadListService(employeeMaster);
+				 List<LeadMasterDto> leadMasterDtoList  = leadMasterService.getAllAssignLeadListService(employeeMaster);
 				if(leadMasterDtoList!=null) {
 					response.setResult(leadMasterDtoList);
 				}

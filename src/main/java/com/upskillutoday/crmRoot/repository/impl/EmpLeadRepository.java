@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Repository
 public interface EmpLeadRepository {
 	boolean addEmpLead(EmpLead empLead);
+	List getAllLeadsFromEmployeeId(Long empId);
+	List getEmpLeadFromStudentId(Long leadId);
 }
 
 @Repository
@@ -31,5 +33,23 @@ class EmpLeadRepositoryImpl implements EmpLeadRepository {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	@Override
+	public List getAllLeadsFromEmployeeId(Long empId) {
+		return entityManager.createQuery(
+				"SELECT new LeadMasterDto( lm ) FROM LeadMaster as lm " +
+						"inner join EmpLead as el on el.leadMaster.studentId = lm.studentId " +
+						"where el.employeeMaster.employeeId = " + empId
+		).getResultList();
+	}
+
+	@Override
+	public List getEmpLeadFromStudentId(Long leadId) {
+		return entityManager.createQuery(
+				"SELECT el FROM EmpLead as el " +
+						"WHERE el.leadMaster.studentId = " + leadId,
+				EmpLead.class
+		).getResultList();
 	}
 }

@@ -200,7 +200,6 @@ try{
 		).getResultList();
 	}
 
-
 	@Override
 	public List getLeadsByRemark(Long remarkId) {
 		return entityManager.createQuery("Select NEW LeadResponseDto("
@@ -234,7 +233,7 @@ try{
 	}
 
 	@Override
-	public List getAllLeadListByquery(Long userId) {
+	public List getAllLeadListByquery(Long empId) {
 		  List list = null;
 		Query query = entityManager.createQuery("Select NEW LeadResponseDto("
 				+ "lead.studentId ,"
@@ -261,9 +260,8 @@ try{
 				"	inner join lead.categoryMaster as cm " +
 				"	inner join lead.remarkMaster as rmk " +
 				"  	inner join EmpLead as el on el.leadMaster.studentId = lead.studentId " +
-				"	inner join el.employeeMaster as em " +
-				"	where em.employeeId = " + userId+
-				" and lead.deletedFlag = true"
+				"	inner join EmployeeMaster as em on em.employeeId = el.employeeMaster.employeeId" +
+				"	where em.employeeId = " + empId
 		);
 			     
 			       list = query.getResultList();
@@ -330,5 +328,48 @@ try{
 						" and lm.contactNo = " + contact +
 						" and lm.deletedFlag = true"
 		).getResultList();
+	}
+
+	@Override
+	public Long getAllLeadCount() {
+		return entityManager.createQuery(
+				"SELECT COUNT(lm) FROM LeadMaster as lm", Long.class
+		).getSingleResult();
+	}
+
+	@Override
+	public List getAllLeadListFromOffsetAndLimit(int offset, int limit) {
+		return entityManager.createQuery(
+				"SELECT new LeadResponseDto (" +
+						"lm.studentId, " +
+						"lm.studentName, " +
+						"lm.courseName, " +
+						"lm.contactNo, " +
+						"lm.area," +
+						"lm.city, " +
+						"lm.emailId, " +
+						"lm.modeOfCourse, " +
+						"lm.modificationStage, " +
+						"lm.address, " +
+						"lm.budget, " +
+						"rmk.remarkId, " +
+						"rmk.remarkName, " +
+						"lm.comments, " +
+						"lm.instituteName," +
+						"cm.categoryId," +
+						"cm.categoryName," +
+						"lm.updatedOn, " +
+						"emp.employeeName, " +
+						"rm.roleName) " +
+						"FROM LeadMaster as lm " +
+						"inner join lm.categoryMaster as cm " +
+						"inner join lm.remarkMaster as rmk \n"+
+						"left join EmpLead as el on lm.studentId = el.leadMaster.studentId \n" +
+						"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
+						"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
+						"left join RoleMaster as rm on rm.roleId = ur.roles.roleId " +
+						"GROUP BY lm.studentId " +
+						"ORDER BY lm.studentId asc ", LeadResponseDto.class
+		).setFirstResult(offset).setMaxResults(limit).getResultList();
 	}
 }

@@ -12,8 +12,8 @@ public interface InstituteRepository {
 	boolean insertInsituteDao(InstituteMaster institute);
 	List getInstituteByCategoryFromStudentId(Long catId);
 	InstituteMaster getInstituteById(Long id);
-	List getInstituteReport();
-	List getInstituteWithZero();
+//	List getInstituteReport();
+//	List getInstituteWithZero();
 	List getInstituteReportDatewise(String date);
 	List getInstituteReportDatewiseWithZero(String date);
 	List getInstitute();

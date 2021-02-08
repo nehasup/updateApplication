@@ -20,7 +20,7 @@ public interface LeadMasterService {
 	LeadMasterDto getRecordByStudentIdService(LeadMasterDto leadMasterDto);
 	boolean updateLeadService(Long userId, LeadMasterDto leadMasterDto);
 	List<LeadMasterDto> getCategoryWiseandverifyLeadService(EmployeeMaster employeeMaster);
-	List<LeadMasterDto> getAllAssignLeadListService(EmployeeMaster employeeMaster);
+	List getAllAssignLeadListService(EmployeeMaster employeeMaster);
 	List<LeadMaster> getAllLeadByAssignFlag();
 	String assignUnverifiedLeadToVerifiers();
 	LeadMaster getLeadByStudentId(Long stduentId);

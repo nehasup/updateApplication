@@ -24,4 +24,6 @@ public interface LeadMasterRepository {
 	LeadMaster getLeadByStudentId(Long stduentId);
 	List getAllLeadFromStatusByEmp(Long remarkId, Long userId);
 	List getLeadMasterByNameEmailContactDeleteFlag(String name, String contact, String email, boolean flag);
+	Long getAllLeadCount();
+	List getAllLeadListFromOffsetAndLimit(int offset, int limit);
 }
