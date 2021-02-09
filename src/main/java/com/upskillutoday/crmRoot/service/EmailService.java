@@ -10,9 +10,9 @@ import org.springframework.util.ResourceUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.transaction.Transactional;
 import java.io.FileNotFoundException;
 
-@Service
 public interface EmailService {
     void sendSimpleEmail(String toAddress, String subject, String message);
     void sendEmailWithAttachment(
@@ -24,6 +24,7 @@ public interface EmailService {
 }
 
 @Service
+@Transactional
 class EmailServiceImpl implements EmailService {
 
     @Autowired

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,8 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.upskillutoday.crmRoot.dto.CityDto;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
 import com.upskillutoday.crmRoot.model.CityMaster;
-import com.upskillutoday.crmRoot.repository.CityJpaRepository;
-import com.upskillutoday.crmRoot.repository.CityRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.CityJpaRepository;
 import com.upskillutoday.crmRoot.response.ResponseVO;
 import com.upskillutoday.crmRoot.service.CityService;
 
@@ -90,7 +88,7 @@ public class CityController {
          ResponseVO<CityDto> response = new ResponseVO<CityDto>();
          CityDto cityDto=new CityDto();
          cityDto.setCityId(cityId);
-         boolean flag=cityservice.getRecordByCityIdService(cityDto);
+         boolean flag = cityservice.getRecordByCityIdService(cityDto);
          if(flag) {
              response.setMessage("Search By Data Sucessfully");
              response.setStatusCode(String.valueOf(HttpStatus.OK));

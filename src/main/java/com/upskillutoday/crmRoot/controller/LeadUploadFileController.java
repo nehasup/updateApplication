@@ -10,7 +10,6 @@ import com.upskillutoday.crmRoot.repository.EmpLeadRepository;
 import com.upskillutoday.crmRoot.request.StudentWithInst;
 import com.upskillutoday.crmRoot.response.*;
 import com.upskillutoday.crmRoot.service.*;
-import com.upskillutoday.crmRoot.service.impl.EmpCategyServiceImpl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -41,8 +40,8 @@ import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.repository.JPARepository.EmpLeadJpaRepository;
 import com.upskillutoday.crmRoot.repository.JPARepository.EmployeeJpaRepository;
-import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
-import com.upskillutoday.crmRoot.repository.UserMasterRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.LeadJpaMasterRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.UserMasterRepository;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.FileStorageService;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
@@ -78,7 +77,7 @@ public class LeadUploadFileController {
 	RemarkService remarkService;
 
 	@Autowired
-	EmpCategyServiceImpl empCategyService;
+	EmpCategyService empCategyService;
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -515,8 +514,9 @@ public class LeadUploadFileController {
 		leadMasterObj.setAssignLeadFlag(true);
 		leadJpaMasterRepository.save(leadMasterObj);
 		LeadMaster leadMaster = leadMasterService.getLeadByStudentId(leadId.getStudentId());
-		if(leadMaster.getRemarkMaster().getRemarkId() == 7) {
-			historyRepository.insertHistory(new History("Verified" ,new Date(), employeeService.getEmployeeByUserId(Long.parseLong(userId)),  leadMaster, leadMaster.getRemarkMaster()));
+		historyRepository.insertHistory(new History("Verified" ,new Date(), employeeService.getEmployeeByUserId(Long.parseLong(userId)),  leadMaster, leadMaster.getRemarkMaster()));
+
+		if(leadMaster.getRemarkMaster() == null ) {
 			for(Long instituteId : leadId.getInstituteIds()) {
 				InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
 				instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId))));
@@ -530,7 +530,22 @@ public class LeadUploadFileController {
 				}
 			}
 		} else {
-			historyRepository.insertHistory(new History("Updated" ,new Date(), employeeService.getEmployeeByUserId(Long.parseLong(userId)),  leadMaster, leadMaster.getRemarkMaster()));
+			if(leadMaster.getRemarkMaster().getRemarkId() == 7) {
+				for(Long instituteId : leadId.getInstituteIds()) {
+					InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
+					instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId))));
+					String email = instituteMaster.getEmailId();
+					sendEmail(leadMaster, email.toLowerCase());
+					if(
+							instituteMaster.getInstituteName().equalsIgnoreCase("Aditya Group Of Institutes") ||
+									instituteMaster.getInstituteName().equalsIgnoreCase("npfs") ||
+									instituteMaster.getInstituteName().equalsIgnoreCase("upskillutoday")) {
+						this.adityaGroupOfIstituteSendLead(leadMaster);
+					}
+				}
+			} else {
+				historyRepository.insertHistory(new History("Updated" ,new Date(), employeeService.getEmployeeByUserId(Long.parseLong(userId)),  leadMaster, leadMaster.getRemarkMaster()));
+			}
 		}
 
 		ResponseVO responseVO = new ResponseVO();

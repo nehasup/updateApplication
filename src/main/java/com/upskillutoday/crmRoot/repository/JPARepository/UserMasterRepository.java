@@ -1,4 +1,4 @@
-package com.upskillutoday.crmRoot.repository;
+package com.upskillutoday.crmRoot.repository.JPARepository;
 
 import java.util.Optional;
 import javax.transaction.Transactional;

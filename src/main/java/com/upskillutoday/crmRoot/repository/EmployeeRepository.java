@@ -49,36 +49,24 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
 
 	}
 
-
 	@Override
 	public List getAllEmpListDao() {
-		List<String> list = null;
-		try {
-			Query query = entityManager.createQuery("Select NEW EmployeeResponseDto(emp.employeeId, emp.employeeName, emp.contactNo ,emp.guardianNo , emp.emailId , emp.address, emp.birthDate, emp.gender, c.categoryName, c.categoryId)"
-					+ " from EmployeeMaster as emp left join emp.category as c where emp.deletedFlag=1");
-			list = query.getResultList();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
+		return entityManager.createQuery(
+				"Select NEW EmployeeResponseDto(emp.employeeId, emp.employeeName, emp.contactNo ,emp.guardianNo , emp.emailId , emp.address, emp.birthDate, emp.gender, c.categoryName, c.categoryId)"
+					+ " from EmployeeMaster as emp" +
+						" left join emp.category as c" +
+						" where emp.deletedFlag = true"
+		).getResultList();
 	}
-
 
 	@Override
 	public EmployeeMaster getRecordByEmployeeIdDao(EmployeeMaster employee) {
-
-		try{
-			Query query = entityManager.createQuery("From EmployeeMaster where employeeId=:id");
-
-			query.setParameter("id",employee.getEmployeeId());
-
-			EmployeeMaster employee2= (EmployeeMaster) query.getSingleResult();
-
+		try {
+			Query query = entityManager.createQuery("SELECT em From EmployeeMaster as em where em.employeeId = :id");
+			query.setParameter("id", employee.getEmployeeId());
+			EmployeeMaster employee2 = (EmployeeMaster) query.getSingleResult();
 			return employee2;
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -97,22 +85,29 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
 
 	@Override
 	public Long getEmployeeIdByUserId(Long userId) {
-		Query query = entityManager.createQuery("SELECT emp.employeeId FROM EmployeeMaster as emp inner join emp.userMaster as us where us.userId = " + userId);
-		Long empId = (Long) query.getSingleResult();
-		return empId;
+		return entityManager.createQuery(
+				"SELECT emp.employeeId FROM EmployeeMaster as emp " +
+						"inner join emp.userMaster as us " +
+						"where us.userId = " + userId, Long.class
+		).getSingleResult();
 	}
 
 	@Override
 	public EmployeeMaster getEmployeeByUserId(Long userId) {
-		return entityManager.createQuery("SELECT emp FROM EmployeeMaster as emp inner join emp.userMaster as um where um.userId = " + userId, EmployeeMaster.class).getSingleResult();
+		return entityManager.createQuery(
+				"SELECT emp FROM EmployeeMaster as emp " +
+						"inner join emp.userMaster as um " +
+						"where um.userId = " + userId
+				, EmployeeMaster.class
+		).getSingleResult();
 	}
 
 	@Override
 	public EmployeeMaster getEmployeeByEmpId(Long empId) {
 		return entityManager.createQuery(
 				"SELECT emp FROM EmployeeMaster as emp where emp.employeeId = " + empId,
-				EmployeeMaster.class)
-				.getSingleResult();
+				EmployeeMaster.class
+		).getSingleResult();
 	}
 
 	@Override
@@ -163,9 +158,9 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
 		return entityManager
 				.createQuery(
 						"SELECT new EmployeeNameWithId (em.employeeId, em.employeeName ) FROM EmployeeMaster as em \n"
-								+ "                               inner join UserMaster um on em.userMaster.userId = um.userId \n"
-								+ "                               inner join UserRole ur on um.userId = ur.users.userId \n"
-								+ "                               inner join RoleMaster rm on ur.roles.roleId = rm.roleId \n"
+								+ "       inner join UserMaster um on em.userMaster.userId = um.userId \n"
+								+ "       inner join UserRole ur on um.userId = ur.users.userId \n"
+								+ "       inner join RoleMaster rm on ur.roles.roleId = rm.roleId \n"
 								+ "where rm.roleName = 'Admissions counsellor' or rm.roleName = 'Verification counsellor'")
 				.getResultList();
 	}

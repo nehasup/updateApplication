@@ -1,4 +1,4 @@
-package com.upskillutoday.crmRoot.repository;
+package com.upskillutoday.crmRoot.repository.JPARepository;
 
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,11 +11,6 @@ import com.upskillutoday.crmRoot.model.UserRole;
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 		UserRole findByUsersAndDeletedFlag(UserMaster userMaster, boolean b);
-
-		//UserRole findByUserRole(Long userId);
 		@Query("select u from UserRole u inner join u.users us where us.userId=:userId")
 		UserRole findByuserRole(Long userId);
-
-
-
 }

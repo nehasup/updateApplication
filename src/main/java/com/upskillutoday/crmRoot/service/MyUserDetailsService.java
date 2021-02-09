@@ -5,9 +5,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import javax.transaction.Transactional;
+
+
+public interface MyUserDetailsService extends UserDetailsService {
+}
 
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+@Transactional
+class MyUserDetailsServiceImpl implements MyUserDetailsService {
 
     @Autowired
     private UserLoginService userLoginService;

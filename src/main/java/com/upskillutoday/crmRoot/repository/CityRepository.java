@@ -38,37 +38,24 @@ class CityRepositoryImpl implements CityRepository {
 			e.printStackTrace();
 		}
 		return false;
-
 	}
-
-
 
 	@Override
 	public List getCityListDao() {
-		List<String> list = null;
-		try {
-			Query query = entityManager.createQuery("Select c from CityMaster as c where c.deletedFlag=1",CityMaster.class);
-			list = query.getResultList();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
+		return entityManager.createQuery(
+				"Select c from CityMaster as c where c.deletedFlag = true"
+				, CityMaster.class
+		).getResultList();
 	}
-
-
 
 	@Override
 	public boolean getRecordByCityIdDao(CityMaster city) {
 		try{
-			Query query = entityManager.createQuery("From CityMaster where cityId=:id");
-
+			Query query = entityManager.createQuery("SELECT cat From CityMaster as cat where cat.cityId = :id");
 			query.setParameter("id",city.getCityId());
-
 			CityMaster city1= (CityMaster) query.getSingleResult();
 			city.setCityName(city1.getCityName());
 			city.setState(city1.getState());
-
 			return true;
 		}
 		catch (Exception e)
@@ -78,10 +65,8 @@ class CityRepositoryImpl implements CityRepository {
 		}
 	}
 
-
 	@Override
 	public boolean updateCityDao(CityMaster city) {
-
 		try {
 			entityManager.merge(city);
 			return true;

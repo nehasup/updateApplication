@@ -1,4 +1,4 @@
-package com.upskillutoday.crmRoot.repository;
+package com.upskillutoday.crmRoot.repository.JPARepository;
 
 import com.upskillutoday.crmRoot.model.CategoryMaster;
 import com.upskillutoday.crmRoot.model.EmpCategy;
