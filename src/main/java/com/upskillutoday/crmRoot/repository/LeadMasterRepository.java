@@ -385,7 +385,6 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 						"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
 						"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
 						"left join RoleMaster as rm on rm.roleId = ur.roles.roleId " +
-						"GROUP BY lm.studentId " +
 						"ORDER BY lm.studentId asc ", LeadResponseDto.class
 		).setFirstResult(offset).setMaxResults(limit).getResultList();
 	}
