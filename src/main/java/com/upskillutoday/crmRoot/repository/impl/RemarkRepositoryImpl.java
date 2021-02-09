@@ -95,32 +95,33 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 	public List getRemarkWithCountForEmployee(Long empId) {
     return entityManager
         .createQuery(
-				"select new CountRemarkDto ( rs.remarkId, rs.remarkName, COUNT(lm.studentId) )from History as h\n"
-						+ "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
-						+ "    inner join LeadMaster as lm on h.leadMaster.studentId = lm.studentId \n"
-						+ "    inner join RemarkMaster as rs on h.remarkMaster.remarkId = rs.remarkId \n"
-						+ "    where e.employeeId = " + empId + "\n"
-						+ "    group by rs.remarkId \n")
+            "select new CountRemarkDto( rs.remarkId, rs.remarkName, COUNT(lm.studentId) ) from EmpLead as el\n"
+                + "    inner join EmployeeMaster as e on e.employeeId = el.employeeMaster.employeeId \n"
+                + "    inner join LeadMaster as lm on el.leadMaster.studentId = lm.studentId\n"
+                + "    inner join RemarkMaster as rs on lm.remarkMaster.remarkId = rs.remarkId\n"
+                + "    where e.employeeId = " + empId + " \n"
+                + "    group by rs.remarkId")
         .getResultList();
 	}
 
 	@Override
 	public CountRemarkDto getAllCountForEmp(Long empId) {
-		return (CountRemarkDto) entityManager
-				.createQuery(
-						"select new CountRemarkDto ( COUNT(lm.studentId) ) from History as h\n"
-								+ "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
-								+ "    inner join LeadMaster as lm on h.leadMaster.studentId = lm.studentId \n"
-								+ "    inner join RemarkMaster as rs on h.remarkMaster.remarkId = rs.remarkId \n"
-								+ "    where e.employeeId = " + empId )
-				.getSingleResult();
+    return (CountRemarkDto)
+        entityManager
+            .createQuery(
+                "select COUNT(lm.studentId) from EmpLead as el\n"
+                    + "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId\n"
+                    + "    inner join LeadMaster as lm on el.leadMaster.studentId = lm.studentId\n"
+                    + "    where e.employeeId = "
+                    + empId)
+            .getSingleResult();
 	}
 
 	@Override
 	public List getReamrkWithCountForEmpDatewise(Long empId, String date) {
     return entityManager
         .createQuery(
-            "select new CountRemarkDto ( rs.remarkId, rs.remarkName, COUNT(lm.studentId) )from History as h\n"
+            "select new CountRemarkDto ( rs.remarkId, rs.remarkName, COUNT( DISTINCT lm.studentId) )from History as h\n"
                 + "    inner join EmployeeMaster as e on h.employeeMaster.employeeId = e.employeeId \n"
                 + "    inner join LeadMaster as lm on h.leadMaster.studentId = lm.studentId \n"
                 + "    inner join RemarkMaster as rs on h.remarkMaster.remarkId = rs.remarkId \n"
