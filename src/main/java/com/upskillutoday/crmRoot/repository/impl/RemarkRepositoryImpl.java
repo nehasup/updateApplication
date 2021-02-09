@@ -106,14 +106,13 @@ public class RemarkRepositoryImpl implements RemarkRepository {
 
 	@Override
 	public CountRemarkDto getAllCountForEmp(Long empId) {
-    return (CountRemarkDto)
-        entityManager
+    return entityManager
             .createQuery(
-                "select COUNT(lm.studentId) from EmpLead as el\n"
+                "select new CountRemarkDto (COUNT(lm.studentId)) from EmpLead as el\n"
                     + "    inner join EmployeeMaster as e on el.employeeMaster.employeeId = e.employeeId\n"
                     + "    inner join LeadMaster as lm on el.leadMaster.studentId = lm.studentId\n"
                     + "    where e.employeeId = "
-                    + empId)
+                    + empId, CountRemarkDto.class)
             .getSingleResult();
 	}
 
@@ -129,8 +128,6 @@ public class RemarkRepositoryImpl implements RemarkRepository {
                 + "    group by rs.remarkId \n")
         .getResultList();
 	}
-
-  //	ALTER TABLE `institute_master` CHANGE COLUMN `institute_usp` `institute_usp` LONGTEXT NULL DEFAULT NULL , CHANGE COLUMN `course_name` `course_name` LONGTEXT NULL DEFAULT NULL ;
 
   @Override
   public CountRemarkDto getAllCountForEmpDatewise(Long empId, String date) {
