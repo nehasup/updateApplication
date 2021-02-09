@@ -560,13 +560,14 @@ public class LeadUploadFileController {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 		helper.setTo(email);
+		String courseName = leadMaster.getCourseName() != null && !leadMaster.getCourseName().equals("") ? leadMaster.getCourseName() : leadMaster.getSubCategoryMaster() != null ? leadMaster.getSubCategoryMaster().getSubCategoryName() : leadMaster.getCategoryMaster() != null ? leadMaster.getCategoryMaster().getCategoryName() : "";
 		String stringBuilder = "Congratulations!\n" +
 				"Students are coming your way. upskillUtoday brings you a new prospect." +
 				"\n" + "Student Detail" +
 				"\n" + "Student Name : " + leadMaster.getStudentName() +
 				"\n" + "Contact No : " + leadMaster.getContactNo() +
 				"\n" + "Email ID : " + leadMaster.getEmailId() +
-				"\n" + "Course Name : " + leadMaster.getCategoryMaster().getCategoryName() +
+				"\n" + "Course Name : " + courseName +
 				"\n\nThank you";
 		helper.setText(stringBuilder);
 		helper.setSubject("New UpSkilluToday Student enquiry");
