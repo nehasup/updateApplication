@@ -6,15 +6,17 @@ import java.util.List;
 
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.repository.JPARepository.CategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.EmpLeadJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.EmployeeJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.RemarkJpaRepository;
 import com.upskillutoday.crmRoot.service.EmployeeService;
 import com.upskillutoday.crmRoot.service.RemarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.upskillutoday.crmRoot.dto.LeadMasterDto;
-import com.upskillutoday.crmRoot.repository.impl.EmpLeadRepository;
-import com.upskillutoday.crmRoot.response.EmpLeadResponseDto;
-import com.upskillutoday.crmRoot.response.LeadResponseDto;
+import com.upskillutoday.crmRoot.repository.EmpLeadRepository;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
 

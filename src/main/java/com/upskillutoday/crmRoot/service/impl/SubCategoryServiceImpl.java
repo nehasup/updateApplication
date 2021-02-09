@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import com.upskillutoday.crmRoot.dto.SubCategoryDto;
 import com.upskillutoday.crmRoot.model.CategoryMaster;
 import com.upskillutoday.crmRoot.model.SubCategoryMaster;
-import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
-import com.upskillutoday.crmRoot.repository.SubCategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.CategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.SubCategoryJpaRepository;
 import com.upskillutoday.crmRoot.repository.SubCategoryRepository;
 import com.upskillutoday.crmRoot.service.SubCategoryService;
 

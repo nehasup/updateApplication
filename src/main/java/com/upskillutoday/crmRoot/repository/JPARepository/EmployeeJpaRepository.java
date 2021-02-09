@@ -1,4 +1,4 @@
-package com.upskillutoday.crmRoot.repository;
+package com.upskillutoday.crmRoot.repository.JPARepository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

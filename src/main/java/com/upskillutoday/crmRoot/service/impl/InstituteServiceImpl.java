@@ -2,16 +2,12 @@ package com.upskillutoday.crmRoot.service.impl;
 
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.upskillutoday.crmRoot.dto.LeadMasterDto;
 import com.upskillutoday.crmRoot.model.*;
-import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
-import com.upskillutoday.crmRoot.service.CategoryService;
+import com.upskillutoday.crmRoot.repository.JPARepository.CategoryJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

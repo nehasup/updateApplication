@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.upskillutoday.crmRoot.request.AuthenticationRequest;
-import com.upskillutoday.crmRoot.response.AuthenticationResponse;
 import com.upskillutoday.crmRoot.service.UserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import com.upskillutoday.crmRoot.dto.EmployeeDto;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
 import com.upskillutoday.crmRoot.model.EmployeeMaster;
-import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.EmployeeJpaRepository;
 import com.upskillutoday.crmRoot.request.EmpLoginReqDto;
 import com.upskillutoday.crmRoot.response.EmpLoginResDto;
 import com.upskillutoday.crmRoot.response.ResponseVO;

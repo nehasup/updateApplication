@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.List;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
-import com.upskillutoday.crmRoot.request.DailyLeadReportDto;
+import com.upskillutoday.crmRoot.repository.JPARepository.CategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.EmployeeJpaRepository;
 import com.upskillutoday.crmRoot.response.DailyReportModelDto;
 import com.upskillutoday.crmRoot.response.EmployeeNameWithId;
 import com.upskillutoday.crmRoot.service.RemarkService;
@@ -25,7 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeRepository employeeRepository;
 	
 	@Autowired
-	CategoryJpaRepository categoryJpaRepository;
+    CategoryJpaRepository categoryJpaRepository;
 	
 	@Autowired
 	UserRoleRepository userRoleRepository;
@@ -37,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	RoleRepository roleRepository;
 	
 	@Autowired
-	EmployeeJpaRepository emplJpaRepository;
+    EmployeeJpaRepository emplJpaRepository;
 
 	@Autowired
 	EmpCategyRepository empCategyRepository;

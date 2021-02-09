@@ -1,16 +1,13 @@
-package com.upskillutoday.crmRoot.repository.impl;
+package com.upskillutoday.crmRoot.repository;
 
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.upskillutoday.crmRoot.model.EmpLead;
-import com.upskillutoday.crmRoot.model.LeadMaster;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Repository
 public interface EmpLeadRepository {

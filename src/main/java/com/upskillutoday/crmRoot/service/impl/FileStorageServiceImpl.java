@@ -6,10 +6,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import com.upskillutoday.crmRoot.exception.GlobalExceptionHandler;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
+import com.upskillutoday.crmRoot.repository.JPARepository.CategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.RemarkJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.SubCategoryJpaRepository;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
 import com.upskillutoday.crmRoot.service.RemarkService;
 import org.apache.commons.io.FilenameUtils;
@@ -23,7 +25,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

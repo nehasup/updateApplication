@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.upskillutoday.crmRoot.dto.RemarkDto;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
-import com.upskillutoday.crmRoot.model.CategoryMaster;
 import com.upskillutoday.crmRoot.model.RemarkMaster;
-import com.upskillutoday.crmRoot.repository.RemarkJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.RemarkJpaRepository;
 import com.upskillutoday.crmRoot.response.ResponseVO;
 import com.upskillutoday.crmRoot.service.RemarkService;
 

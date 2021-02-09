@@ -20,11 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.upskillutoday.crmRoot.dto.CategoryDto;
-import com.upskillutoday.crmRoot.dto.CityDto;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
 import com.upskillutoday.crmRoot.model.CategoryMaster;
-import com.upskillutoday.crmRoot.model.CityMaster;
-import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.CategoryJpaRepository;
 import com.upskillutoday.crmRoot.response.ResponseVO;
 import com.upskillutoday.crmRoot.service.CategoryService;
 

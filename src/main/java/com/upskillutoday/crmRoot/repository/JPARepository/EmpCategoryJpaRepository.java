@@ -1,4 +1,4 @@
-package com.upskillutoday.crmRoot.repository;
+package com.upskillutoday.crmRoot.repository.JPARepository;
 
 import com.upskillutoday.crmRoot.model.EmpCategy;
 import org.springframework.data.jpa.repository.JpaRepository;

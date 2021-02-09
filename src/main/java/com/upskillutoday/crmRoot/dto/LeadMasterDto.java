@@ -3,11 +3,7 @@ package com.upskillutoday.crmRoot.dto;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.upskillutoday.crmRoot.model.*;
-import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 

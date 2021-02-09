@@ -1,14 +1,11 @@
 package com.upskillutoday.crmRoot.controller;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.upskillutoday.crmRoot.dto.SubCategoryDto;
 import com.upskillutoday.crmRoot.exception.ResourceNotFoundException;
-import com.upskillutoday.crmRoot.model.CategoryMaster;
 import com.upskillutoday.crmRoot.model.SubCategoryMaster;
-import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
-import com.upskillutoday.crmRoot.repository.SubCategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.SubCategoryJpaRepository;
 import com.upskillutoday.crmRoot.repository.SubCategoryRepository;
 import com.upskillutoday.crmRoot.response.ResponseVO;
 import com.upskillutoday.crmRoot.service.SubCategoryService;

@@ -4,14 +4,12 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.transaction.Transactional;
 
 import com.upskillutoday.crmRoot.model.*;
 import com.upskillutoday.crmRoot.repository.*;
-import com.upskillutoday.crmRoot.repository.impl.EmpLeadRepository;
-import com.upskillutoday.crmRoot.response.LeadResponseDto;
+import com.upskillutoday.crmRoot.repository.EmpLeadRepository;
 import com.upskillutoday.crmRoot.service.EmpLeadService;
 import com.upskillutoday.crmRoot.service.EmployeeService;
 import com.upskillutoday.crmRoot.service.RemarkService;
@@ -25,13 +23,12 @@ import com.upskillutoday.crmRoot.model.EmployeeMaster;
 import com.upskillutoday.crmRoot.model.LeadMaster;
 import com.upskillutoday.crmRoot.model.RemarkMaster;
 import com.upskillutoday.crmRoot.model.SubCategoryMaster;
-import com.upskillutoday.crmRoot.repository.CategoryJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmpLeadJpaRepository;
-import com.upskillutoday.crmRoot.repository.EmployeeJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.CategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.EmpLeadJpaRepository;
 import com.upskillutoday.crmRoot.repository.LeadJpaMasterRepository;
 import com.upskillutoday.crmRoot.repository.LeadMasterRepository;
-import com.upskillutoday.crmRoot.repository.RemarkJpaRepository;
-import com.upskillutoday.crmRoot.repository.SubCategoryJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.RemarkJpaRepository;
+import com.upskillutoday.crmRoot.repository.JPARepository.SubCategoryJpaRepository;
 import com.upskillutoday.crmRoot.service.LeadMasterService;
 import reactor.core.publisher.Flux;
 
