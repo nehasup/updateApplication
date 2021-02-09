@@ -358,7 +358,7 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	public List getAllLeadListFromOffsetAndLimit(int offset, int limit) {
 		return entityManager.createQuery(
 				"SELECT new LeadResponseDto (" +
-						"lm.studentId, " +
+						" lm.studentId, " +
 						"lm.studentName, " +
 						"lm.courseName, " +
 						"lm.contactNo, " +

@@ -373,3 +373,4 @@ public class LeadResponseDto {
 		this.history = history;
 	}
 }
+
