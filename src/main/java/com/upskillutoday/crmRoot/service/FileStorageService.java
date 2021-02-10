@@ -81,7 +81,7 @@ class FileStorageServiceImpl implements FileStorageService {
             result = readDataFromExcel(file, 0);
         }
         try {
-            leadMasterService.assignUnverifiedLeadToVerifiers();
+//            leadMasterService.assignUnverifiedLeadToVerifiers();
         } catch (Exception ignore) {
         }
 
@@ -181,6 +181,7 @@ class FileStorageServiceImpl implements FileStorageService {
                                     throw new ResourceNotFoundException("'Category' Not Found of Student Name: - " + studentName + ": Uploaded Student Count - " + count);
                                 }
                             }
+
                             long id = 3;
                             RemarkMaster remarkMaster = remarkJpaRepository.findById(id).orElse(null);
                             leadMaster.setRemarkMaster(remarkMaster);
