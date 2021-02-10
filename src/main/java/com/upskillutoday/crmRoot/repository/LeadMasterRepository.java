@@ -213,7 +213,7 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 						"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
 						"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
 						"left join RoleMaster as rm on rm.roleId = ur.roles.roleId " +
-						"where lm.studentId not in (select lm1.studentId from LeadMaster as lm1 inner join EmpLead as el1 on lm1.studentId = el1.leadMaster.studentId)"
+						"where lm.studentId not in (select lm1.studentId from LeadMaster as lm1 inner join EmpLead as el1 on lm1.studentId = el1.leadMaster.studentId) and rmk.remarkId = 3"
 		).getResultList();
 	}
 

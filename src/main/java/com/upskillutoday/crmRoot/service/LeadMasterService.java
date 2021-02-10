@@ -271,7 +271,8 @@ class LeadMasterServiceImpl implements LeadMasterService{
             for (LeadMaster leadMaster : (List<LeadMaster> )leadMasters) {
                 EmpLead empLead = new EmpLead();
                 empLead.setLeadMaster(leadMaster);
-                empLead.setEmployeeMaster(employeeRepository.getVerificationConsellorByCategory(leadMaster.getCategoryMaster().getCategoryId()));
+                List employees = employeeRepository.getVerificationConsellorByCategory(leadMaster.getCategoryMaster().getCategoryId());
+                empLead.setEmployeeMaster((EmployeeMaster) employees.get(0));
                 empLead.setUpdatedOn(new Date());
                 empLead.setDeletedFlag(true);
                 historyRepository.insertHistory(new History("Assigned" ,new Date(), empLead.getEmployeeMaster(), empLead.getLeadMaster(), remarkService.getRemarkById(3L)));

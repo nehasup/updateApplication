@@ -25,7 +25,7 @@ public interface EmployeeRepository {
 	Long getEmployeeFromCategory(Long studentId);
 	Long getEmployeeByCategory(Long cat);
 	List getVerifiactionAndAdmissionConusellor();
-	EmployeeMaster getVerificationConsellorByCategory(Long catId);
+	List getVerificationConsellorByCategory(Long catId);
 	List getCatsByEmpId(Long empId);
 }
 
@@ -166,17 +166,22 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
 	}
 
 	@Override
-	public EmployeeMaster getVerificationConsellorByCategory(Long catId) {
-		return entityManager
-				.createQuery(
-						"select e \n"
-								+ "from EmployeeMaster as e\n"
-								+ "inner join e.userMaster as um \n"
-								+ "inner join UserRole as ur on ur.users.userId = um.userId \n"
-								+ "inner join EmpCategy as ec on e.employeeId = ec.employeeMaster.employeeId \n"
-								+ "where ec.categoryMaster.categoryId = " + catId + " and ur.roles.roleId = 10"
-						, EmployeeMaster.class)
-				.getSingleResult();
+	public List getVerificationConsellorByCategory(Long catId) {
+    return entityManager
+        .createQuery(
+            "select e \n"
+                + "from EmployeeMaster as e\n"
+                + "inner join e.userMaster as um \n"
+                + "inner join UserRole as ur on ur.users.userId = um.userId \n"
+                + "inner join EmpCategy as ec on e.employeeId = ec.employeeMaster.employeeId \n"
+                + "  left join EmpLead as el on e.employeeId = el.employeeMaster.employeeId"
+                + "  left join LeadMaster as lm on el.leadMaster.studentId = lm.studentId \n"
+                + "where ec.categoryMaster.categoryId = "
+                + catId
+                + " and ur.roles.roleId = 10 "
+                + " group by e.employeeId \n"
+                + " order by COUNT(lm.studentId) ")
+        .getResultList();
 	}
 
 	@Override

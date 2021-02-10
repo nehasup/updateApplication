@@ -81,7 +81,7 @@ class FileStorageServiceImpl implements FileStorageService {
             result = readDataFromExcel(file, 0);
         }
         try {
-//            leadMasterService.assignUnverifiedLeadToVerifiers();
+            leadMasterService.assignUnverifiedLeadToVerifiers();
         } catch (Exception ignore) {
         }
 
