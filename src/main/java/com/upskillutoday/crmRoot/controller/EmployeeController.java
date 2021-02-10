@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+import com.upskillutoday.crmRoot.repository.EmployeeRepository;
 import com.upskillutoday.crmRoot.request.AuthenticationRequest;
 import com.upskillutoday.crmRoot.service.UserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class EmployeeController {
 
 	@Autowired
     private UserLoginService userLoginService;
+
+	@Autowired
+    private EmployeeRepository employeeRepository;
 	
 	@PostMapping("/saveEmployee")
 	@ResponseBody 
@@ -146,5 +150,10 @@ public class EmployeeController {
     @GetMapping(value = "/getDatewiseReport")
     public List getDatewiseReport(@RequestParam("date") String date) {
         return employeeService.getCountOfEmployeesDateWise(date);
+    }
+
+    @GetMapping(value = "/getVerificationConsellorByCategoryId")
+    public List getVerificationConsellorByCategoryId(@RequestParam("catId") Long catId) {
+	    return employeeRepository.getVerificationConsellorByCategory(catId);
     }
 }
