@@ -174,7 +174,8 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
 								+ "inner join e.userMaster as um \n"
 								+ "inner join UserRole as ur on ur.users.userId = um.userId \n"
 								+ "inner join EmpCategy as ec on e.employeeId = ec.employeeMaster.employeeId \n"
-								+ "where ec.categoryMaster.categoryId = " + catId + " and ur.roles.roleId = 10", EmployeeMaster.class)
+								+ "where ec.categoryMaster.categoryId = " + catId + " and ur.roles.roleId = 10"
+						, EmployeeMaster.class)
 				.getSingleResult();
 	}
 

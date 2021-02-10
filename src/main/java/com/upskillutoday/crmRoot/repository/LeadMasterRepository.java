@@ -290,7 +290,7 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	public List getAllUnassignedNewLeads() {
 		return entityManager.createQuery(
 				"SELECT lm FROM LeadMaster as lm where lm.remarkMaster.remarkId = 3" +
-						" and lm.deletedFlag = true"
+						" and lm.deletedFlag = true and lm.studentId not in (select el.leadMaster.studentId from EmpLead as el)"
 				, LeadMaster.class).getResultList();
 	}
 
