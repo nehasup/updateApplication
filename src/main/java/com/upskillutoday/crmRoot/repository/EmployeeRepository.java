@@ -22,7 +22,8 @@ public interface EmployeeRepository {
 	EmployeeMaster getEmployeeByUserId(Long userId);
 	EmployeeMaster getEmployeeByEmpId(Long empId);
 	List getAllVerificationCounsellor();
-	Long getEmployeeFromCategory(Long studentId);
+	List getEmployeeFromCategory(Long studentId);
+	List getEmployeeFromCat(Long catId);
 	Long getEmployeeByCategory(Long cat);
 	List getVerifiactionAndAdmissionConusellor();
 	List getVerificationConsellorByCategory(Long catId);
@@ -123,19 +124,38 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
 	}
 
 	@Override
-	public Long getEmployeeFromCategory(Long studentId) {
+	public List getEmployeeFromCategory(Long studentId) {
 		return entityManager
 				.createQuery(
-						"SELECT em.employeeId FROM EmployeeMaster as em \n"
+						"SELECT em FROM EmployeeMaster as em \n"
 								+ "    inner join EmpCategy as ec on em.employeeId = ec.employeeMaster.employeeId \n"
 								+ "    inner join UserMaster as um on em.userMaster.userId = um.userId\n"
-								+ "    inner join UserRole as ur on um.userId = ur.users.userId \n"
-								+ "    where ec.categoryMaster.categoryId = (SELECT lm.categoryMaster.categoryId FROM LeadMaster lm where lm.studentId = "
-								+ studentId
-								+ "\n and ur.roles.roleId = 11"
-								+ ")",
-						Long.class)
-				.getSingleResult();
+								+ "    inner join UserRole as ur on um.userId = ur.users.userId \n" +
+								"      inner join EmpLead as el on el.employeeMaster.employeeId = em.employeeId \n" +
+								"      inner join LeadMaster as lm on lm.studentId = el.leadMaster.studentId \n"
+								+ "   where ec.categoryMaster.categoryId = ( " +
+								"SELECT lm.categoryMaster.categoryId FROM LeadMaster lm " +
+								"where lm.studentId = " + studentId +
+								") and ur.roles.roleId = 11 " +
+								"GROUP BY em.employeeId " +
+								"ORDER BY COUNT(lm.studentId) " ,EmployeeMaster.class)
+				.getResultList();
+	}
+
+	@Override
+	public List getEmployeeFromCat(Long catId) {
+		return entityManager
+				.createQuery(
+						"SELECT em FROM EmployeeMaster as em \n"
+								+ "    inner join EmpCategy as ec on em.employeeId = ec.employeeMaster.employeeId \n"
+								+ "    inner join UserMaster as um on em.userMaster.userId = um.userId\n"
+								+ "    inner join UserRole as ur on um.userId = ur.users.userId \n" +
+								"      inner join EmpLead as el on el.employeeMaster.employeeId = em.employeeId \n" +
+								"      inner join LeadMaster as lm on lm.studentId = el.leadMaster.studentId \n"
+								+ "   where ec.categoryMaster.categoryId = " + catId + " and ur.roles.roleId = 11 " +
+								"GROUP BY em.employeeId " +
+								"ORDER BY COUNT(lm.studentId) " ,EmployeeMaster.class)
+				.getResultList();
 	}
 
 	@Override

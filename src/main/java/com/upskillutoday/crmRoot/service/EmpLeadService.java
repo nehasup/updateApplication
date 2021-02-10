@@ -21,7 +21,7 @@ import javax.transaction.Transactional;
 public interface EmpLeadService {
 	List<LeadMasterDto> getAllAssignEmpLeadRecordService();
 	void setAllLeadToThisEmployee(List<LeadMaster> leadMasters, EmployeeMaster employeeMaster);
-	Long assignLeadAutomatically(Long studentId);
+	EmployeeMaster assignLeadAutomatically(Long studentId);
 }
 
 @Service
@@ -147,7 +147,8 @@ class EmpLeadServiceImpl implements EmpLeadService {
     }
 
     @Override
-    public Long assignLeadAutomatically(Long studentId) {
-        return employeeService.getEmployeeAutomatically(studentId);
+    public EmployeeMaster assignLeadAutomatically(Long studentId) {
+        List list = employeeService.getEmployeeAutomatically(studentId);
+        return (EmployeeMaster) list.get(0);
     }
 }

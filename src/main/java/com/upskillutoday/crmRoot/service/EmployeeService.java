@@ -29,7 +29,7 @@ public interface EmployeeService {
 	EmployeeMaster getEmployeeByUserId(Long userId);
 	EmployeeMaster getEmployeeByEmpId(Long empId);
 	List getAllVerificationCounsellor();
-	Long getEmployeeAutomatically(Long studentId);
+	List getEmployeeAutomatically(Long studentId);
 	List getDailyCountOfEmployees();
 	List getCountOfEmployeesDateWise(String date);
 }
@@ -250,7 +250,7 @@ class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Long getEmployeeAutomatically(Long studentId) {
+    public List getEmployeeAutomatically(Long studentId) {
         return employeeRepository.getEmployeeFromCategory(studentId);
     }
 

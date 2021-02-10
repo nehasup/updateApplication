@@ -542,8 +542,7 @@ public class LeadUploadFileController {
 	@PostMapping(value = "/verifyTheLeadAssignAutomatically")
 	@ResponseBody
 	public ResponseVO verifyTheLead(@RequestParam("userId") String userId, @RequestBody StudentWithInst leadId) throws Exception {
-		Long empId = empLeadService.assignLeadAutomatically(leadId.getStudentId());
-		EmployeeMaster employeeMaster = employeeService.getEmployeeByEmpId(empId);
+		EmployeeMaster employeeMaster = empLeadService.assignLeadAutomatically(leadId.getStudentId());
 		LeadMaster leadMasterObj= leadJpaMasterRepository.findByStudentIdAndDeletedFlag(leadId.getStudentId(), true);
 		EmpLead empLead = new EmpLead();
 		empLead.setLeadMaster(leadMasterObj);
@@ -662,4 +661,6 @@ public class LeadUploadFileController {
 	public String webhook() {
 		return "Hello Webhook";
 	}
+
+
 }

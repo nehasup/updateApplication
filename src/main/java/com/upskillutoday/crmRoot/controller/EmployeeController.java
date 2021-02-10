@@ -156,4 +156,9 @@ public class EmployeeController {
     public List getVerificationConsellorByCategoryId(@RequestParam("catId") Long catId) {
 	    return employeeRepository.getVerificationConsellorByCategory(catId);
     }
+
+    @GetMapping(value = "/getAddmissionConsellorByCategoryId")
+    public List getAddmissionConsellorByCategoryId(@RequestParam("catId") Long catId) {
+        return employeeRepository.getEmployeeFromCat(catId);
+    }
 }
