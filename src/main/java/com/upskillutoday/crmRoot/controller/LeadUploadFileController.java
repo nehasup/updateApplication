@@ -499,6 +499,47 @@ public class LeadUploadFileController {
 	        return response;
 	    }
 
+	@GetMapping("/getAllLeadInStream")
+	public @ResponseBody ResponseVO<List> getLeadInSteram(
+			@RequestParam(name = "userId") Long userId
+	) {
+		System.out.println("user"+userId);
+		ResponseVO<List> response=new ResponseVO<List>();
+		System.out.println("List Successfully!!");
+
+		try {
+			EmployeeMaster employeeMaster = employeeJpaRepository.findByUserMaster(userMasterRepository.findAllByUserIdAndDeletedFlag(userId, true));
+			RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
+			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
+				//Admin // All leads
+				//List list=leadMasterService.getAllLeadRecordService();
+				List list = leadMasterRepository.getAllUnAssignedLeads();
+				if(list!=null) {
+					response.setResult(list);
+				}
+				else {
+					//Data not present
+					response.setResult(list);
+					response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+					response.setMessage("Data is not Present");
+				}
+			} else if (roleMaster.getRoleName().equalsIgnoreCase("Admissions counsellor")  || roleMaster.getRoleName().equalsIgnoreCase("Verification counsellor")) {
+				//Cousler     //Category based leads
+				List<LeadMasterDto> leadMasterDtoList  = leadMasterService.getAllAssignLeadListService(employeeMaster);
+				if(leadMasterDtoList!=null) {
+					response.setResult(leadMasterDtoList);
+				}
+				else {
+					//Data not present
+					response.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+					response.setMessage("Data is not Present");
+					response.setResult(leadMasterDtoList);
+				}
+			}
+		} catch (NullPointerException nullPointerException) {}
+		return response;
+	}
+
 	@PostMapping(value = "/verifyTheLeadAssignAutomatically")
 	@ResponseBody
 	public ResponseVO verifyTheLead(@RequestParam("userId") String userId, @RequestBody StudentWithInst leadId) throws Exception {
