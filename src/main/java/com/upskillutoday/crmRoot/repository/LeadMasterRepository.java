@@ -24,6 +24,7 @@ public interface LeadMasterRepository {
 	List getAllLeadForMe();
 	Flux getAllLeadForMeFlux();
 	List<LeadResponseDto> getAllUnAssignedLeads();
+	List otherThanAllUnAssignedLeads();
 	List getLeadsByRemark(Long remarkId);
 	List getAllLeadListByquery(Long userId);
 	List getAllUnassignedNewLeads();
@@ -50,8 +51,7 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	@Override
 	public LeadMaster findByEmail(String email) {
 		LeadMaster lead = null;
-		Query query = entityManager.createQuery("SELECT l FROM lead_master l WHERE l.email_id=:email");
-		query.setParameter("email_id", email);
+		Query query = entityManager.createQuery("SELECT l FROM LeadMaster as l WHERE l.emailId = '" + email + "' and l.deletedFlag = true");
 		try {
 			lead = (LeadMaster) query.getSingleResult();
 		} catch (Exception e) {
@@ -142,7 +142,9 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 				"left join EmpLead as el on lm.studentId = el.leadMaster.studentId \n" +
 				"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
 				"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
-				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId ")
+				"left join RoleMaster as rm on rm.roleId = ur.roles.roleId " +
+				"where lm.deletedFlag = true" +
+				" group by lm.studentId")
 				.getResultList();
 	}
 
@@ -213,7 +215,44 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 						"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
 						"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
 						"left join RoleMaster as rm on rm.roleId = ur.roles.roleId " +
-						"where lm.studentId not in (select lm1.studentId from LeadMaster as lm1 inner join EmpLead as el1 on lm1.studentId = el1.leadMaster.studentId) and rmk.remarkId = 3"
+						"where lm.studentId not in (select lm1.studentId from LeadMaster as lm1 inner join EmpLead as el1 on lm1.studentId = el1.leadMaster.studentId) and rmk.remarkId = 3 and lm.deletedFlag = true" +
+						" group by lm.studentId"
+		).getResultList();
+	}
+
+	@Override
+	public List otherThanAllUnAssignedLeads() {
+		return entityManager.createQuery(
+				"SELECT new LeadResponseDto (" +
+						"lm.studentId, " +
+						"lm.studentName, " +
+						"lm.courseName, " +
+						"lm.contactNo, " +
+						"lm.area," +
+						"lm.city, " +
+						"lm.emailId, " +
+						"lm.modeOfCourse, " +
+						"lm.modificationStage, " +
+						"lm.address, " +
+						"lm.budget, " +
+						"rmk.remarkId, " +
+						"rmk.remarkName, " +
+						"lm.comments, " +
+						"lm.instituteName," +
+						"cm.categoryId," +
+						"cm.categoryName," +
+						"lm.updatedOn, " +
+						"emp.employeeName, " +
+						"rm.roleName) " +
+						"FROM LeadMaster as lm " +
+						"inner join lm.categoryMaster as cm " +
+						"inner join lm.remarkMaster as rmk \n"+
+						"left join EmpLead as el on lm.studentId = el.leadMaster.studentId \n" +
+						"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
+						"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
+						"left join RoleMaster as rm on rm.roleId = ur.roles.roleId " +
+						"where lm.studentId in (select lm1.studentId from LeadMaster as lm1 inner join EmpLead as el1 on lm1.studentId = el1.leadMaster.studentId) and lm.deletedFlag = true" +
+						" group by lm.studentId "
 		).getResultList();
 	}
 
@@ -278,7 +317,8 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 				"	inner join lead.remarkMaster as rmk " +
 				"  	inner join EmpLead as el on el.leadMaster.studentId = lead.studentId " +
 				"	inner join EmployeeMaster as em on em.employeeId = el.employeeMaster.employeeId" +
-				"	where em.employeeId = " + empId
+				"	where em.employeeId = " + empId + " and lead.deletedFlag = true" +
+				"   group by lead.studentId"
 		);
 
 		list = query.getResultList();
@@ -290,7 +330,7 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	public List getAllUnassignedNewLeads() {
 		return entityManager.createQuery(
 				"SELECT lm FROM LeadMaster as lm where lm.remarkMaster.remarkId = 3" +
-						" and lm.deletedFlag = true and lm.studentId not in (select el.leadMaster.studentId from EmpLead as el)"
+						" and lm.deletedFlag = true and lm.studentId not in (select el.leadMaster.studentId from EmpLead as el) group by lm.studentId"
 				, LeadMaster.class).getResultList();
 	}
 
@@ -298,7 +338,7 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 	public LeadMaster getLeadByStudentId(Long stduentId) {
 		return entityManager.createQuery(
 				"SELECT lm FROM  LeadMaster as lm WHERE lm.studentId = " + stduentId +
-						" and lm.deletedFlag = true", LeadMaster.class).getSingleResult();
+						" and lm.deletedFlag = true group by lm.studentId", LeadMaster.class).getSingleResult();
 	}
 
 	@Override
@@ -333,7 +373,8 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 								+ "		inner join lm.remarkMaster as rm \n"
 								+ "    where um.userId = " + userId
 								+ " and lm.remarkMaster.remarkId = " + remarkId +
-								" and lm.deletedFlag = true")
+								" and lm.deletedFlag = true " +
+								"group by lm.studentId")
 				.getResultList();
 	}
 
@@ -343,7 +384,8 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 				"SELECT lm FROM LeadMaster as lm " +
 						" WHERE lm.emailId = '" + email + "'" +
 						" and lm.contactNo = " + contact +
-						" and lm.deletedFlag = true"
+						" and lm.deletedFlag = true " +
+						"group by lm.studentId"
 		).getResultList();
 	}
 
@@ -385,6 +427,7 @@ class LeadMasterRepositoryImpl implements LeadMasterRepository {
 						"left join EmployeeMaster as emp on emp.employeeId = el.employeeMaster.employeeId \n" +
 						"left join UserRole as ur on ur.users.userId = emp.userMaster.userId \n" +
 						"left join RoleMaster as rm on rm.roleId = ur.roles.roleId " +
+						"group by lm.studentId " +
 						"ORDER BY lm.studentId asc ", LeadResponseDto.class
 		).setFirstResult(offset).setMaxResults(limit).getResultList();
 	}

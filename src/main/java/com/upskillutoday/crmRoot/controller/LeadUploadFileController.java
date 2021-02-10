@@ -451,7 +451,7 @@ public class LeadUploadFileController {
 				}
 				empleadJparepository.save(empLead);
 			}
-			leadMasterObj.setCategoryMaster(categoryService.getCatgoryById(3L));
+			leadMasterObj.setRemarkMaster(remarkService.getRemarkById(3L));
 			leadMasterObj.setAssignLeadFlag(true);
 			leadJpaMasterRepository.save(leadMasterObj);
 		}
@@ -472,8 +472,7 @@ public class LeadUploadFileController {
 			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
 			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
 				//Admin // All leads
-				//List list=leadMasterService.getAllLeadRecordService();
-				List list = leadMasterRepository.getAllUnAssignedLeads();
+				List list = leadMasterService.getAllUnAssignedLeadWithAssignedLead();
 				if(list!=null) {
 					 response.setResult(list);
 				}
@@ -513,8 +512,7 @@ public class LeadUploadFileController {
 			RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
 			if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
 				//Admin // All leads
-				//List list=leadMasterService.getAllLeadRecordService();
-				List list = leadMasterRepository.getAllUnAssignedLeads();
+				List list = leadMasterService.getAllUnAssignedLeadWithAssignedLead();
 				if(list!=null) {
 					response.setResult(list);
 				}
