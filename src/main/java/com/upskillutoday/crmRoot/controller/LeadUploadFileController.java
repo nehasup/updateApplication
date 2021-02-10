@@ -101,7 +101,7 @@ public class LeadUploadFileController {
 	private InstituteRepository instituteRepository;
 
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	private CategoryService categoryService;
 
 	@Autowired
 	private EmpLeadRepository empLeadRepository;
@@ -451,6 +451,7 @@ public class LeadUploadFileController {
 				}
 				empleadJparepository.save(empLead);
 			}
+			leadMasterObj.setCategoryMaster(categoryService.getCatgoryById(3L));
 			leadMasterObj.setAssignLeadFlag(true);
 			leadJpaMasterRepository.save(leadMasterObj);
 		}

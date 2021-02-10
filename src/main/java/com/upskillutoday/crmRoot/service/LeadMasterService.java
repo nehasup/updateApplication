@@ -57,9 +57,6 @@ class LeadMasterServiceImpl implements LeadMasterService{
     EmployeeService employeeService;
 
     @Autowired
-    private EmpLeadService empLeadService;
-
-    @Autowired
     EmpLeadRepository empLeadRepository;
 
     @Autowired
@@ -166,7 +163,6 @@ class LeadMasterServiceImpl implements LeadMasterService{
         }
     }
 
-
     @Override
     public boolean updateLeadService(Long userId, LeadMasterDto leadMasterDto) {
         //cat obj by id
@@ -221,7 +217,6 @@ class LeadMasterServiceImpl implements LeadMasterService{
         if(leadMasterList!=null) {
             for (LeadMaster leadMaster : leadMasterList) {
                 LeadMasterDto leadMasterDto = new LeadMasterDto();
-
                 leadMasterDto.setStudentId(leadMaster.getStudentId());
                 leadMasterDto.setStudentName(leadMaster.getStudentName());
                 leadMasterDto.setCourseName(leadMaster.getCourseName());
@@ -239,15 +234,13 @@ class LeadMasterServiceImpl implements LeadMasterService{
                 leadMasterDto.setUpdatedOn(new Date());
                 leadMasterDto.setDeletedFlag(true);
                 leadMasterDto.setCategoryName(leadMaster.getCategoryMaster().getCategoryName());
-                //leadMasterDto.setSubCategoryName(leadMaster.getSubCategoryMaster().getSubCategoryName());
+                leadMasterDto.setSubCategoryName(leadMaster.getSubCategoryMaster().getSubCategoryName());
                 leadMasterDto.setRemarkName(leadMaster.getRemarkMaster().getRemarkName());
-
                 leadMasterDtoList.add(leadMasterDto);
             }
         }
         return leadMasterDtoList;
     }
-
 
     @Override
     public List getAllAssignLeadListService(EmployeeMaster employeeMaster) {
