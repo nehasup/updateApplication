@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 public interface CityService {
-	public boolean insertCityService(CityDto cityDto);
+	boolean insertCityService(CityDto cityDto);
 	List getAllRecordCityService();
 	boolean getRecordByCityIdService(CityDto cityDto);
 	boolean updateCityService(CityDto cityDto);

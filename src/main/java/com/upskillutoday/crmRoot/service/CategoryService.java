@@ -16,7 +16,6 @@ public interface CategoryService {
 	boolean insertCategoryService(CategoryDto categoryDto);
 	boolean getRecordByCategoryIdService(CategoryDto categoryDto);
 	List getAllRecordCategoryService();
-	// Added By Laukik
 	CategoryMaster getCatgoryById(Long id);
 }
 
@@ -27,9 +26,6 @@ class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-	@Autowired
-	private CityRepository cityRepository;
-
 	@Override
 	public boolean insertCategoryService(CategoryDto categoryDto) {
 		CategoryMaster category = new CategoryMaster();
@@ -37,7 +33,6 @@ class CategoryServiceImpl implements CategoryService {
 		category.setUpdatedOn(new Date());
 		category.setDeletedFlag(true);
 		boolean  flag= categoryRepository.insertCategoryDao(category);
-
 		return flag;
 	}
 

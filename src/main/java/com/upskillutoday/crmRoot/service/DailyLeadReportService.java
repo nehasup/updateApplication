@@ -38,7 +38,6 @@ class DailyLeadReportServiceImpl  implements DailyLeadReportService{
         List<History> histories = historyRepository.getHistoryOfTheDate(date);
         ArrayList<LeadReportRes> leadReportRess = new ArrayList<>();
         for(History history: histories) {
-            Long employeeId = history.getLeadMaster().getUpdatedBy();
             leadReportRess.add(new LeadReportRes(history.getLeadMaster().getStudentName(),
                     history.getLeadMaster().getContactNo(),
                     history.getLeadMaster().getCity(),

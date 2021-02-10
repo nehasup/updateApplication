@@ -77,9 +77,6 @@ public class LeadUploadFileController {
 	RemarkService remarkService;
 
 	@Autowired
-	EmpCategyService empCategyService;
-
-	@Autowired
 	RoleRepository roleRepository;
 
 	@Autowired
@@ -99,9 +96,6 @@ public class LeadUploadFileController {
 
 	@Autowired
 	private InstituteRepository instituteRepository;
-
-	@Autowired
-	private CategoryService categoryService;
 
 	@Autowired
 	private EmpLeadRepository empLeadRepository;
@@ -550,15 +544,15 @@ public class LeadUploadFileController {
 		empLead.setUpdatedOn(new Date());
 		empLead.setDeletedFlag(true);
 		empleadJparepository.save(empLead);
-		leadMasterObj.setAssignLeadFlag(true);
 		leadJpaMasterRepository.save(leadMasterObj);
 		LeadMaster leadMaster = leadMasterService.getLeadByStudentId(leadId.getStudentId());
 		historyRepository.insertHistory(new History("Verified" ,new Date(), employeeService.getEmployeeByUserId(Long.parseLong(userId)),  leadMaster, leadMaster.getRemarkMaster()));
 
-		if(leadMaster.getRemarkMaster() == null ) {
-			for(Long instituteId : leadId.getInstituteIds()) {
-				InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
-				instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId))));
+		for(Long instituteId : leadId.getInstituteIds()) {
+			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
+			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId))));
+
+			if(leadMaster.getRemarkMaster() == null ) {
 				String email = instituteMaster.getEmailId();
 				sendEmail(leadMaster, email.toLowerCase());
 				if(
@@ -567,23 +561,16 @@ public class LeadUploadFileController {
 								instituteMaster.getInstituteName().equalsIgnoreCase("upskillutoday")) {
 					this.adityaGroupOfIstituteSendLead(leadMaster);
 				}
-			}
-		} else {
-			if(leadMaster.getRemarkMaster().getRemarkId() == 7) {
-				for(Long instituteId : leadId.getInstituteIds()) {
-					InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
-					instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId))));
+			} else {
+				if(leadMaster.getRemarkMaster().getRemarkId() == 7) {
 					String email = instituteMaster.getEmailId();
 					sendEmail(leadMaster, email.toLowerCase());
-					if(
-							instituteMaster.getInstituteName().equalsIgnoreCase("Aditya Group Of Institutes") ||
-									instituteMaster.getInstituteName().equalsIgnoreCase("npfs") ||
-									instituteMaster.getInstituteName().equalsIgnoreCase("upskillutoday")) {
+						if(	instituteMaster.getInstituteName().equalsIgnoreCase("Aditya Group Of Institutes") ||
+							instituteMaster.getInstituteName().equalsIgnoreCase("npfs") ||
+							instituteMaster.getInstituteName().equalsIgnoreCase("upskillutoday")) {
 						this.adityaGroupOfIstituteSendLead(leadMaster);
 					}
 				}
-			} else {
-				historyRepository.insertHistory(new History("Updated" ,new Date(), employeeService.getEmployeeByUserId(Long.parseLong(userId)),  leadMaster, leadMaster.getRemarkMaster()));
 			}
 		}
 
@@ -661,6 +648,4 @@ public class LeadUploadFileController {
 	public String webhook() {
 		return "Hello Webhook";
 	}
-
-
 }
