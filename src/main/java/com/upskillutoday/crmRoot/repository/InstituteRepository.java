@@ -61,7 +61,7 @@ class InstituteRepositoryImpl implements InstituteRepository {
 						"select COUNT(lm.studentId) from InstituteLead as il\n"
 								+ "    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n"
 								+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId " +
-								"	where im.instituteId = " + instituteId + "\n",
+								"	where im.instituteId = " + instituteId + " and il.shouldCount = 1",
 						Long.class)
 				.getSingleResult();
 	}
@@ -73,7 +73,7 @@ class InstituteRepositoryImpl implements InstituteRepository {
 						"select COUNT(lm.studentId) from InstituteLead as il\n"
 								+ "    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n"
 								+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId " +
-								"	   where im.instituteId = " + instituteId + " and il.sentOn = DATE('" + date + "') ",
+								"	   where im.instituteId = " + instituteId + " and il.sentOn = DATE('" + date + "') and il.shouldCount = 1",
 						Long.class)
 				.getSingleResult();
 	}
