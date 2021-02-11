@@ -61,7 +61,7 @@ class DailyLeadReportServiceImpl  implements DailyLeadReportService{
             if(employeeNames.size() > 0) {
                 String empName = (String) employeeNames.get(0);
                 for(int i=1; i<employeeNames.size(); i++) {
-                    empName = ", " + employeeNames.get(i);
+                    empName += ", " + employeeNames.get(i);
                 }
                 instituteReport.setEmployeeName(empName);
             }
@@ -81,7 +81,7 @@ class DailyLeadReportServiceImpl  implements DailyLeadReportService{
             if(employeeNames.size() > 0) {
                 String empName = (String) employeeNames.get(0);
                 for(int i=1; i<employeeNames.size(); i++) {
-                    empName = ", " + employeeNames.get(i);
+                    empName += ", " + employeeNames.get(i);
                 }
                 instituteReport.setEmployeeName(empName);
             }
