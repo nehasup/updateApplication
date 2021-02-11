@@ -57,6 +57,14 @@ class DailyLeadReportServiceImpl  implements DailyLeadReportService{
         ArrayList<InstituteReport> newList = new ArrayList();
         for(InstituteReport instituteReport : (List<InstituteReport>) list) {
             instituteReport.setTotalCount(instituteRepository.getTotalCount(instituteReport.getId()));
+            List employeeNames = instituteRepository.getEmployeeName(instituteReport.getId(), dateFormat.format(date));
+            if(employeeNames.size() > 0) {
+                String empName = (String) employeeNames.get(0);
+                for(int i=1; i<employeeNames.size(); i++) {
+                    empName = ", " + employeeNames.get(i);
+                }
+                instituteReport.setEmployeeName(empName);
+            }
             newList.add(instituteReport);
         }
         return newList;
@@ -69,6 +77,14 @@ class DailyLeadReportServiceImpl  implements DailyLeadReportService{
         ArrayList<InstituteReport> newList = new ArrayList();
         for(InstituteReport instituteReport : (List<InstituteReport>) list) {
             instituteReport.setTotalCount(instituteRepository.getTotalCount(instituteReport.getId()));
+            List employeeNames = instituteRepository.getEmployeeName(instituteReport.getId(), date);
+            if(employeeNames.size() > 0) {
+                String empName = (String) employeeNames.get(0);
+                for(int i=1; i<employeeNames.size(); i++) {
+                    empName = ", " + employeeNames.get(i);
+                }
+                instituteReport.setEmployeeName(empName);
+            }
             newList.add(instituteReport);
         }
         return newList;

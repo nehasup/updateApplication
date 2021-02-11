@@ -22,6 +22,7 @@ public interface InstituteRepository {
 	Long getTotalCount(Long instituteId);
 	Long getTotalCountByDate(Long instituteId, String date);
 	Long getHighestId();
+	List getEmployeeName(Long instId, String date);
 }
 
 @Repository
@@ -90,6 +91,17 @@ class InstituteRepositoryImpl implements InstituteRepository {
 	}
 
 	@Override
+	public List getEmployeeName(Long instituteId, String date) {
+    return entityManager
+        .createQuery(
+            "select e.employeeName from InstituteLead as il\n"
+                + "    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId\n"
+                + "    where il.instituteMaster.instituteId = "+ instituteId +" and il.sentOn = DATE('" + date + "')"
+                + "    group by e.employeeId")
+        .getResultList();
+	}
+
+	@Override
 	public List getInstituteByCategoryFromStudentId(Long stduentId) {
 		return entityManager
 				.createQuery(
@@ -117,7 +129,7 @@ class InstituteRepositoryImpl implements InstituteRepository {
 								"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
 								"    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId \n" +
 								"	 where il.sentOn = DATE('" + date + "') and il.shouldCount = 1" +
-								"    group by im.instituteId, e.employeeId ")
+								"    group by im.instituteId ")
 				.getResultList();
 	}
 
@@ -130,9 +142,10 @@ class InstituteRepositoryImpl implements InstituteRepository {
 						"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
 						"    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId \n" +
 						"	 where il.sentOn = DATE('" + date + "') and il.shouldCount = 1" +
-						"    group by im.instituteId, e.employeeId )")
+						"    group by im.instituteId )")
 				.getResultList();
 	}
+
 
 	@Override
 	public List getInstitute() {
