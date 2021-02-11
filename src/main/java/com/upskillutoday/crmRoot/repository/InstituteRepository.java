@@ -130,7 +130,7 @@ class InstituteRepositoryImpl implements InstituteRepository {
 								"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
 								"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
 								"    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId \n" +
-								"	 where il.sentOn = DATE('" + date + "')" +
+								"	 where il.sentOn = DATE('" + date + "') and lm.categoryMaster.categoryId = 7" +
 								"    group by im.instituteId, e.employeeId ")
 				.getResultList();
 	}
