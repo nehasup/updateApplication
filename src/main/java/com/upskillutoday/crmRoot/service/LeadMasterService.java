@@ -27,6 +27,7 @@ public interface LeadMasterService {
 	String assignUnverifiedLeadToVerifiers();
 	LeadMaster getLeadByStudentId(Long stduentId);
 	List getAllUnAssignedLeadWithAssignedLead();
+	List assignedLeads();
 }
 
 @Service
@@ -286,5 +287,10 @@ class LeadMasterServiceImpl implements LeadMasterService{
         List list = leadRepostiory.getAllUnAssignedLeads();
         list.addAll(leadRepostiory.otherThanAllUnAssignedLeads());
         return list;
+    }
+
+    @Override
+    public List assignedLeads() {
+        return leadRepostiory.otherThanAllUnAssignedLeads();
     }
 }

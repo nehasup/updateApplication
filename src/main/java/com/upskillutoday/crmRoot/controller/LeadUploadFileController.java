@@ -466,7 +466,7 @@ public class LeadUploadFileController {
 			 RoleMaster roleMaster = roleRepository.getroleByid(roleRepository.getRoleIdFromUserId(userId));
 			 if(roleMaster.getRoleName().equalsIgnoreCase("Project manager")) {
 				//Admin // All leads
-				List list = leadMasterService.getAllUnAssignedLeadWithAssignedLead();
+				List list = leadMasterService.assignedLeads();
 				if(list!=null) {
 					 response.setResult(list);
 				}
@@ -654,10 +654,10 @@ public class LeadUploadFileController {
 	@GetMapping(value = "/assignLead")
 	public String assignLead() {
 //		aditya -> music and film,
-// 		avi ritika,
-//		divya design,
-// 		deepa technical & other deepa ,
-//		rohit beauty,
+// 		ritika -> avi,
+//		divya -> design,
+// 		deepa -> technical & other deepa ,
+//		rohit -> beauty,
 		int ad = 0, ru = 0, di = 0, de = 0, ro = 0;
 		try {
 			List list = leadMasterRepository.getAllUnAssLead();
