@@ -8,7 +8,6 @@ import javax.persistence.*;
 public class InstituteMaster {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "institute_id")
 	private Long instituteId;
 

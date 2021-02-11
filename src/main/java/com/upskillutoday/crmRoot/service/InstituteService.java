@@ -35,6 +35,7 @@ class InstituteServiceImpl implements InstituteService {
     public boolean insertInstituteservice(InstituteDto instituteDto) {
         InstituteMaster institute = new InstituteMaster();
         CategoryMaster categoryMaster = categoryJpaRepository.findByCategoryId(Long.parseLong(instituteDto.getCategoryId()));
+        institute.setInstituteId(instituteRepository.getHighestId() + 1L);
         institute.setInstituteName(instituteDto.getInstituteName());
         institute.setContactNo(instituteDto.getContactNo());
         institute.setEmailId(instituteDto.getEmailId());
@@ -51,7 +52,7 @@ class InstituteServiceImpl implements InstituteService {
         institute.setCourseName(instituteDto.getCourseName());
         institute.setUpdatedOn(new Date());
         institute.setDeletedFlag(true);
-        boolean flag=instituteRepository.insertInsituteDao(institute);
+        boolean flag = instituteRepository.insertInsituteDao(institute);
         System.out.println("Out insert service ");
         return flag;
     }

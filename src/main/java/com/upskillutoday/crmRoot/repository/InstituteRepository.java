@@ -21,6 +21,7 @@ public interface InstituteRepository {
 	void updateInstitute(InstituteMaster instituteMaster);
 	Long getTotalCount(Long instituteId);
 	Long getTotalCountByDate(Long instituteId, String date);
+	Long getHighestId();
 }
 
 @Repository
@@ -33,7 +34,6 @@ class InstituteRepositoryImpl implements InstituteRepository {
 
 	@Override
 	public boolean insertInsituteDao(InstituteMaster institute) {
-
 		try {
 			entityManager.persist(institute);
 			return true;
@@ -75,6 +75,17 @@ class InstituteRepositoryImpl implements InstituteRepository {
 								+ "    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId " +
 								"	   where im.instituteId = " + instituteId + " and il.sentOn = DATE('" + date + "') and il.shouldCount = 1",
 						Long.class)
+				.getSingleResult();
+	}
+
+	@Override
+	public Long getHighestId() {
+		return entityManager.createQuery(
+				"SELECT ins.instituteId FROM InstituteMaster as ins " +
+						"ORDER By ins.instituteId desc "
+				, Long.class)
+				.setFirstResult(0)
+				.setMaxResults(1)
 				.getSingleResult();
 	}
 
