@@ -648,4 +648,78 @@ public class LeadUploadFileController {
 	public String webhook() {
 		return "Hello Webhook";
 	}
+
+	@GetMapping(value = "/assignLead")
+	public String assignLead() {
+//		aditya -> music and film,
+// 		avi ritika,
+//		divya design,
+// 		deepa technical & other deepa ,
+//		rohit beauty,
+		int ad = 0, ru = 0, di = 0, de = 0, ro = 0;
+		try {
+			List list = leadMasterRepository.getAllUnAssLead();
+			for(LeadMaster leadMaster : (List<LeadMaster>) list) {
+				EmployeeMaster employeeMaster = null;
+				if(leadMaster.getCategoryMaster().getCategoryId() == 9L || leadMaster.getCategoryMaster().getCategoryId() == 5L) {
+					employeeMaster = employeeService.getEmployeeByEmpId(13L);
+					ad++;
+				} else if (leadMaster.getCategoryMaster().getCategoryId() == 1L) {
+					employeeMaster = employeeService.getEmployeeByEmpId(20L);
+					ru++;
+				} else if (leadMaster.getCategoryMaster().getCategoryId() == 2L) {
+					employeeMaster = employeeService.getEmployeeByEmpId(17L);
+					ro ++;
+				} else if (leadMaster.getCategoryMaster().getCategoryId() == 4L) {
+					employeeMaster = employeeService.getEmployeeByEmpId(18L);
+					di++;
+				}
+				else {
+					employeeMaster = employeeService.getEmployeeByEmpId(5L);
+					de ++;
+				}
+
+				List<EmpLead> empLeads = empLeadRepository.getEmpLeadFromStudentId(leadMaster.getStudentId());
+				if(empLeads.size() == 1) {
+					//insert
+					EmpLead empLead = empLeads.get(0);
+					empLead.setEmployeeMaster(employeeMaster);
+					empLead.setUpdatedOn(new Date());
+					empleadJparepository.save(empLead);
+				} else if (empLeads.size() > 1) {
+					EmpLead empLead = empLeads.get(0);
+					empLead.setEmployeeMaster(employeeMaster);
+					empLead.setUpdatedOn(new Date());
+					for(EmpLead empLead1 : empLeads) {
+						empleadJparepository.delete(empLead1);
+					}
+					empleadJparepository.save(empLead);
+				} else {
+					EmpLead empLead = new EmpLead();
+					empLead.setEmployeeMaster(employeeMaster);
+					empLead.setLeadMaster(leadMaster);
+					empLead.setUpdatedOn(new Date());
+					empLead.setUpdatedBy(0);
+					empLead.setDeletedFlag(true);
+					empleadJparepository.save(empLead);
+				}
+				leadMaster.setRemarkMaster(remarkService.getRemarkById(3L));
+				leadMaster.setAssignLeadFlag(true);
+				leadJpaMasterRepository.save(leadMaster);
+			}
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+
+		StringBuilder stringBuilder = new StringBuilder();
+
+		stringBuilder
+				.append("Rohit: ").append(ro).append("\n")
+				.append("Divya: ").append(di).append("\n")
+				.append("Deepa: ").append(de).append("\n")
+				.append("Rutika: ").append(ru).append("\n")
+				.append("Aditya: ").append(ad);
+
+		return stringBuilder.toString();
+	}
 }
