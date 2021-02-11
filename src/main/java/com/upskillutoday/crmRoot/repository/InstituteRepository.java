@@ -14,8 +14,6 @@ public interface InstituteRepository {
 	boolean insertInsituteDao(InstituteMaster institute);
 	List getInstituteByCategoryFromStudentId(Long catId);
 	InstituteMaster getInstituteById(Long id);
-//	List getInstituteReport();
-//	List getInstituteWithZero();
 	List getInstituteReportDatewise(String date);
 	List getInstituteReportDatewiseWithZero(String date);
 	List getInstitute();
@@ -99,29 +97,6 @@ class InstituteRepositoryImpl implements InstituteRepository {
 				.getSingleResult();
 	}
 
-//	@Override
-//	public List getInstituteReport() {
-//    return entityManager.createQuery(
-//		"select new InstituteReport (im.instituteId, im.instituteName, e.employeeName,  COUNT(lm.studentId)) from InstituteLead as il\n" +
-//				"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
-//				"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
-//				"    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId \n" +
-//				"    group by im.instituteId, e.employeeId ").getResultList();
-//	}
-//
-//	@Override
-//	public List getInstituteWithZero() {
-//    return entityManager
-//        .createQuery(
-//				"select new InstituteReport (im2.instituteId, im2.instituteName) from InstituteMaster as im2 " +
-//						"where im2.instituteId not in (select im.instituteId from InstituteLead as il\n" +
-//						"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
-//						"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
-//						"    inner join EmployeeMaster as e on  il.employeeMaster.employeeId = e.employeeId \n" +
-//						"    group by im.instituteId, e.employeeId) ")
-//        .getResultList();
-//	}
-
 	@Override
 	public List getInstituteReportDatewise(String date) {
 		return entityManager
@@ -130,7 +105,7 @@ class InstituteRepositoryImpl implements InstituteRepository {
 								"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
 								"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
 								"    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId \n" +
-								"	 where il.sentOn = DATE('" + date + "')" +
+								"	 where il.sentOn = DATE('" + date + "') and il.shouldCount = 1" +
 								"    group by im.instituteId, e.employeeId ")
 				.getResultList();
 	}
@@ -143,7 +118,7 @@ class InstituteRepositoryImpl implements InstituteRepository {
 						"    inner join InstituteMaster as im on il.instituteMaster.instituteId = im.instituteId\n" +
 						"    inner join LeadMaster as lm on il.leadMaster.studentId = lm.studentId \n" +
 						"    inner join EmployeeMaster as e on il.employeeMaster.employeeId = e.employeeId \n" +
-						"	 where il.sentOn = DATE('" + date + "')" +
+						"	 where il.sentOn = DATE('" + date + "') and il.shouldCount = 1" +
 						"    group by im.instituteId, e.employeeId )")
 				.getResultList();
 	}

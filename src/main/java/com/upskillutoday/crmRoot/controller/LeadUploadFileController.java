@@ -550,11 +550,10 @@ public class LeadUploadFileController {
 
 		for(Long instituteId : leadId.getInstituteIds()) {
 			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
-			instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId))));
-
 			if(leadMaster.getRemarkMaster() == null ) {
 				String email = instituteMaster.getEmailId();
 				sendEmail(leadMaster, email.toLowerCase());
+				instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId)), 1));
 				if(
 						instituteMaster.getInstituteName().equalsIgnoreCase("Aditya Group Of Institutes") ||
 								instituteMaster.getInstituteName().equalsIgnoreCase("npfs") ||
@@ -565,11 +564,14 @@ public class LeadUploadFileController {
 				if(leadMaster.getRemarkMaster().getRemarkId() == 7) {
 					String email = instituteMaster.getEmailId();
 					sendEmail(leadMaster, email.toLowerCase());
-						if(	instituteMaster.getInstituteName().equalsIgnoreCase("Aditya Group Of Institutes") ||
+					instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId)), 1));
+					if(	instituteMaster.getInstituteName().equalsIgnoreCase("Aditya Group Of Institutes") ||
 							instituteMaster.getInstituteName().equalsIgnoreCase("npfs") ||
 							instituteMaster.getInstituteName().equalsIgnoreCase("upskillutoday")) {
 						this.adityaGroupOfIstituteSendLead(leadMaster);
 					}
+				} else {
+					instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId)), 0));
 				}
 			}
 		}

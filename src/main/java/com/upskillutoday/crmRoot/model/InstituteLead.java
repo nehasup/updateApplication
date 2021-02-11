@@ -15,6 +15,9 @@ public class InstituteLead {
     @Column(name = "sent_on")
     private Date sentOn;
 
+    @Column(name = "should_count")
+    private int shouldCount;
+
     @JoinColumn(name="institute_id",referencedColumnName="institute_id")
     @ManyToOne(fetch = FetchType.EAGER)
     private InstituteMaster instituteMaster;
@@ -27,6 +30,9 @@ public class InstituteLead {
     @JoinColumn(name="sent_by", referencedColumnName = "employee_id")
     @ManyToOne(fetch = FetchType.EAGER)
     private EmployeeMaster employeeMaster;
+
+    public InstituteLead() {
+    }
 
     public Long getInstituteleadId() {
         return instituteleadId;
@@ -73,11 +79,27 @@ public class InstituteLead {
         this.employeeMaster = employeeMaster;
     }
 
+    public InstituteLead(Date sentOn, InstituteMaster instituteMaster, LeadMaster leadMaster, EmployeeMaster employeeMaster, int shouldCount) {
+        this.sentOn = sentOn;
+        this.instituteMaster = instituteMaster;
+        this.leadMaster = leadMaster;
+        this.employeeMaster = employeeMaster;
+        this.shouldCount = shouldCount;
+    }
+
     public EmployeeMaster getEmployeeMaster() {
         return employeeMaster;
     }
 
     public void setEmployeeMaster(EmployeeMaster employeeMaster) {
         this.employeeMaster = employeeMaster;
+    }
+
+    public int getShouldCount() {
+        return shouldCount;
+    }
+
+    public void setShouldCount(int shouldCount) {
+        this.shouldCount = shouldCount;
     }
 }
