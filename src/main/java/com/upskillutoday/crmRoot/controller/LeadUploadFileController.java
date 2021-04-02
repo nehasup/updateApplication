@@ -378,7 +378,7 @@ public class LeadUploadFileController {
 	 }
 
 	 // update Lead by id
-	// updated by Laukik
+	 // updated by Laukik
 	 @PutMapping("/updateLeadByid/{id}")
 	 @ResponseBody public ResponseVO updateLeadController(
 	 		@RequestParam(value = "userId") Long userId,
@@ -444,12 +444,20 @@ public class LeadUploadFileController {
 					empleadJparepository.delete(empLead1);
 				}
 				empleadJparepository.save(empLead);
+			} else {
+				EmpLead empLead = new EmpLead();
+				empLead.setEmployeeMaster(employeeMaster);
+				empLead.setLeadMaster(leadMasterObj);
+				empLead.setUpdatedOn(new Date());
+				empLead.setUpdatedBy(0);
+				empLead.setDeletedFlag(true);
+				empleadJparepository.save(empLead);
 			}
+
 			leadMasterObj.setRemarkMaster(remarkService.getRemarkById(3L));
 			leadMasterObj.setAssignLeadFlag(true);
 			leadJpaMasterRepository.save(leadMasterObj);
 		}
-
 		return response;
     }
 	  
@@ -552,7 +560,13 @@ public class LeadUploadFileController {
 			InstituteMaster instituteMaster = instituteRepository.getInstituteById(instituteId);
 			if(leadMaster.getRemarkMaster() == null ) {
 				String email = instituteMaster.getEmailId();
-				sendEmail(leadMaster, email.toLowerCase());
+
+				try {
+					sendEmail(leadMaster, email.toLowerCase());
+				} catch (Exception e) {
+					sendEmailFromAWS(leadMaster, email.toLowerCase());
+				}
+
 				instituteLeadRepository.insertInstituteLead(new InstituteLead(new Date(), instituteMaster, leadMaster, employeeService.getEmployeeByUserId(Long.parseLong(userId)), 1));
 				if(
 						instituteMaster.getInstituteName().equalsIgnoreCase("Aditya Group Of Institutes") ||
@@ -582,7 +596,6 @@ public class LeadUploadFileController {
 		responseVO.setResult("All Leads are assigned");
 		return responseVO;
 	}
-
 	// For sending mail through method change method body to use
 	private void sendEmail(LeadMaster leadMaster, String email) throws Exception{
 		MimeMessage message = sender.createMimeMessage();
@@ -600,6 +613,41 @@ public class LeadUploadFileController {
 		helper.setText(stringBuilder);
 		helper.setSubject("New UpSkilluToday Student enquiry");
 		sender.send(message);
+	}
+
+	private void sendEmailFromAWS(LeadMaster leadMaster, String email) throws IOException {
+		OkHttpClient client = new OkHttpClient().newBuilder()
+				.build();
+    Request request =
+        new Request.Builder()
+            .url(
+                "https://email.us-east-2.amazonaws"
+                    + ".com?Action=SendEmail&Source=studentenquireis@gmail"
+                    + ".com&Destination.ToAddresses.member.1=" + email + ""
+                    + ".com&Message.Subject.Data=New Verified Lead - " + leadMaster.getStudentName() + " | "
+                    + "upskillUtoday&Message.Body.Text.Data=Hey,"
+                    + "\nNew student lead: \n"
+                    + "Name: " + leadMaster.getStudentName() + " \n"
+                    + "Email: " + leadMaster.getEmailId() + " \n"
+                    + "Contact: " + leadMaster.getContactNo() + " \n\n\n"
+                    + "Regards, \n"
+                    + "upskillUtoday&Message.Body.Html.Data=<html><body> Hello, <br></br><h4>New "
+                    + "student lead:</h4><table><tbody><tr><td><b>Name</b></td><td>:</td><td>"
+					+ leadMaster.getStudentName()
+					+ "</td></tr><tr><td><b>Contact</b></td><td>:</td><td>"
+					+ leadMaster.getContactNo()
+					+ "</td></tr><tr><td><b>Email</b></td><td>:</td><td>"
+					+ leadMaster.getEmailId()
+					+ ".com</td></tr><tr><td><b>Interest</b></td><td"
+					+ ">:</td><td>Cabin Crew</td></tr></tbody></table> <br></br> Regards, <br></br> upskillUtoday</body></html>")
+            .method("GET", null)
+            .addHeader("X-Amz-Date", "20210402T052444Z")
+            .addHeader(
+                "Authorization",
+                "AWS4-HMAC-SHA256 Credential=AKIAQVU3BP5E6Z5ZKX2R/20210402/us-east-2/ses/aws4_request, SignedHeaders=host;x-amz-date, Signature=07730c2d7f32ac65e26a1e8e5dc563c7d3a9dbf250509012f8d342ef42d0ba07")
+            .build();
+		Response response = client.newCall(request).execute();
+    	System.out.println(response.message());
 	}
 
 	private void adityaGroupOfIstituteSendLead(LeadMaster leadMaster) throws IOException {
